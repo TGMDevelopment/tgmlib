@@ -16,7 +16,6 @@ public class KeyBindManager {
 
     private static final KeyBindManager INSTANCE = new KeyBindManager();
     private final Map<KeyBind, KeyBinding> keyBinds = new HashMap<>();
-    private KeyBinding asKeyBinding;
 
     public static KeyBindManager getInstance() {
         return INSTANCE;
