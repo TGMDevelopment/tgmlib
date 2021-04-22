@@ -20,7 +20,7 @@ public class PlayerUtils {
      *
      * @param layer the layer to be added.
      */
-    public void addLayer(LayerRenderer layer) {
+    public static void addLayer(LayerRenderer layer) {
         try {
 
             Method method = RendererLivingEntity.class.getDeclaredMethod("addLayer", LayerRenderer.class);

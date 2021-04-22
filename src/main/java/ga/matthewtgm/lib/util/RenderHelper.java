@@ -12,18 +12,7 @@ import java.awt.*;
 /**
  * Used to make Minecraft rendering easier.
  */
-public class RenderUtils {
-
-    private static RenderUtils INSTANCE;
-
-    /**
-     * @return an instance of {@link RenderUtils}.
-     */
-    public static RenderUtils getInstance() {
-        if (INSTANCE == null)
-            INSTANCE = new RenderUtils();
-        return INSTANCE;
-    }
+public class RenderHelper {
 
     /**
      * Draws a rounded rectangle using arcs.
@@ -35,7 +24,7 @@ public class RenderUtils {
      * @param cornerRadius the radius of the rounded corners.
      * @param color        the colour of the rectangle.
      */
-    public void drawRoundedRect(int x, int y, int width, int height, int cornerRadius, Color color) {
+    public static void drawRoundedRect(int x, int y, int width, int height, int cornerRadius, Color color) {
         Gui.drawRect(x, y + cornerRadius, x + cornerRadius, y + height - cornerRadius, color.getRGB());
         Gui.drawRect(x + cornerRadius, y, x + width - cornerRadius, y + height, color.getRGB());
         Gui.drawRect(x + width - cornerRadius, y + cornerRadius, x + width, y + height - cornerRadius, color.getRGB());
@@ -56,7 +45,7 @@ public class RenderUtils {
      * @param thickness outline thickness.
      * @param color     outline colour.
      */
-    public void drawHollowRoundedRect(int x, int y, int width, int height, double thickness, Color color) {
+    public static void drawHollowRoundedRect(int x, int y, int width, int height, double thickness, Color color) {
         double radius = 4;
         drawHollowArc(x, y, radius, -180, -90, thickness, color);
         drawVerticalLine(x, y + 3, y + height - 4, color.getRGB());
@@ -68,7 +57,7 @@ public class RenderUtils {
         drawHollowArc(x, y + height - 8, radius, -90, -0, thickness, color);
     }
 
-    private void drawArc(int x, int y, int radius, int startAngle, int endAngle, Color color) {
+    private static void drawArc(int x, int y, int radius, int startAngle, int endAngle, Color color) {
 
         GL11.glPushMatrix();
         GL11.glEnable(3042);
@@ -93,7 +82,7 @@ public class RenderUtils {
         GL11.glPopMatrix();
     }
 
-    private void drawHollowArc(double x, double y, double radius, int startAngle, int endAngle, double thickness, Color color) {
+    private static void drawHollowArc(double x, double y, double radius, int startAngle, int endAngle, double thickness, Color color) {
         radius -= thickness / 2;
         x += thickness / 2;
         y += thickness / 2;
@@ -115,14 +104,13 @@ public class RenderUtils {
 
     /**
      * Draws a full rectangle.
-     *
      * @param left   left side of the rectangle.
      * @param top    top of the rectangle.
      * @param right  right side of the rectangle.
      * @param bottom bottom of the rectangle.
      * @param color  colour of the rectangle.
      */
-    public void drawRect(int left, int top, int right, int bottom, int color) {
+    public static void drawRect(int left, int top, int right, int bottom, int color) {
         if (left < right) {
             int i = left;
             left = right;
@@ -164,14 +152,14 @@ public class RenderUtils {
      * @param height rectangle height.
      * @param color  rectangle colour.
      */
-    public void drawHollowRect(int x, int y, int width, int height, int color) {
-        this.drawHorizontalLine(x, x + width, y, color);
-        this.drawHorizontalLine(x, x + width, y + height, color);
-        this.drawVerticalLine(x, y + height, y, color);
-        this.drawVerticalLine(x + width, y + height, y, color);
+    public static void drawHollowRect(int x, int y, int width, int height, int color) {
+        drawHorizontalLine(x, x + width, y, color);
+        drawHorizontalLine(x, x + width, y + height, color);
+        drawVerticalLine(x, y + height, y, color);
+        drawVerticalLine(x + width, y + height, y, color);
     }
 
-    protected void drawHorizontalLine(int startX, int endX, int y, int color) {
+    protected static void drawHorizontalLine(int startX, int endX, int y, int color) {
         if (endX < startX) {
             int i = startX;
             startX = endX;
@@ -181,7 +169,7 @@ public class RenderUtils {
         drawRect(startX, y, endX + 1, y + 1, color);
     }
 
-    protected void drawVerticalLine(int x, int startY, int endY, int color) {
+    protected static void drawVerticalLine(int x, int startY, int endY, int color) {
         if (endY < startY) {
             int i = startY;
             startY = endY;

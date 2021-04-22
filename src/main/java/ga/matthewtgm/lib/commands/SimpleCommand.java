@@ -9,11 +9,11 @@ import net.minecraft.util.BlockPos;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModCommand extends CommandBase {
+public class SimpleCommand extends CommandBase {
 
-    private final ModCommandRunnable runnable;
+    private final SimpleCommandEntry runnable;
 
-    public ModCommand(ModCommandRunnable runnable) {
+    public SimpleCommand(SimpleCommandEntry runnable) {
         this.runnable = runnable;
     }
 
