@@ -6,7 +6,7 @@ import net.minecraft.client.gui.FontRenderer;
  * Used along with {@link FontRenderer} to make things regarding font rendering just a little nicer.
  * @author MatthewTGM
  */
-public class FontRendererUtils {
+public class FontRendererHelper {
 
     /**
      * Draws a string centered on the X and Y coordinates given.

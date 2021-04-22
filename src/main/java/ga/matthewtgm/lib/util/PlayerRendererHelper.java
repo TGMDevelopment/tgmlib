@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Makes methods regarding the client player and other players easier to access.
  */
-public class PlayerUtils {
+public class PlayerRendererHelper {
 
     /**
      * Adds a new layer to the player class.
