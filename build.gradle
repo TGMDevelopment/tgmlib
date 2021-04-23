@@ -39,7 +39,7 @@ minecraft {
     version = project.forge_ver
     runDir = "run"
 
-    replace("@VER@", project.version)
+    replace("@VER@", project.mod_ver)
 
     mappings = project.minecraft_mappings
 }

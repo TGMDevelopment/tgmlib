@@ -8,7 +8,7 @@ public class TGMLib {
 
     private static TGMLib INSTANCE;
 
-    public static String NAME = "TGMLib", VERSION = "1.0.3";
+    public static String NAME = "TGMLib", VERSION = "@VER@";
 
     @Getter private boolean listenersRegistered;
 
