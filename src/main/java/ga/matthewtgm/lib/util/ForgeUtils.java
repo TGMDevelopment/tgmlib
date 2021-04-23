@@ -4,9 +4,13 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class ForgeUtils {
 
-    public static void registerEventListeners(Object... eventListenerClasses) {
-        for (Object eventListenerClass : eventListenerClasses)
-            MinecraftForge.EVENT_BUS.register(eventListenerClass);
+    /**
+     * @param listeners All listeners to register.
+     * @author MatthewTGM
+     */
+    public static void registerEventListeners(Object... listeners) {
+        for (Object listener : listeners)
+            MinecraftForge.EVENT_BUS.register(listener);
     }
 
 }

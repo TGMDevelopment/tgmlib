@@ -8,9 +8,12 @@ import lombok.Getter;
  */
 public abstract class KeyBind {
 
-    @Getter private final String name;
-    @Getter private final int keyCode;
-    @Getter private final String category;
+    @Getter
+    private final String name;
+    @Getter
+    private final int keyCode;
+    @Getter
+    private final String category;
 
     public KeyBind(String description, int keyCode, String category) {
         this.name = description;

@@ -104,6 +104,7 @@ public class RenderHelper {
 
     /**
      * Draws a full rectangle.
+     *
      * @param left   left side of the rectangle.
      * @param top    top of the rectangle.
      * @param right  right side of the rectangle.

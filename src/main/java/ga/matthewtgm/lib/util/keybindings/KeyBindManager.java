@@ -11,14 +11,17 @@ import java.util.Map;
 
 /**
  * Used to add Minecraft keybinds with ease.
+ *
  * @author MatthewTGM
  */
 public class KeyBindManager {
 
-    @Getter private static final Map<KeyBind, KeyBinding> keyBinds = new HashMap<>();
+    @Getter
+    private static final Map<KeyBind, KeyBinding> keyBinds = new HashMap<>();
 
     /**
      * Used to register new Minecraft keybinds.
+     *
      * @param keyBind The keybind to register.
      * @author MatthewTGM
      */

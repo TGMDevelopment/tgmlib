@@ -6,8 +6,8 @@ import net.minecraft.util.ChatComponentText;
 public class ChatHandler {
 
     /**
-     * @author MatthewTGM
      * @param msg The message to send.
+     * @author MatthewTGM
      */
     public static void sendMessage(String msg) {
         if (msg == null)
@@ -18,8 +18,8 @@ public class ChatHandler {
     }
 
     /**
-     * @author MatthewTGM
      * @param text The text to send.
+     * @author MatthewTGM
      */
     public static void sendMessage(ChatComponentText text) {
         if (text == null)
@@ -30,8 +30,8 @@ public class ChatHandler {
     }
 
     /**
-     * @author MatthewTGM
      * @param o The object to send.
+     * @author MatthewTGM
      */
     public static void sendMessage(Object o) {
         if (o == null)

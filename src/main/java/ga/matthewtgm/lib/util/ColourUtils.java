@@ -8,8 +8,8 @@ import java.awt.*;
 public class ColourUtils {
 
     /**
-     * @author MatthewTGM
      * @return a changing colour based on the users computer time. Simulates a "chroma" colour.
+     * @author MatthewTGM
      */
     public static int chroma() {
         final long l = System.currentTimeMillis();

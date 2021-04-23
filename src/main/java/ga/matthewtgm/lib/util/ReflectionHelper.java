@@ -11,7 +11,7 @@ public class ReflectionHelper {
 
     /**
      * @param clazz The class to change the field in.
-     * @param name The name of the field.
+     * @param name  The name of the field.
      * @return The field requested from the class provided.
      * @author MatthewTGM
      */
@@ -29,10 +29,11 @@ public class ReflectionHelper {
 
     /**
      * Sets the field requested in the class provided.
-     * @param clazz The class to change the field in.
+     *
+     * @param clazz    The class to change the field in.
      * @param instance An instance of the class.
-     * @param name The name of the field.
-     * @param value The value to set it to.
+     * @param name     The name of the field.
+     * @param value    The value to set it to.
      * @author MatthewTGM
      */
     public static <I, V> void setField(Class<?> clazz, I instance, String name, V value) {
