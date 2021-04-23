@@ -2,40 +2,46 @@ buildscript {
     repositories {
         jcenter()
         maven {
-            name = "forge"
+            name = "Forge"
             url = "http://maven.minecraftforge.net"
         }
         maven {
-            name = 'sponge'
+            name = "JitPack"
+            url = "https://jitpack.io"
+        }
+        maven {
+            name = "Sponge"
             url = 'https://repo.spongepowered.org/maven'
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath 'com.github.asbyth:ForgeGradle:f6500bf402'
         classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'java'
 
-version = "1.0.3"
-group = "ga.matthewtgm.lib"
-archivesBaseName = "TGMLib"
+archivesBaseName = project.mod_name
+version = project.mod_ver
+group = project.mod_group
 
 sourceCompatibility = targetCompatibility = 1.8
 
 repositories {
     maven {
-        url "https://jitpack.io"
+        name = "JitPack"
+        url = "https://jitpack.io"
     }
 }
 
 minecraft {
-    version = "1.8.9-11.15.1.2318-1.8.9"
+    version = project.forge_ver
     runDir = "run"
 
     replace("@VER@", project.version)
 
-    mappings = "stable_22"
+    mappings = project.minecraft_mappings
 }
 
 dependencies {
