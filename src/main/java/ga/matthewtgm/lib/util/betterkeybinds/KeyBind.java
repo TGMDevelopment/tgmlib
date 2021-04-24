@@ -1,4 +1,4 @@
-package ga.matthewtgm.lib.util.keybindings;
+package ga.matthewtgm.lib.util.betterkeybinds;
 
 import lombok.Getter;
 
