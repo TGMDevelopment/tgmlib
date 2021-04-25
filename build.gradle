@@ -65,8 +65,6 @@ minecraft {
 dependencies {
     compile('org.projectlombok:lombok:1.18.16')
     annotationProcessor('org.projectlombok:lombok:1.18.16')
-    compile('org.spongepowered:mixins:0.7.11-SNAPSHOT')
-    annotationProcessor('org.spongepowered:mixins:0.7.11-SNAPSHOT')
 }
 
 processResources {
