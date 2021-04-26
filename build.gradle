@@ -90,7 +90,7 @@ jar {
 
 mixin {
     defaultObfuscationEnv = "searge"
-    add sourceSets.main, "mixins.gallium.refmap.json"
+    add sourceSets.main, "mixins.tgmlib.refmap.json"
 }
 
 processResources {
