@@ -5,6 +5,8 @@
   "verbose": true,
   "refmap": "mixins.tgmlib.refmap.json",
   "mixins": [
-    "MinecraftMixin"
+    "entity.EntityPlayerSPMixin",
+    "networking.NetHandlerPlayClientMxin",
+    "networking.NetworkManagerMixin"
   ]
 }

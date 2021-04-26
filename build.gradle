@@ -38,6 +38,7 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
 archivesBaseName = project.mod_name
@@ -51,6 +52,10 @@ repositories {
         name = "JitPack"
         url = "https://jitpack.io"
     }
+    maven {
+        name = "Sponge"
+        url = "https://repo.spongepowered.org/maven/"
+    }
 }
 
 minecraft {
@@ -63,8 +68,22 @@ minecraft {
 }
 
 dependencies {
-    compile('org.projectlombok:lombok:1.18.16')
+    implementation('org.projectlombok:lombok:1.18.16')
     annotationProcessor('org.projectlombok:lombok:1.18.16')
+
+    compile('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+        exclude module: 'gson'
+        exclude module: 'commons-io'
+    }
+    annotationProcessor('org.spongepowered:mixin:0.7.11-SNAPSHOT')
+}
+
+jar {
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 processResources {

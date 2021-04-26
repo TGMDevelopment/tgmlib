@@ -20,6 +20,7 @@ package ga.matthewtgm.lib;
 import ga.matthewtgm.lib.util.ForgeUtils;
 import ga.matthewtgm.lib.util.GuiHelper;
 import ga.matthewtgm.lib.util.HypixelHelper;
+import ga.matthewtgm.lib.util.Notifications;
 import ga.matthewtgm.lib.util.betterkeybinds.KeyBindManager;
 import lombok.Getter;
 
@@ -33,7 +34,7 @@ public class TGMLib {
 
     public void onForgePreInit() {
         if (!listenersRegistered) {
-            ForgeUtils.registerEventListeners(new KeyBindManager(), new GuiHelper(), new HypixelHelper());
+            ForgeUtils.registerEventListeners(new KeyBindManager(), new GuiHelper(), new HypixelHelper(), new Notifications());
             listenersRegistered = true;
         }
     }

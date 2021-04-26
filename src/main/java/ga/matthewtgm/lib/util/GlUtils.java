@@ -18,6 +18,11 @@
 
 package ga.matthewtgm.lib.util;
 
+import ga.matthewtgm.lib.other.ColourRGB;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 
 public class GlUtils {
@@ -36,11 +41,46 @@ public class GlUtils {
     }
 
     /**
+     * @param x      The x coordinate to start the box.
+     * @param y      The y coordinate to start the box.
+     * @param width  The width of the box.
+     * @param height The height of the box.
+     * @author MatthewTGM
+     */
+    public static void startScissorBox(float x, float y, float width, float height) {
+        GL11.glPushMatrix();
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        GL11.glScissor((int) x, (int) y, (int) width, (int) height);
+    }
+
+    /**
      * @author MatthewTGM
      */
     public static void endScissorBox() {
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         GL11.glPopMatrix();
+    }
+
+    public static void drawRectangle(float xPosition, float yPosition, float width, float height, ColourRGB colour) {
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        WorldRenderer worldrenderer = Tessellator.getInstance().getWorldRenderer();
+        GlStateManager.color(
+                colour.getR() / 255.0F,
+                colour.getG() / 255.0F,
+                colour.getB() / 255.0F,
+                colour.getA() / 255.0F);
+        worldrenderer.begin(7, DefaultVertexFormats.POSITION);
+        worldrenderer.pos(xPosition, yPosition + height, 0.0D).endVertex();
+        worldrenderer.pos(xPosition + width, yPosition + height, 0.0D).endVertex();
+        worldrenderer.pos(xPosition + width, yPosition, 0.0D).endVertex();
+        worldrenderer.pos(xPosition, yPosition, 0.0D).endVertex();
+        Tessellator.getInstance().draw();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.bindTexture(0);
+        GlStateManager.color(1f, 1f, 1f, 1f);
     }
 
 }
