@@ -47,6 +47,12 @@ group = project.mod_group
 
 sourceCompatibility = targetCompatibility = 1.8
 
+sourceSets {
+    main {
+        output.resourcesDir = "build/classes/main"
+    }
+}
+
 repositories {
     maven {
         name = "JitPack"
@@ -68,9 +74,6 @@ minecraft {
 }
 
 dependencies {
-    implementation('org.projectlombok:lombok:1.18.16')
-    annotationProcessor('org.projectlombok:lombok:1.18.16')
-
     compile('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
         exclude module: 'launchwrapper'
         exclude module: 'guava'
@@ -78,6 +81,9 @@ dependencies {
         exclude module: 'commons-io'
     }
     annotationProcessor('org.spongepowered:mixin:0.7.11-SNAPSHOT')
+
+    implementation('org.projectlombok:lombok:1.18.16')
+    annotationProcessor('org.projectlombok:lombok:1.18.16')
 }
 
 jar {
@@ -86,6 +92,8 @@ jar {
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
+
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
 }
 
 mixin {
@@ -94,6 +102,13 @@ mixin {
 }
 
 processResources {
+    inputs.files "src/main/resources"
+    outputs.dir "build/classes/main"
+    copy {
+        from("src/main/resources")
+        into("build/classes/main")
+    }
+
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
