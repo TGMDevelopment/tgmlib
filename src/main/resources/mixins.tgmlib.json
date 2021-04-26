@@ -5,6 +5,7 @@
   "verbose": true,
   "refmap": "mixins.tgmlib.refmap.json",
   "mixins": [
+    "entity.EntityLivingBaseMixin",
     "entity.EntityPlayerSPMixin",
     "networking.NetHandlerPlayClientMxin",
     "networking.NetworkManagerMixin"
