@@ -89,6 +89,14 @@ dependencies {
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
+    manifest.attributes(
+            'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+            'MixinConfigs': 'mixins.tgmlib.json',
+            'FMLCorePlugin': 'ga.matthewtgm.tgmlib.mixins.TGMLibLoadingPlugin',
+            'FMLCorePluginContainsFMLMod': true,
+            'ForceLoadAsMod': true
+    )
+
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
