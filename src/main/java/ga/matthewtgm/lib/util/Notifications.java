@@ -128,20 +128,25 @@ public class Notifications {
         String[] words = text.split("(" + split + "|\n)");
         int lineLength = 0;
         StringBuilder output = new StringBuilder();
+
         for (int i = 0; i < words.length; i++) {
             String word = words[i];
-            if (i != words.length - 1)
+            if (i != words.length - 1) {
                 word += split;
+            }
             int wordLength = fontRenderer.getStringWidth(word);
+
             if (lineLength + wordLength <= lineWidth) {
                 output.append(word);
                 lineLength += wordLength;
             } else if (wordLength <= lineWidth) {
                 output.append("\n").append(word);
                 lineLength = wordLength;
-            } else
+            } else {
                 output.append(wrapText(word, fontRenderer, lineWidth, "")).append(split);
+            }
         }
+
         return output.toString();
     }
 
