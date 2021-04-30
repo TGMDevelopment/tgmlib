@@ -35,6 +35,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Adapted from XanderLib under GPLv3
+ * https://github.com/isXander/XanderLib/blob/main/LICENSE
+ */
 public class Notifications {
 
     private Minecraft mc = Minecraft.getMinecraft();
@@ -63,8 +67,7 @@ public class Notifications {
             return;
         Notification notification = current.get(0);
         float time = notification.time;
-        float opacity = 175;
-
+        float opacity = 200;
         if (time <= 1 || time >= 10) {
             float easeTime = Math.min(time, 1);
             opacity = easeTime * 200;
@@ -87,7 +90,7 @@ public class Notifications {
         GlUtils.drawRectangle(rectX, rectY, rectWidth, rectHeight, new ColourRGB(0, 0, 0, (int)MathHelper.clamp(opacity, 5, 255)));
         if (notification.time > 0.1f) {
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
-            GlUtils.startScissorBox(rectX, rectY, rectWidth, rectHeight);
+            GlUtils.totalScissor(rectX, rectY, rectWidth, rectHeight);
             int color = new Color(255, 255, 255, (int)MathHelper.clamp(opacity, 2, 255)).getRGB();
             int i = 0;
             for (String line : wrappedTitle) {
@@ -98,7 +101,7 @@ public class Notifications {
                 mc.fontRendererObj.drawString(line, res.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(line) / 2f), rectY + paddingHeight + (textDistance * i) + (mc.fontRendererObj.FONT_HEIGHT * i), color, false);
                 i++;
             }
-            GlUtils.endScissorBox();
+            GL11.glDisable(GL11.GL_SCISSOR_TEST);
         }
         GlStateManager.popMatrix();
         if (notification.time >= 3f)
@@ -142,16 +145,14 @@ public class Notifications {
             } else if (wordLength <= lineWidth) {
                 output.append("\n").append(word);
                 lineLength = wordLength;
-            } else {
+            } else
                 output.append(wrapText(word, fontRenderer, lineWidth, "")).append(split);
-            }
         }
 
         return output.toString();
     }
 
     private static class Notification {
-
         String title;
         String description;
         Runnable runnable;
@@ -173,7 +174,6 @@ public class Notifications {
             this.closing = false;
             this.clicked = false;
         }
-
     }
 
 }

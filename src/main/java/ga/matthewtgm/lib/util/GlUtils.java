@@ -19,6 +19,8 @@
 package ga.matthewtgm.lib.util;
 
 import ga.matthewtgm.lib.other.ColourRGB;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -59,6 +61,11 @@ public class GlUtils {
     public static void endScissorBox() {
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         GL11.glPopMatrix();
+    }
+
+    public static void totalScissor(double xPosition, double yPosition, double width, double height) {
+        ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
+        GL11.glScissor((int) ((xPosition * Minecraft.getMinecraft().displayWidth) / scaledResolution.getScaledWidth()), (int) (((scaledResolution.getScaledHeight() - (yPosition + height)) * Minecraft.getMinecraft().displayHeight) / scaledResolution.getScaledHeight()), (int) (width * Minecraft.getMinecraft().displayWidth / scaledResolution.getScaledWidth()), (int) (height * Minecraft.getMinecraft().displayHeight / scaledResolution.getScaledHeight()));
     }
 
     public static void drawRectangle(float xPosition, float yPosition, float width, float height, ColourRGB colour) {
