@@ -17,6 +17,7 @@
  */
 
 package ga.matthewtgm.lib;
+import ga.matthewtgm.lib.commands.CommandManager;
 import ga.matthewtgm.lib.commands.SimpleCommand;
 import ga.matthewtgm.lib.commands.SimpleCommandEntry;
 import ga.matthewtgm.lib.util.*;
@@ -24,7 +25,6 @@ import ga.matthewtgm.lib.util.betterkeybinds.KeyBindManager;
 import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.client.ClientCommandHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,14 +52,14 @@ public class TGMLib {
 
         if (!commandsRegistered) {
             logger.info("Registering commands...");
-            ClientCommandHandler.instance.registerCommand(new SimpleCommand(new SimpleCommandEntry() {
+            CommandManager.register(new SimpleCommand(new SimpleCommandEntry() {
                 @Override
                 public String name() {
-                    return null;
+                    return "tgmlib";
                 }
                 @Override
                 public String usage() {
-                    return null;
+                    return "/" + name();
                 }
                 @Override
                 public int permissionLevel() {
