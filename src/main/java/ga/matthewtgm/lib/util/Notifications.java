@@ -41,12 +41,12 @@ import java.util.List;
  */
 public class Notifications {
 
-    private Minecraft mc = Minecraft.getMinecraft();
+    private final Minecraft mc = Minecraft.getMinecraft();
 
-    @Getter @Setter private static int width;
-    @Getter @Setter private static int paddingWidth;
-    @Getter @Setter private static int paddingHeight;
-    @Getter @Setter private static int textDistance;
+    @Getter @Setter private static int width = 200;
+    @Getter @Setter private static int paddingWidth = 5;
+    @Getter @Setter private static int paddingHeight = 3;
+    @Getter @Setter private static int textDistance = 2;
 
     private static final List<Notification> current = new ArrayList<>();
 
@@ -134,11 +134,9 @@ public class Notifications {
 
         for (int i = 0; i < words.length; i++) {
             String word = words[i];
-            if (i != words.length - 1) {
+            if (i != words.length - 1)
                 word += split;
-            }
             int wordLength = fontRenderer.getStringWidth(word);
-
             if (lineLength + wordLength <= lineWidth) {
                 output.append(word);
                 lineLength += wordLength;
@@ -148,7 +146,6 @@ public class Notifications {
             } else
                 output.append(wrapText(word, fontRenderer, lineWidth, "")).append(split);
         }
-
         return output.toString();
     }
 
