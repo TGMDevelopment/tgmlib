@@ -54,6 +54,15 @@ public class StandardVersionChecker {
         }
     }
 
+    public String getLatestBeta() {
+        try {
+            return versJsonObject.get("beta").getAsString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
     public String getDownloadUrl() {
         try {
             return versJsonObject.get("download").getAsString();
