@@ -19,27 +19,35 @@
 package ga.matthewtgm.lib;
 import ga.matthewtgm.lib.util.*;
 import ga.matthewtgm.lib.util.betterkeybinds.KeyBindManager;
-import lombok.Getter;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+@Mod(name = TGMLib.NAME, version = TGMLib.VERSION, modid = TGMLib.ID)
 public class TGMLib {
 
+    @Mod.Instance
     private static TGMLib INSTANCE;
 
-    public static String NAME = "TGMLib", VERSION = "@VER@";
+    public static final String NAME = "TGMLib", VERSION = "@VER@", ID = "tgmlib";
 
     private final Logger logger = LogManager.getLogger("TGMLib");
 
-    @Getter private boolean listenersRegistered;
+    @Mod.EventHandler
+    public void onPreInit(FMLPreInitializationEvent event) {
+        setupMetadata(event);
+        logger.info("Registering listeners...");
+        ForgeUtils.registerEventListeners(new KeyBindManager(), new GuiHelper(), new HypixelHelper(), new Notifications());
+        logger.info("Listeners registered!");
+    }
 
-    public void onForgePreInit() {
-        if (!listenersRegistered) {
-            logger.info("Registering listeners...");
-            ForgeUtils.registerEventListeners(new KeyBindManager(), new GuiHelper(), new HypixelHelper(), new Notifications());
-            logger.info("Listeners registered!");
-            listenersRegistered = true;
-        }
+    private void setupMetadata(FMLPreInitializationEvent event) {
+        ModMetadata metadata = event.getModMetadata();
+        metadata.description = "Modding utility library.";
+        metadata.authorList.clear();
+        metadata.authorList.add("TGMDevelopment");
     }
 
     public static TGMLib getInstance() {

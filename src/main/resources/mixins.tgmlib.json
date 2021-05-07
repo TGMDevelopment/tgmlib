@@ -8,6 +8,8 @@
     "entity.EntityLivingBaseMixin",
     "entity.EntityPlayerSPMixin",
     "networking.NetHandlerPlayClientMxin",
-    "networking.NetworkManagerMixin"
+    "networking.NetworkManagerMixin",
+    "render.LayerRendererMixin",
+    "render.RenderMixin"
   ]
 }

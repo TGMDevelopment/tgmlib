@@ -18,17 +18,44 @@
 
 package ga.matthewtgm.lib.util;
 
+import lombok.Getter;
 import net.minecraftforge.common.MinecraftForge;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public class ForgeUtils {
+
+    @Getter private static final List<Object> registeredListeners = new CopyOnWriteArrayList<>();
 
     /**
      * @param listeners All listeners to register.
      * @author MatthewTGM
      */
-    public static void registerEventListeners(Object... listeners) {
-        for (Object listener : listeners)
-            MinecraftForge.EVENT_BUS.register(listener);
+    public static boolean registerEventListeners(Object... listeners) {
+        boolean val = false;
+        for (Object listener : listeners) {
+            if (!registeredListeners.contains(listener)) {
+                MinecraftForge.EVENT_BUS.register(listener);
+                registeredListeners.add(listener);
+                val = true;
+            } else
+                val = false;
+        }
+        return val;
+    }
+
+    public static boolean unregisterEventListeners(Object... listeners) {
+        boolean val = false;
+        for (Object listener : listeners) {
+            if (registeredListeners.contains(listener)) {
+                MinecraftForge.EVENT_BUS.unregister(listener);
+                registeredListeners.remove(listener);
+                val = true;
+            } else
+                val = false;
+        }
+        return val;
     }
 
 }

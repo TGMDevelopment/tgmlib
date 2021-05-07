@@ -15,7 +15,7 @@
 TGMLib is a library for making MinecraftForge mods, including utilities for most needs and other commonly used components!
 
 ## Why should I use it?
-There's no reason in specific. The library is just for your own QOL.
+There's no reason in specific. The library is just for your own QoL.
 
 ## How do I use it?
 You simply import it into your project using Maven, Gradle or whatever :)

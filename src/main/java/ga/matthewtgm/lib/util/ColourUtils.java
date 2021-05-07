@@ -18,6 +18,8 @@
 
 package ga.matthewtgm.lib.util;
 
+import net.minecraft.client.gui.FontRenderer;
+
 import java.awt.*;
 
 /**
@@ -26,12 +28,37 @@ import java.awt.*;
 public class ColourUtils {
 
     /**
-     * @return a changing colour based on the users computer time. Simulates a "chroma" colour.
+     * @return A changing colour based on the users computer time. Simulates a "chroma" colour.
      * @author MatthewTGM
      */
-    public static int chroma() {
-        final long l = System.currentTimeMillis();
-        return Color.HSBtoRGB(l % 2000L / 2000.0F, 0.8F, 0.8F);
+    public static int timeBasedChroma() {
+        long l = System.currentTimeMillis();
+        return Color.HSBtoRGB(l % 2000L / 2000.0f, 0.8f, 0.8f);
+    }
+
+    /**
+     * @param fontRenderer The game's font renderer.
+     * @param text The text to render.
+     * @param x
+     * @param y
+     * @param shadow Whether or not to render a text shadow along-side the text.
+     * @author Wyvest
+     */
+    public static void drawChromaString(FontRenderer fontRenderer, String text, float x, float y, boolean shadow) {
+        for (char c : text.toCharArray()) {
+            int i = getChroma(x, y).getRGB();
+            String tmp = String.valueOf(c);
+            fontRenderer.drawString(tmp, x, y, i, shadow);
+            x += fontRenderer.getStringWidth(tmp);
+        }
+    }
+
+    /**
+     * @author Wyvest
+     */
+    public static Color getChroma(double x, double y) {
+        float v = 2000.0f;
+        return new Color(Color.HSBtoRGB((float)((System.currentTimeMillis() - x * 10.0 * 1.0 - y * 10.0 * 1.0) % v) / v, 0.8f, 0.8f));
     }
 
 }

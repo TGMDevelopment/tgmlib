@@ -24,12 +24,14 @@ import org.spongepowered.asm.mixin.Mixins;
 
 import java.util.Map;
 
+
 @IFMLLoadingPlugin.SortingIndex(99)
 public class TGMLibLoadingPlugin implements IFMLLoadingPlugin {
 
     public TGMLibLoadingPlugin() {
         MixinBootstrap.init();
         Mixins.addConfiguration("mixins.tgmlib.json");
+        System.out.println("TGMLib loading plugin initialized!");
     }
 
     @Override
@@ -48,13 +50,10 @@ public class TGMLibLoadingPlugin implements IFMLLoadingPlugin {
     }
 
     @Override
-    public void injectData(Map<String, Object> map) {
-
-    }
+    public void injectData(Map<String, Object> map) {}
 
     @Override
     public String getAccessTransformerClass() {
         return null;
     }
-
 }
