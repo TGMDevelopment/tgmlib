@@ -9,7 +9,6 @@
     "entity.EntityPlayerSPMixin",
     "networking.NetHandlerPlayClientMxin",
     "networking.NetworkManagerMixin",
-    "render.LayerRendererMixin",
     "render.RenderMixin"
   ]
 }
