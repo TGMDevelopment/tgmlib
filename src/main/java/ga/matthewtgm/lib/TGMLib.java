@@ -20,7 +20,6 @@ package ga.matthewtgm.lib;
 import ga.matthewtgm.lib.util.*;
 import ga.matthewtgm.lib.util.betterkeybinds.KeyBindManager;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,10 +43,9 @@ public class TGMLib {
     }
 
     private void setupMetadata(FMLPreInitializationEvent event) {
-        ModMetadata metadata = event.getModMetadata();
-        metadata.description = "Modding utility library.";
-        metadata.authorList.clear();
-        metadata.authorList.add("TGMDevelopment");
+        event.getModMetadata().description = "Modding utility library.";
+        event.getModMetadata().authorList.clear();
+        event.getModMetadata().authorList.add("TGMDevelopment");
     }
 
     public static TGMLib getInstance() {
