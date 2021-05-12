@@ -68,4 +68,15 @@ public class ServerHelper {
         return false;
     }
 
+    public static boolean hypixelBedwars() {
+        if (mc != null && mc.theWorld != null && !mc.isSingleplayer() && hypixel()) {
+            ScoreObjective sidebarObjective = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+            if (sidebarObjective != null) {
+                String objectiveName = StringUtils.stripControlCodes(sidebarObjective.getDisplayName());
+                return objectiveName.contains("BED WARS");
+            }
+        }
+        return false;
+    }
+
 }

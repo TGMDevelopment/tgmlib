@@ -20,6 +20,8 @@ package ga.matthewtgm.lib.util;
 
 import lombok.Getter;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -56,6 +58,21 @@ public class ForgeUtils {
                 val = false;
         }
         return val;
+    }
+
+    public static boolean isModLoaded(String id) {
+        return isModLoaded(id, null);
+    }
+
+    public static boolean isModLoaded(String id, String version) {
+        boolean loaded = Loader.isModLoaded(id);
+        if (loaded && version != null) {
+            for (ModContainer container : Loader.instance().getModList())
+                if (container.getModId().equalsIgnoreCase(id) && container.getVersion().equalsIgnoreCase(version))
+                    return true;
+            return false;
+        }
+        return loaded;
     }
 
 }

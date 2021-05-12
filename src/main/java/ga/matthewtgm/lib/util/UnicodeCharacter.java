@@ -52,7 +52,7 @@ public enum UnicodeCharacter {
     ARABIC_NUMERAL_9("\u2468"),
     ARABIC_NUMERAL_10("\u2469");
 
-    @Getter private String asString;
+    @Getter private final String asString;
     UnicodeCharacter(String asString) {
         this.asString = asString;
     }
