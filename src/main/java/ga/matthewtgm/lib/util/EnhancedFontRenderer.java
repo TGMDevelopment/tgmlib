@@ -36,12 +36,30 @@ public class EnhancedFontRenderer {
         drawText(text, (float) x, (float) y, colour, dropShadow);
     }
 
+    public static void drawChromaText(String text, float x, float y, boolean dropShadow) {
+        for (char c : text.toCharArray()) {
+            int col = ColourUtils.getChroma(x, y).getRGB();
+            String charStr = String.valueOf(c);
+            drawText(charStr, x, y, col, dropShadow);
+            x += mc.fontRendererObj.getStringWidth(charStr);
+        }
+    }
+
+    public static void drawChromaText(String text, double x, double y, boolean dropShadow) {
+        for (char c : text.toCharArray()) {
+            int col = ColourUtils.getChroma(x, y).getRGB();
+            String charStr = String.valueOf(c);
+            drawText(charStr, x, y, col, dropShadow);
+            x += mc.fontRendererObj.getStringWidth(charStr);
+        }
+    }
+
     public static void drawCenteredText(String text, float x, float y, int colour, boolean dropShadow) {
-        drawText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y / 2, colour, dropShadow);
+        drawText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, colour, dropShadow);
     }
 
     public static void drawCenteredText(String text, double x, double y, int colour, boolean dropShadow) {
-        drawText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y / 2, colour, dropShadow);
+        drawText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, colour, dropShadow);
     }
 
     public static void drawText(String text, float x, float y, int colour) {
@@ -50,6 +68,14 @@ public class EnhancedFontRenderer {
 
     public static void drawText(String text, double x, double y, int colour) {
         drawText(text, (float) x, (float) y, colour, false);
+    }
+
+    public static void drawCenteredChromaText(String text, float x, float y) {
+        drawChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, false);
+    }
+
+    public static void drawCenteredChromaText(String text, double x, double y) {
+        drawChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, false);
     }
 
     public static void drawCenteredText(String text, float x, float y, int colour) {
@@ -78,12 +104,38 @@ public class EnhancedFontRenderer {
         drawStyledText(text, (float) x, (float) y, colour);
     }
 
+    public static void drawStyledChromaText(String text, float x, float y) {
+        for (char c : text.toCharArray()) {
+            int col = ColourUtils.getChroma(x, y).getRGB();
+            String charStr = String.valueOf(c);
+            drawStyledText(charStr, x, y, col);
+            x += mc.fontRendererObj.getStringWidth(charStr);
+        }
+    }
+
+    public static void drawStyledChromaText(String text, double x, double y) {
+        for (char c : text.toCharArray()) {
+            int col = ColourUtils.getChroma(x, y).getRGB();
+            String charStr = String.valueOf(c);
+            drawStyledText(charStr, x, y, col);
+            x += mc.fontRendererObj.getStringWidth(charStr);
+        }
+    }
+
     public static void drawCenteredStyledText(String text, float x, float y, int colour) {
-        drawStyledText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y / 2, colour);
+        drawStyledText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, colour);
     }
 
     public static void drawCenteredStyledText(String text, double x, double y, int colour) {
-        drawStyledText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y / 2, colour);
+        drawStyledText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, colour);
+    }
+
+    public static void drawCenteredStyledChromaText(String text, float x, float y) {
+        drawStyledChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y);
+    }
+
+    public static void drawCenteredStyledChromaText(String text, double x, double y) {
+        drawStyledChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y);
     }
 
 }
