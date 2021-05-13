@@ -61,4 +61,8 @@ public class ColourUtils {
         return new Color(Color.HSBtoRGB((float)((System.currentTimeMillis() - x * 10.0 * 1.0 - y * 10.0 * 1.0) % v) / v, 0.8f, 0.8f));
     }
 
+    public static int getAlpha(int colour) {
+        return (colour >> 24 & 255);
+    }
+
 }
