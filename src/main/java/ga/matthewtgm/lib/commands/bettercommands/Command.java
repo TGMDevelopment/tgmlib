@@ -18,6 +18,13 @@
 
 package ga.matthewtgm.lib.commands.bettercommands;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Command {
 
     String name();
@@ -26,8 +33,12 @@ public @interface Command {
     String[] tabCompleteOptions();
     int permissionLevel();
 
+    @Target(ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
     @interface Process {}
 
+    @Target(ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
     @interface Argument {
         String name();
         String[] aliases();

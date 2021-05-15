@@ -34,7 +34,7 @@ import java.util.*;
 
 public class CommandManager {
 
-    @Getter private static final Map<Class<?>, CommandBase> commandMap = new HashMap<>();
+    @Getter private static final Map<Class, CommandBase> commandMap = new HashMap<>();
 
     public static void register(ICommand command) {
         ClientCommandHandler.instance.registerCommand(command);
@@ -48,11 +48,11 @@ public class CommandManager {
         ClientCommandHandler.instance.getCommands().remove(name);
     }
 
-    public static void register(Class<?> clazz) {
+    public static void register(Class clazz) {
         if (clazz.isAnnotationPresent(Command.class)) {
             ExceptionHelper.tryCatch(() -> {
                 Object instance = clazz.newInstance();
-                Command command = clazz.getAnnotation(Command.class);
+                Command command = (Command) clazz.getAnnotation(Command.class);
                 CommandBase theCommand;
                 register(theCommand = new CommandBase() {
                     @Override
@@ -78,7 +78,9 @@ public class CommandManager {
                     @Override
                     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
                         ExceptionHelper.tryCatch(() -> {
-                            getProcessMethod(clazz).invoke(instance, sender, args);
+                            Method processMethod = getProcessMethod(clazz);
+                            if (processMethod != null)
+                                processMethod.invoke(instance, sender, args);
                             if (!(args.length <= 0)) {
                                 for (ArgumentMethod method : getArgumentMethods(clazz)) {
                                     String arg = args[method.argument.index()];
@@ -96,21 +98,19 @@ public class CommandManager {
                 });
                 commandMap.put(clazz, theCommand);
             });
-        } else {
-            throw new IllegalStateException("The class provided is not a command!");
         }
     }
 
-    public static void unregister(Class<?> clazz) {
+    public static void unregister(Class clazz) {
         if (clazz.isAnnotationPresent(Command.class)) {
-            unregister(clazz.getAnnotation(Command.class).name());
+            unregister(((Command) clazz.getAnnotation(Command.class)).name());
             commandMap.remove(clazz);
         } else {
             throw new IllegalStateException("The class provided is not a command!");
         }
     }
 
-    private static Method getProcessMethod(Class<?> clazz) {
+    private static Method getProcessMethod(Class clazz) {
         Method ret = null;
         for (Method method : clazz.getDeclaredMethods()) {
             if (!method.isAccessible())
@@ -118,12 +118,10 @@ public class CommandManager {
             if (method.isAnnotationPresent(Command.Process.class) && method.getParameterTypes() != null && !Arrays.asList(method.getParameterTypes()).isEmpty() && method.getParameterTypes()[0].isAssignableFrom(EntityPlayer.class) && method.getParameterTypes()[1].isAssignableFrom(String[].class))
                 ret = method;
         }
-        if (ret == null)
-            throw new IllegalStateException(clazz.getSimpleName() + " either doesn't contain a process method or the parameters are sorted incorrectly.");
         return ret;
     }
 
-    private static ArgumentMethod[] getArgumentMethods(Class<?> clazz) {
+    private static ArgumentMethod[] getArgumentMethods(Class clazz) {
         List<ArgumentMethod> methodList = new ArrayList<>();
         for (Method method : clazz.getDeclaredMethods()) {
             if (!method.isAccessible())
