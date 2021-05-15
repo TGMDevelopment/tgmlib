@@ -85,7 +85,7 @@ public class CommandManager {
                                 for (ArgumentMethod method : getArgumentMethods(clazz)) {
                                     String arg = args[method.argument.index()];
                                     if (arg != null && arg.equalsIgnoreCase(method.argument.name()) || Arrays.stream(method.argument.aliases()).anyMatch(alias -> alias.equalsIgnoreCase(arg)))
-                                        method.method.invoke(instance, args);
+                                        method.method.invoke(instance, (Object) args);
                                 }
                             }
                         });
