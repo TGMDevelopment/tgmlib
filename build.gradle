@@ -82,8 +82,6 @@ dependencies {
     }
     annotationProcessor('org.spongepowered:mixin:0.7.11-SNAPSHOT')
 
-    compile('org.reflections:reflections:0.9.12')
-
     implementation('org.projectlombok:lombok:1.18.16')
     annotationProcessor('org.projectlombok:lombok:1.18.16')
 }
