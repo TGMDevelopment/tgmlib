@@ -36,7 +36,6 @@ public class TGMLib {
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
-        setupMetadata(event);
         logger.info("Registering listeners...");
         ForgeUtils.registerEventListeners(new KeyBindManager(), new GuiHelper(), new HypixelHelper(), new Notifications());
         logger.info("Listeners registered!");
