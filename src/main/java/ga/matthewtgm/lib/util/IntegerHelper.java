@@ -18,11 +18,13 @@
 
 package ga.matthewtgm.lib.util;
 
+import lombok.Getter;
+
 import java.util.Random;
 
 public class IntegerHelper {
 
-    private static final Random random = new Random();
+    @Getter private static final Random random = new Random();
 
     /**
      * @param min The minimum number that can be returned.

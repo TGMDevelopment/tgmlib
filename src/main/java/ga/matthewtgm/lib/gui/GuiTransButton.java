@@ -18,6 +18,7 @@
 
 package ga.matthewtgm.lib.gui;
 
+import ga.matthewtgm.lib.util.EnhancedFontRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -32,13 +33,26 @@ import java.awt.*;
 public class GuiTransButton extends GuiButton {
 
     private Color buttonColour = new Color(0, 0, 0, 55);
+    private boolean chroma;
 
     public GuiTransButton(int buttonId, int x, int y, String buttonText) {
         super(buttonId, x, y, buttonText);
+        this.chroma = false;
     }
 
     public GuiTransButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText) {
         super(buttonId, x, y, widthIn, heightIn, buttonText);
+        this.chroma = false;
+    }
+
+    public GuiTransButton(int buttonId, int x, int y, String buttonText, boolean chroma) {
+        super(buttonId, x, y, buttonText);
+        this.chroma = chroma;
+    }
+
+    public GuiTransButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, boolean chroma) {
+        super(buttonId, x, y, widthIn, heightIn, buttonText);
+        this.chroma = chroma;
     }
 
     @Override
@@ -52,6 +66,10 @@ public class GuiTransButton extends GuiButton {
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
             GlStateManager.blendFunc(770, 771);
             this.mouseDragged(mc, mouseX, mouseY);
+            if (chroma) {
+                EnhancedFontRenderer.drawCenteredChromaText(displayString, xPosition + width / 2, xPosition + (height - 8) / 2);
+                return;
+            }
             int j = 14737632;
             if (!enabled) {
                 j = 10526880;
@@ -107,6 +125,22 @@ public class GuiTransButton extends GuiButton {
      */
     public void setButtonColour(Color buttonColour) {
         this.buttonColour = buttonColour;
+    }
+
+    /**
+     * @author MatthewTGM
+     * @return Whether or not the button's text is chroma.
+     */
+    public boolean isChroma() {
+        return chroma;
+    }
+
+    /**
+     * @author MatthewTGM
+     * @param chroma The chroma status.
+     */
+    public void setChroma(boolean chroma) {
+        this.chroma = chroma;
     }
 
 }

@@ -27,12 +27,15 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class HypixelHelper {
 
     private static int tickTimer = 0;
 
     @Getter private static String locraw;
     private static boolean allowLocrawCancel;
+    private static final AtomicInteger limboLoop = new AtomicInteger(0);
     private static boolean checked;
 
     @SubscribeEvent
@@ -56,15 +59,35 @@ public class HypixelHelper {
             String stripped = StringUtils.stripControlCodes(event.message.getUnformattedText());
             if (stripped.startsWith("{") && stripped.contains("server") && stripped.endsWith("}") && allowLocrawCancel) {
                 if (stripped.contains("limbo")) {
+                    if (limboLoop.get() > 10)
+                        return;
                     allowLocrawCancel = false;
                     checked = false;
+                    limboLoop.set(limboLoop.get() + 1);
                     return;
                 }
                 locraw = stripped;
                 allowLocrawCancel = false;
+                limboLoop.set(0);
                 event.setCanceled(true);
             }
         }
+    }
+
+    public static class HypixelAPI {
+
+        public static String getPlayer(String apiKey, String uuid) {
+            return ApiHelper.getJsonOnline(String.format("https://api.hypixel.net/player?uuid=%s&key=%s", uuid, apiKey));
+        }
+
+        public static String getStatus(String apiKey, String uuid) {
+            return ApiHelper.getJsonOnline(String.format("https://api.hypixel.net/status?uuid=%s&key=%s", uuid, apiKey));
+        }
+
+        public static String getGuild(String apiKey, String uuid) {
+            return ApiHelper.getJsonOnline(String.format("https://api.hypixel.net/guild?player=%s&key=%s", uuid, apiKey));
+        }
+
     }
 
 }

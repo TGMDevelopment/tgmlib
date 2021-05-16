@@ -36,6 +36,7 @@ public class HttpsPost {
     @Getter private String response;
     @Getter private int responseCode;
     @Getter private boolean successful;
+    @Getter private Exception error;
 
     public HttpsPost(String url) {
         this.url = url;
@@ -72,9 +73,11 @@ public class HttpsPost {
             if(conn.getResponseCode() != 0)
                 this.responseCode = conn.getResponseCode();
             successful = true;
+            this.error = null;
         } catch (Exception e) {
             e.printStackTrace();
             successful = false;
+            this.error = e;
         }
     }
 

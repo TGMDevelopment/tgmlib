@@ -79,4 +79,8 @@ public class ServerHelper {
         return false;
     }
 
+    public static boolean isOnServer(String ip) {
+        return !mc.isSingleplayer() && mc.getCurrentServerData() != null && mc.getCurrentServerData().serverIP.equalsIgnoreCase(ip);
+    }
+
 }

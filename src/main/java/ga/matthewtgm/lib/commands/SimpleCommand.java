@@ -62,7 +62,10 @@ public class SimpleCommand extends CommandBase {
 
     @Override
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-        return new ArrayList<>(runnable.tabCompleteOptions());
+        ArrayList<String> options = new ArrayList<>();
+        options.addAll(runnable.tabCompleteOptions());
+        options.addAll(runnable.tabCompleteOptions((EntityPlayer) sender, args, pos));
+        return options;
     }
 
 }

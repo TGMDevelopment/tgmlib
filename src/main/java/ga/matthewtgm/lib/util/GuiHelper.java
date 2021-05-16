@@ -19,11 +19,18 @@
 package ga.matthewtgm.lib.util;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.awt.*;
 
 /**
  * Used to enhance bits of code relating to the Minecraft {@link GuiScreen}.
@@ -32,6 +39,12 @@ public class GuiHelper {
 
     private static GuiScreen toOpen;
 
+    public static void fixDisplayString(GuiButton button, String display) {
+        if (!button.displayString.equals(display)) {
+            button.displayString = display;
+        }
+    }
+
     /**
      * Opens a {@link GuiScreen}. (will be most commonly used in commands.)
      *
@@ -39,6 +52,26 @@ public class GuiHelper {
      */
     public static void open(GuiScreen screen) {
         toOpen = screen;
+    }
+
+    public static void drawBackground(GuiScreen screen, int alpha) {
+        if (Minecraft.getMinecraft().theWorld == null) {
+            GlStateManager.disableLighting();
+            GlStateManager.disableFog();
+            Tessellator tessellator = Tessellator.getInstance();
+            WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+            Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.optionsBackground);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            float f = 32.0F;
+            worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+            worldrenderer.pos(0.0D, screen.height, 0.0D).tex(0.0D, ((float)screen.height / 32.0F + (float)0)).color(64, 64, 64, 255).endVertex();
+            worldrenderer.pos(screen.width, screen.height, 0.0D).tex(((float)screen.width / 32.0F), (double)((float)screen.height / 32.0F + (float)0)).color(64, 64, 64, 255).endVertex();
+            worldrenderer.pos(screen.width, 0.0D, 0.0D).tex(((float)screen.width / 32.0F), 0).color(64, 64, 64, 255).endVertex();
+            worldrenderer.pos(0.0D, 0.0D, 0.0D).tex(0.0D, 0).color(64, 64, 64, 255).endVertex();
+            tessellator.draw();
+            return;
+        }
+        Gui.drawRect(0, 0, screen.width, screen.height, new Color(0, 0, 0, 60).getRGB());
     }
 
     @SubscribeEvent

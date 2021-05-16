@@ -22,18 +22,19 @@ import ga.matthewtgm.lib.TGMLib;
 import org.apache.commons.io.IOUtils;
 
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ApiHelper {
 
     /**
-     * @param stringUrl The url to fetch from.
+     * @param url The url to fetch from.
      * @return The json returned as a string.
      * @author MatthewTGM
      */
-    public static String getJsonOnline(String stringUrl) {
+    public static String getJsonOnline(URL url) {
         try {
-            URL url = new URL(stringUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setUseCaches(false);
@@ -45,6 +46,28 @@ public class ApiHelper {
             e.printStackTrace();
             return "{\"failed\": \"true\"}";
         }
+    }
+
+    /**
+     * @param url The url to fetch from.
+     * @return The json returned as a string.
+     * @author MatthewTGM
+     */
+    public static String getJsonOnline(String url) {
+        AtomicReference<String> json = new AtomicReference<>(null);
+        ExceptionHelper.tryCatch(() -> json.set(getJsonOnline(new URL(url))));
+        return json.get();
+    }
+
+    /**
+     * @param uri The url to fetch from.
+     * @return The json returned as a string.
+     * @author MatthewTGM
+     */
+    public static String getJsonOnline(URI uri) {
+        AtomicReference<String> json = new AtomicReference<>(null);
+        ExceptionHelper.tryCatch(() -> json.set(getJsonOnline(uri.toURL())));
+        return json.get();
     }
 
 }

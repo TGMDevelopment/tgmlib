@@ -18,35 +18,21 @@
 
 package ga.matthewtgm.lib.util;
 
-import java.awt.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import org.apache.commons.lang3.ArrayUtils;
 
-/**
- * Used to create and get colours easily.
- */
-public class ColourUtils {
+import java.util.Arrays;
 
-    /**
-     * @return A changing colour based on the users computer time. Simulates a "chroma" colour.
-     * @author MatthewTGM
-     */
-    public static int timeBasedChroma() {
-        long l = System.currentTimeMillis();
-        return Color.HSBtoRGB(l % 2000L / 2000.0f, 0.8f, 0.8f);
+public class CustomClientRegistry {
+
+    public static void registerKeyBinding(KeyBinding key) {
+        Minecraft.getMinecraft().gameSettings.keyBindings = ArrayUtils.add(Minecraft.getMinecraft().gameSettings.keyBindings, key);
     }
 
-    /**
-     * @author Wyvest
-     */
-    public static Color getChroma(double x, double y) {
-        float v = 2000.0f;
-        return new Color(Color.HSBtoRGB((float)((System.currentTimeMillis() - x * 10.0 * 1.0 - y * 10.0 * 1.0) % v) / v, 0.8f, 0.8f));
-    }
-
-    /**
-     * @author Wyvest
-     */
-    public static int getAlpha(int colour) {
-        return (colour >> 24 & 255);
+    public static void unregisterKeyBinding(KeyBinding key) {
+        if (Arrays.asList(Minecraft.getMinecraft().gameSettings.keyBindings).contains(key))
+            Minecraft.getMinecraft().gameSettings.keyBindings = ArrayUtils.remove(Minecraft.getMinecraft().gameSettings.keyBindings, Arrays.asList(Minecraft.getMinecraft().gameSettings.keyBindings).indexOf(key));
     }
 
 }

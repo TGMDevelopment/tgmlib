@@ -24,7 +24,7 @@ import org.lwjgl.input.Mouse;
 
 public class MouseHelper {
 
-    private static Minecraft mc = Minecraft.getMinecraft();
+    private static final Minecraft mc = Minecraft.getMinecraft();
 
     public static int getMouseX() {
         ScaledResolution res = new ScaledResolution(mc);

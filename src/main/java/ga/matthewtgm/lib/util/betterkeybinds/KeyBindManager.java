@@ -51,13 +51,13 @@ public class KeyBindManager {
 
     @SubscribeEvent
     protected void onKeyPressed(InputEvent.KeyInputEvent event) {
-        keyBinds.forEach((keyBind, keyBinding) -> {
-            if (keyBinding.isPressed())
-                keyBind.press();
+        for (Map.Entry<KeyBind, KeyBinding> entry : keyBinds.entrySet()) {
+            if (entry.getValue().isPressed())
+                entry.getKey().press();
 
-            if (keyBinding.isKeyDown())
-                keyBind.hold();
-        });
+            if (entry.getValue().isKeyDown())
+                entry.getKey().hold();
+        }
     }
 
 }

@@ -18,35 +18,17 @@
 
 package ga.matthewtgm.lib.util;
 
-import java.awt.*;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 
-/**
- * Used to create and get colours easily.
- */
-public class ColourUtils {
+public class NpcUtils {
 
-    /**
-     * @return A changing colour based on the users computer time. Simulates a "chroma" colour.
-     * @author MatthewTGM
-     */
-    public static int timeBasedChroma() {
-        long l = System.currentTimeMillis();
-        return Color.HSBtoRGB(l % 2000L / 2000.0f, 0.8f, 0.8f);
-    }
-
-    /**
-     * @author Wyvest
-     */
-    public static Color getChroma(double x, double y) {
-        float v = 2000.0f;
-        return new Color(Color.HSBtoRGB((float)((System.currentTimeMillis() - x * 10.0 * 1.0 - y * 10.0 * 1.0) % v) / v, 0.8f, 0.8f));
-    }
-
-    /**
-     * @author Wyvest
-     */
-    public static int getAlpha(int colour) {
-        return (colour >> 24 & 255);
+    public static boolean isNPC(Entity entity) {
+        if (!(entity instanceof EntityOtherPlayerMP))
+            return false;
+        EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
+        return entity.getUniqueID().version() == 2 && entityLivingBase.getHealth() == 20.0F && !entityLivingBase.isPlayerSleeping();
     }
 
 }

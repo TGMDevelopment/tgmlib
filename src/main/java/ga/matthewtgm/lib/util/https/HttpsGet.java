@@ -32,6 +32,7 @@ public class HttpsGet {
     @Getter private String response;
     @Getter private int responseCode;
     @Getter private boolean successful;
+    @Getter private Exception error;
 
     public HttpsGet(String url) {
         this.url = url;
@@ -44,16 +45,19 @@ public class HttpsGet {
             conn.setRequestMethod("GET");
             conn.setUseCaches(true);
             conn.setRequestProperty("User-Agent", agentName + "/" + agentVersion);
-
             this.responseCode = conn.getResponseCode();
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 this.response = IOUtils.toString(conn.getInputStream(), Charset.defaultCharset());
                 this.successful = true;
-            } else
+                this.error = null;
+            } else {
                 this.successful = false;
+                this.error = new Exception("Response code wasn't 200. Response code: " + conn.getResponseCode());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             this.successful = false;
+            this.error = e;
         }
     }
 
