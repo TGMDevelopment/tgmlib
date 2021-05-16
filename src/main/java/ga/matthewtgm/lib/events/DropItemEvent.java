@@ -23,19 +23,21 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class DropItemEvent extends Event {
+    public final boolean dropAll;
+    public DropItemEvent(boolean dropAll) {
+        this.dropAll = dropAll;
+    }
     @Cancelable
     public static class Pre extends DropItemEvent {
         public final ItemStack item;
-        public final boolean dropAll;
         public Pre(ItemStack item, boolean dropAll) {
+            super(dropAll);
             this.item = item;
-            this.dropAll = dropAll;
         }
     }
     public static class Post extends DropItemEvent {
-        public final boolean dropAll;
         public Post(boolean dropAll) {
-            this.dropAll = dropAll;
+            super(dropAll);
         }
     }
 }

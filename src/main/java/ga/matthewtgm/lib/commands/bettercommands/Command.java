@@ -28,10 +28,10 @@ import java.lang.annotation.Target;
 public @interface Command {
 
     String name();
-    String usage();
-    String[] aliases();
-    String[] tabCompleteOptions();
-    int permissionLevel();
+    String usage() default "";
+    String[] aliases() default {};
+    String[] tabCompleteOptions() default {};
+    int permissionLevel() default -1;
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
@@ -41,8 +41,8 @@ public @interface Command {
     @Retention(RetentionPolicy.RUNTIME)
     @interface Argument {
         String name();
-        String[] aliases();
-        int index();
+        String[] aliases() default {};
+        int index() default 0;
     }
 
 }

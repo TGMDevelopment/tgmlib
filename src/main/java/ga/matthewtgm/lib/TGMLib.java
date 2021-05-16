@@ -17,8 +17,12 @@
  */
 
 package ga.matthewtgm.lib;
+import ga.matthewtgm.lib.commands.CommandManager;
+import ga.matthewtgm.lib.commands.bettercommands.Command;
 import ga.matthewtgm.lib.util.*;
 import ga.matthewtgm.lib.util.betterkeybinds.KeyBindManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
@@ -31,6 +35,7 @@ public class TGMLib {
     private static TGMLib INSTANCE;
 
     public static final String NAME = "TGMLib", VERSION = "@VER@", ID = "tgmlib";
+    public static final String chatPrefix = EnumChatFormatting.GRAY + "[" + EnumChatFormatting.GOLD + EnumChatFormatting.BOLD.toString() + "TGMLib" + EnumChatFormatting.RESET + EnumChatFormatting.GRAY.toString() + "]";
 
     private final Logger logger = LogManager.getLogger("TGMLib");
 
@@ -39,18 +44,38 @@ public class TGMLib {
         logger.info("Registering listeners...");
         ForgeUtils.registerEventListeners(new KeyBindManager(), new GuiHelper(), new HypixelHelper(), new Notifications());
         logger.info("Listeners registered!");
-    }
 
-    private void setupMetadata(FMLPreInitializationEvent event) {
-        event.getModMetadata().description = "Modding utility library.";
-        event.getModMetadata().authorList.clear();
-        event.getModMetadata().authorList.add("TGMDevelopment");
+        logger.info("Registering commands...");
+        CommandManager.register(TGMLibCommand.class);
+        logger.info("Commands registered!!");
     }
 
     public static TGMLib getInstance() {
         if (INSTANCE == null)
             INSTANCE = new TGMLib();
         return INSTANCE;
+    }
+
+    @Command(name = "tgmlib")
+    private static class TGMLibCommand {
+
+        @Command.Process
+        protected void process(EntityPlayer player, String[] args) {
+            if (args.length <= 0) {
+                ChatHandler.sendMessage(TGMLib.chatPrefix, EnumChatFormatting.RED + "This command requires arguments! Press tab with the command entered in chat to see options.");
+            }
+        }
+
+        @Command.Argument(name = "notitest")
+        protected void notificationTest(String[] args) {
+            Notifications.push("Test Notification", "Test Description");
+        }
+
+        @Command.Argument(name = "notitest2")
+        protected void notificationTest2(String[] args) {
+            Notifications.push("Test Clickable Notification", "Test Clickable Description", () -> ChatHandler.sendMessage(TGMLib.chatPrefix, "Notification clicked!"));
+        }
+
     }
 
 }

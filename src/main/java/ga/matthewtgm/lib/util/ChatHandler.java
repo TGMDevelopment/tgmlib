@@ -20,6 +20,8 @@ package ga.matthewtgm.lib.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 public class ChatHandler {
 
@@ -32,7 +34,42 @@ public class ChatHandler {
             return;
         if (Minecraft.getMinecraft().thePlayer == null)
             return;
-        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(msg));
+        ChatComponentText text = new ChatComponentText(msg);
+        if (post(text))
+            return;
+        Minecraft.getMinecraft().thePlayer.addChatMessage(text);
+    }
+
+    /**
+     * @param prefix The prefix to be prepended to the message.
+     * @param msg The message to send.
+     * @author MatthewTGM
+     */
+    public static void sendMessage(String prefix, String msg) {
+        if (msg == null)
+            return;
+        if (Minecraft.getMinecraft().thePlayer == null)
+            return;
+        ChatComponentText text = new ChatComponentText(prefix + " " + msg);
+        if (post(text))
+            return;
+        Minecraft.getMinecraft().thePlayer.addChatMessage(text);
+    }
+
+    /**
+     * @param prefix The prefix to be prepended to the message.
+     * @param msg The message to send.
+     * @author MatthewTGM
+     */
+    public static void sendMessage(ChatComponentText prefix, String msg) {
+        if (msg == null)
+            return;
+        if (Minecraft.getMinecraft().thePlayer == null)
+            return;
+        ChatComponentText text = (ChatComponentText) prefix.appendSibling(new ChatComponentText(msg));
+        if (post(text))
+            return;
+        Minecraft.getMinecraft().thePlayer.addChatMessage(text);
     }
 
     /**
@@ -44,7 +81,39 @@ public class ChatHandler {
             return;
         if (Minecraft.getMinecraft().thePlayer == null)
             return;
+        if (post(text))
+            return;
         Minecraft.getMinecraft().thePlayer.addChatMessage(text);
+    }
+
+    /**
+     * @param text The text to send.
+     * @author MatthewTGM
+     */
+    public static void sendMessage(ChatComponentText prefix, ChatComponentText text) {
+        if (text == null)
+            return;
+        if (Minecraft.getMinecraft().thePlayer == null)
+            return;
+        ChatComponentText msg = (ChatComponentText) prefix.appendSibling(text);
+        if (post(msg))
+            return;
+        Minecraft.getMinecraft().thePlayer.addChatMessage(msg);
+    }
+
+    /**
+     * @param text The text to send.
+     * @author MatthewTGM
+     */
+    public static void sendMessage(String prefix, ChatComponentText text) {
+        if (text == null)
+            return;
+        if (Minecraft.getMinecraft().thePlayer == null)
+            return;
+        ChatComponentText msg = (ChatComponentText) new ChatComponentText(prefix).appendSibling(text);
+        if (post(msg))
+            return;
+        Minecraft.getMinecraft().thePlayer.addChatMessage(msg);
     }
 
     /**
@@ -58,6 +127,27 @@ public class ChatHandler {
             return;
         String toString = String.valueOf(o);
         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(toString));
+    }
+
+    /**
+     * @param o The object to send.
+     * @author MatthewTGM
+     */
+    public static void sendMessage(Object prefix, Object o) {
+        if (o == null)
+            return;
+        if (Minecraft.getMinecraft().thePlayer == null)
+            return;
+        String preString = String.valueOf(prefix);
+        String oString = String.valueOf(o);
+        ChatComponentText text = new ChatComponentText(preString + " " + oString);
+        if (post(text))
+            return;
+        Minecraft.getMinecraft().thePlayer.addChatMessage(text);
+    }
+
+    private static boolean post(ChatComponentText component) {
+        return MinecraftForge.EVENT_BUS.post(new ClientChatReceivedEvent((byte) 0, component));
     }
 
 }

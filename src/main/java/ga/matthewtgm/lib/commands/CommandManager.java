@@ -98,6 +98,8 @@ public class CommandManager {
                 });
                 commandMap.put(clazz, theCommand);
             });
+        } else {
+            throw new IllegalStateException(clazz.getSimpleName() + " is not a command class!");
         }
     }
 
@@ -106,7 +108,7 @@ public class CommandManager {
             unregister(((Command) clazz.getAnnotation(Command.class)).name());
             commandMap.remove(clazz);
         } else {
-            throw new IllegalStateException("The class provided is not a command!");
+            throw new IllegalStateException(clazz.getSimpleName() + " is not a command class!");
         }
     }
 

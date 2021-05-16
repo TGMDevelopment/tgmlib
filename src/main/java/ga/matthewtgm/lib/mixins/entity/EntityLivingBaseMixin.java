@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin({EntityLivingBase.class})
 public class EntityLivingBaseMixin {
 
-    private EntityLivingBase $this = (EntityLivingBase)(Object)this;
+    private final EntityLivingBase $this = (EntityLivingBase)(Object)this;
 
     @Inject(method = "addPotionEffect", at = @At("HEAD"), cancellable = true)
     protected void addPotionEffect_pre(PotionEffect effect, CallbackInfo ci) {
