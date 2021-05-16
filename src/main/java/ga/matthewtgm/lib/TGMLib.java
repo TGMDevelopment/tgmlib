@@ -19,7 +19,6 @@
 package ga.matthewtgm.lib;
 import ga.matthewtgm.lib.util.*;
 import ga.matthewtgm.lib.util.betterkeybinds.KeyBindManager;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
@@ -32,7 +31,6 @@ public class TGMLib {
     private static TGMLib INSTANCE;
 
     public static final String NAME = "TGMLib", VERSION = "@VER@", ID = "tgmlib";
-    public static final String chatPrefix = EnumChatFormatting.GRAY + "[" + EnumChatFormatting.GOLD + EnumChatFormatting.BOLD.toString() + "TGMLib" + EnumChatFormatting.RESET + EnumChatFormatting.GRAY.toString() + "]";
 
     private final Logger logger = LogManager.getLogger("TGMLib");
 

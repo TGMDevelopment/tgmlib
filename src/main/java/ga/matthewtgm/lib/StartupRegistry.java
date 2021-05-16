@@ -34,24 +34,24 @@ public class StartupRegistry {
         logger.info("Commands registered!!");
     }
 
-    @Command(name = "tgmlib")
-    private static class TGMLibCommand {
+    @Command(name = "tgmlib", tabCompleteOptions = {"notitest1", "notitest2"})
+    public static class TGMLibCommand {
 
         @Command.Process
-        protected void process(EntityPlayer player, String[] args) {
+        protected void process(EntityPlayer sender, String[] args) {
             if (args.length <= 0) {
-                ChatHandler.sendMessage(TGMLib.chatPrefix, EnumChatFormatting.RED + "This command requires arguments! Press tab with the command entered in chat to see options.");
+                ChatHandler.sendMessage(ChatHandler.tgmLibChatPrefix, EnumChatFormatting.RED + "This command requires arguments! Press tab with the command entered in chat to see options.");
             }
         }
 
-        @Command.Argument(name = "notitest")
-        protected void notificationTest(String[] args) {
+        @Command.Argument(name = "notitest1")
+        protected void notificationTest1(String[] args) {
             Notifications.push("Test Notification", "Test Description");
         }
 
         @Command.Argument(name = "notitest2")
         protected void notificationTest2(String[] args) {
-            Notifications.push("Test Clickable Notification", "Test Clickable Description", () -> ChatHandler.sendMessage(TGMLib.chatPrefix, "Notification clicked!"));
+            Notifications.push("Test Clickable Notification", "Test Clickable Description", () -> ChatHandler.sendMessage(ChatHandler.tgmLibChatPrefix, "Notification clicked!"));
         }
 
     }

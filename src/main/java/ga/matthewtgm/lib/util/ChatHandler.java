@@ -20,10 +20,13 @@ package ga.matthewtgm.lib.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ChatHandler {
+
+    public static final String tgmLibChatPrefix = EnumChatFormatting.GRAY + "[" + EnumChatFormatting.GOLD + EnumChatFormatting.BOLD.toString() + "TGMLib" + EnumChatFormatting.RESET + EnumChatFormatting.GRAY.toString() + "]";
 
     /**
      * @param msg The message to send.
@@ -50,7 +53,7 @@ public class ChatHandler {
             return;
         if (Minecraft.getMinecraft().thePlayer == null)
             return;
-        ChatComponentText text = new ChatComponentText(prefix + " " + msg);
+        ChatComponentText text = new ChatComponentText(prefix + EnumChatFormatting.RESET + " " + msg);
         if (post(text))
             return;
         Minecraft.getMinecraft().thePlayer.addChatMessage(text);
@@ -66,7 +69,7 @@ public class ChatHandler {
             return;
         if (Minecraft.getMinecraft().thePlayer == null)
             return;
-        ChatComponentText text = (ChatComponentText) prefix.appendSibling(new ChatComponentText(msg));
+        ChatComponentText text = (ChatComponentText) prefix.appendSibling(new ChatComponentText(EnumChatFormatting.RESET + " " + msg));
         if (post(text))
             return;
         Minecraft.getMinecraft().thePlayer.addChatMessage(text);
@@ -95,7 +98,7 @@ public class ChatHandler {
             return;
         if (Minecraft.getMinecraft().thePlayer == null)
             return;
-        ChatComponentText msg = (ChatComponentText) prefix.appendSibling(text);
+        ChatComponentText msg = (ChatComponentText) prefix.appendSibling(new ChatComponentText(EnumChatFormatting.RESET + " ").appendSibling(text));
         if (post(msg))
             return;
         Minecraft.getMinecraft().thePlayer.addChatMessage(msg);
@@ -110,7 +113,7 @@ public class ChatHandler {
             return;
         if (Minecraft.getMinecraft().thePlayer == null)
             return;
-        ChatComponentText msg = (ChatComponentText) new ChatComponentText(prefix).appendSibling(text);
+        ChatComponentText msg = (ChatComponentText) new ChatComponentText(prefix + EnumChatFormatting.RESET + " ").appendSibling(text);
         if (post(msg))
             return;
         Minecraft.getMinecraft().thePlayer.addChatMessage(msg);
@@ -140,7 +143,7 @@ public class ChatHandler {
             return;
         String preString = String.valueOf(prefix);
         String oString = String.valueOf(o);
-        ChatComponentText text = new ChatComponentText(preString + " " + oString);
+        ChatComponentText text = new ChatComponentText(preString + EnumChatFormatting.RESET + " " + oString);
         if (post(text))
             return;
         Minecraft.getMinecraft().thePlayer.addChatMessage(text);
