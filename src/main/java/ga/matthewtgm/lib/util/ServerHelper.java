@@ -19,11 +19,18 @@
 package ga.matthewtgm.lib.util;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.multiplayer.GuiConnecting;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
+import net.minecraft.scoreboard.ScorePlayerTeam;
+import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,6 +88,53 @@ public class ServerHelper {
 
     public static boolean isOnServer(String ip) {
         return !mc.isSingleplayer() && mc.getCurrentServerData() != null && mc.getCurrentServerData().serverIP.equalsIgnoreCase(ip);
+    }
+
+    public static boolean doesScoreboardNameContain(String input) {
+        if (mc.theWorld != null) {
+            ScoreObjective sidebarObjective = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+            if (sidebarObjective != null) {
+                String objectiveName = StringUtils.stripControlCodes(sidebarObjective.getDisplayName());
+                return objectiveName.contains(input);
+            }
+        }
+        return false;
+    }
+
+    public static boolean doesScoreboardContentContain(String input) {
+        if (mc.theWorld != null) {
+            Scoreboard scoreboard = mc.theWorld.getScoreboard();
+            if (scoreboard != null) {
+                ScoreObjective sidebarObjective = scoreboard.getObjectiveInDisplaySlot(1);
+                if (sidebarObjective != null) {
+                    Collection<Score> scores = scoreboard.getSortedScores(sidebarObjective);
+                    for (Score score : scores) {
+                        return StringUtils.stripControlCodes(ScorePlayerTeam.formatPlayerName(scoreboard.getPlayersTeam(score.getPlayerName()), score.getPlayerName())).trim().contains(input);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean doesScoreboardContain(String input) {
+        return doesScoreboardNameContain(input) || doesScoreboardContentContain(input);
+    }
+
+    public static void joinServer(GuiScreen parent, String ip, int port) {
+        GuiHelper.open(new GuiConnecting(parent, mc, ip, port));
+    }
+
+    public static void joinServer(String ip, int port) {
+        joinServer(null, ip, port);
+    }
+
+    public static void joinServer(GuiScreen parent, ServerData data) {
+        GuiHelper.open(new GuiConnecting(parent, mc, data));
+    }
+
+    public static void joinServer(ServerData data) {
+        joinServer(null, data);
     }
 
 }
