@@ -26,50 +26,68 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class CommandQueue {
+public class MessageQueue {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
-    private static final Runnable NULL = () -> {};
 
     private static final Queue<QueueEntry> queue = new ConcurrentLinkedQueue<>();
     private static long tickDelay = 25;
-    private static long lastSent;
+    private static long tickCounter;
 
     public static void queue(String msg, Runnable runnable) {
         queue.add(new QueueEntry(msg, runnable));
     }
 
+    public static void queue(String msg, Runnable runnable, long delay) {
+        queue.add(new QueueEntry(msg, runnable, delay));
+    }
+
     public static void queue(String msg) {
-        queue(msg, NULL);
+        queue(msg, () -> {});
+    }
+
+    public static void queue(String msg, long delay) {
+        queue(msg, () -> {}, delay);
     }
 
     @SubscribeEvent
     protected void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
-            if (lastSent < tickDelay)
-                lastSent++;
+            if (tickCounter < tickDelay)
+                tickCounter++;
 
-            if (lastSent % tickDelay == 0) {
-                QueueEntry poll = queue.poll();
-                if (poll == null || poll.getMsg() == null)
-                    return;
-
-                lastSent = 0;
-                if (mc.thePlayer != null)
-                    mc.thePlayer.sendChatMessage(poll.getMsg());
-
-                if (poll.getRunnable() != null)
-                    poll.getRunnable().run();
+            QueueEntry current = queue.element();
+            if (current != null) {
+                runEntry(current, current.getDelay() == null ? tickDelay : current.getDelay());
             }
+        }
+    }
+
+    private void runEntry(QueueEntry entry, long delay) {
+        if (tickCounter % delay == 0) {
+            queue.remove(entry);
+            if (entry == null || entry.getMsg() == null)
+                return;
+
+            if (mc.thePlayer != null)
+                mc.thePlayer.sendChatMessage(entry.getMsg());
+            entry.getRunnable().run();
         }
     }
 
     private static class QueueEntry {
         @Getter private final String msg;
         @Getter private final Runnable runnable;
+        @Getter private final Long delay;
         public QueueEntry(String msg, Runnable runnable) {
             this.msg = msg;
             this.runnable = runnable;
+            this.delay = null;
+        }
+        public QueueEntry(String msg, Runnable runnable, Long delay) {
+            this.msg = msg;
+            this.runnable = runnable;
+            this.delay = delay;
         }
     }
 
