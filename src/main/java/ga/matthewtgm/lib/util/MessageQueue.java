@@ -56,9 +56,11 @@ public class MessageQueue {
             if (tickCounter < tickDelay)
                 tickCounter++;
 
-            QueueEntry current = queue.element();
-            if (current != null) {
-                runEntry(current, current.getDelay() == null ? tickDelay : current.getDelay());
+            if (!queue.isEmpty()) {
+                QueueEntry current = queue.element();
+                if (current != null) {
+                    runEntry(current, current.getDelay() == null ? tickDelay : current.getDelay());
+                }
             }
         }
     }
