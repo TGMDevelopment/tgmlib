@@ -53,27 +53,27 @@ public class MessageQueue {
     @SubscribeEvent
     protected void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
-            if (tickCounter < tickDelay)
-                tickCounter++;
+            tickCounter++;
 
             if (!queue.isEmpty()) {
                 QueueEntry current = queue.element();
-                if (current != null) {
+                if (current != null)
                     runEntry(current, current.getDelay() == null ? tickDelay : current.getDelay());
-                }
             }
         }
     }
 
     private void runEntry(QueueEntry entry, long delay) {
         if (tickCounter % delay == 0) {
-            queue.remove(entry);
             if (entry == null || entry.getMsg() == null)
                 return;
+
+            tickCounter = 0;
 
             if (mc.thePlayer != null)
                 mc.thePlayer.sendChatMessage(entry.getMsg());
             entry.getRunnable().run();
+            queue.remove(entry);
         }
     }
 

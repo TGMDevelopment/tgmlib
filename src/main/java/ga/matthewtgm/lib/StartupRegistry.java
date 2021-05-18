@@ -21,6 +21,7 @@ package ga.matthewtgm.lib;
 import ga.matthewtgm.lib.commands.CommandManager;
 import ga.matthewtgm.lib.commands.bettercommands.Command;
 import ga.matthewtgm.lib.util.ChatHandler;
+import ga.matthewtgm.lib.util.MessageQueue;
 import ga.matthewtgm.lib.util.Notifications;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
@@ -34,7 +35,7 @@ public class StartupRegistry {
         logger.info("Commands registered!!");
     }
 
-    @Command(name = "tgmlib", tabCompleteOptions = {"notitest1", "notitest2"})
+    @Command(name = "tgmlib", tabCompleteOptions = {"notitest1", "notitest2", "messagequeuetest"})
     public static class TGMLibCommand {
 
         @Command.Process
@@ -52,6 +53,14 @@ public class StartupRegistry {
         @Command.Argument(name = "notitest2")
         protected void notificationTest2(String[] args) {
             Notifications.push("Test Clickable Notification", "Test Clickable Description", () -> ChatHandler.sendMessage(ChatHandler.tgmLibChatPrefix, "Notification clicked!"));
+        }
+
+        @Command.Argument(name = "messagequeuetest")
+        protected void messageQueueTest(String[] args) {
+            MessageQueue.queue("Default delay - 25 ticks");
+            MessageQueue.queue("Default delay 2 - 25 ticks");
+            MessageQueue.queue("Default delay 3 - 25 ticks");
+            MessageQueue.queue("Custom delay - 50 ticks", 50);
         }
 
     }
