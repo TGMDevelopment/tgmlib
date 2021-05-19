@@ -32,7 +32,7 @@ public class StartupRegistry {
     static void init(Logger logger) {
         logger.info("Registering commands...");
         CommandManager.register(TGMLibCommand.class);
-        logger.info("Commands registered!!");
+        logger.info("Commands registered!");
     }
 
     @Command(name = "tgmlib", tabCompleteOptions = {"notitest1", "notitest2", "messagequeuetest"})

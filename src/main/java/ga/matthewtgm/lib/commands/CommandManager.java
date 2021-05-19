@@ -93,7 +93,12 @@ public class CommandManager {
 
                     @Override
                     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                        return Arrays.asList(command.tabCompleteOptions());
+                        List<String> ret = new ArrayList<>();
+                        for (String option  : command.tabCompleteOptions()) {
+                            if (option.startsWith(args[args.length - 1]))
+                                ret.add(option);
+                        }
+                        return new ArrayList<>(ret);
                     }
                 });
                 commandMap.put(clazz, theCommand);
