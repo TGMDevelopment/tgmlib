@@ -20,6 +20,11 @@ package ga.matthewtgm.lib;
 
 import ga.matthewtgm.lib.commands.CommandManager;
 import ga.matthewtgm.lib.commands.bettercommands.Command;
+import ga.matthewtgm.lib.gui.betterguis.AugmentedGuiScreen;
+import ga.matthewtgm.lib.gui.betterguis.AugmentedScreenManager;
+import ga.matthewtgm.lib.gui.betterguis.elements.impl.ButtonElement;
+import ga.matthewtgm.lib.gui.betterguis.elements.impl.TextFieldElement;
+import ga.matthewtgm.lib.gui.betterguis.elements.other.ElementText;
 import ga.matthewtgm.lib.util.ChatHandler;
 import ga.matthewtgm.lib.util.MessageQueue;
 import ga.matthewtgm.lib.util.Notifications;
@@ -35,7 +40,7 @@ public class StartupRegistry {
         logger.info("Commands registered!");
     }
 
-    @Command(name = "tgmlib", tabCompleteOptions = {"notitest1", "notitest2", "messagequeuetest"})
+    @Command(name = "tgmlib", tabCompleteOptions = {"notitest1", "notitest2", "messagequeuetest", "guiframeworktest"})
     public static class TGMLibCommand {
 
         @Command.Process
@@ -61,6 +66,39 @@ public class StartupRegistry {
             MessageQueue.queue("Default delay 2 - 25 ticks");
             MessageQueue.queue("Default delay 3 - 25 ticks");
             MessageQueue.queue("Custom delay - 50 ticks", 50);
+        }
+
+        @Command.Argument(name = "guiframeworktest")
+        protected void guiFrameworkTest(String[] args) {
+            AugmentedScreenManager.open(new AugmentedGuiScreen() {
+
+                private TextFieldElement textField;
+
+                @Override
+                public void init() {
+                    elements.add(new ButtonElement(0, width / 2 - 50, height - 40, 100, 20, new ElementText("Back", false, false, false), new ButtonElement.ButtonStyle.DefaultStyle(), () -> System.out.println("Attempting to go BACK!")));
+                    elements.add(new ButtonElement(1, width / 2 - 50, height - 70, 100, 20, new ElementText("Back", true, false, false), new ButtonElement.ButtonStyle.DefaultStyle(), () -> System.out.println("Attempting to go BAACK!")));
+                    elements.add(new ButtonElement(2, width / 2 - 50, height - 100, 100, 20, new ElementText("Back", false, true, false), new ButtonElement.ButtonStyle.DefaultStyle(), () -> System.out.println("Attempting to go BAAACK!")));
+                    elements.add(new ButtonElement(3, width / 2 - 50, height - 130, 100, 20, new ElementText("Back", true, true, false), new ButtonElement.ButtonStyle.DefaultStyle(), () -> System.out.println("Attempting to go BAAAACK!")));
+                    elements.add(new ButtonElement(4, width / 2 - 50, height - 160, 100, 20, new ElementText("Back", true, true, true), new ButtonElement.ButtonStyle.DefaultStyle(), () -> System.out.println("Attempting to go BAAAAACK!")));
+                }
+
+                @Override
+                public void keyTyped(char typedChar, int keyCode) {
+                    super.keyTyped(typedChar, keyCode);
+                    System.out.println(textField.getContent());
+                }
+
+                @Override
+                public void draw(int mouseX, int mouseY, float partialTicks) {
+
+                }
+
+                @Override
+                public boolean pausesGame() {
+                    return false;
+                }
+            });
         }
 
     }

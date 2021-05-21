@@ -32,6 +32,14 @@ public class MathHelper {
         return val;
     }
 
+    public static int clamp_int(int num, int min, int max) {
+        return num < min ? min : (num > max ? max : num);
+    }
+
+    public static long clamp_long(long num, long min, long max) {
+        return num < min ? min : (num > max ? max : num);
+    }
+
     public static float lerp(float start, float end, float interpolation) {
         return start + (end - start) * clamp01(interpolation);
     }

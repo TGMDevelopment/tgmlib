@@ -53,6 +53,8 @@ public class CommandManager {
             ExceptionHelper.tryCatch(() -> {
                 Object instance = clazz.newInstance();
                 Command command = (Command) clazz.getAnnotation(Command.class);
+                Method processMethod = getProcessMethod(clazz);
+                ArgumentMethod[] argumentMethods = getArgumentMethods(clazz);
                 CommandBase theCommand;
                 register(theCommand = new CommandBase() {
                     @Override
@@ -78,11 +80,9 @@ public class CommandManager {
                     @Override
                     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
                         ExceptionHelper.tryCatch(() -> {
-                            Method processMethod = getProcessMethod(clazz);
-                            if (processMethod != null)
-                                processMethod.invoke(instance, sender, args);
+                            processMethod.invoke(instance, sender, args);
                             if (!(args.length <= 0)) {
-                                for (ArgumentMethod method : getArgumentMethods(clazz)) {
+                                for (ArgumentMethod method : argumentMethods) {
                                     String arg = args[method.argument.index()];
                                     if (arg != null && arg.equalsIgnoreCase(method.argument.name()) || Arrays.stream(method.argument.aliases()).anyMatch(alias -> alias.equalsIgnoreCase(arg)))
                                         method.method.invoke(instance, (Object) args);

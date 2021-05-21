@@ -212,8 +212,30 @@ public class EnhancedFontRenderer {
      * @param y The y coordinate to render to.
      * @author MatthewTGM
      */
+    public static void drawCenteredChromaText(String text, float x, float y, boolean textShadow) {
+        drawChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, textShadow);
+    }
+
+    /**
+     * Renders a string of text to the screen.
+     * @param text The text to render.
+     * @param x The x coordinate to render to.
+     * @param y The y coordinate to render to.
+     * @author MatthewTGM
+     */
+    public static void drawCenteredChromaText(String text, double x, double y, boolean textShadow) {
+        drawChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, textShadow);
+    }
+
+    /**
+     * Renders a string of text to the screen.
+     * @param text The text to render.
+     * @param x The x coordinate to render to.
+     * @param y The y coordinate to render to.
+     * @author MatthewTGM
+     */
     public static void drawCenteredChromaText(String text, float x, float y) {
-        drawChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, false);
+        drawCenteredChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, false);
     }
 
     /**
@@ -224,7 +246,7 @@ public class EnhancedFontRenderer {
      * @author MatthewTGM
      */
     public static void drawCenteredChromaText(String text, double x, double y) {
-        drawChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, false);
+        drawCenteredChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, false);
     }
 
     /**

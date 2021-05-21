@@ -78,4 +78,13 @@ public class ColourRGB {
         return new Color(r, g, b, a).getRGB();
     }
 
+    @Override
+    public String toString() {
+        return "ColourRGB{" +
+                "r=" + r +
+                ", g=" + g +
+                ", b=" + b +
+                ", a=" + a +
+                '}';
+    }
 }
