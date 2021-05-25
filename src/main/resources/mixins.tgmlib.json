@@ -5,10 +5,10 @@
   "verbose": true,
   "refmap": "mixins.tgmlib.refmap.json",
   "mixins": [
-    "entity.EntityLivingBaseMixin",
-    "entity.EntityPlayerSPMixin",
-    "networking.NetHandlerPlayClientMxin",
-    "networking.NetworkManagerMixin",
-    "render.RenderMixin"
+    "xyz.matthewtgm.lib.mixins.entity.EntityLivingBaseMixin",
+    "xyz.matthewtgm.lib.mixins.entity.EntityPlayerSPMixin",
+    "xyz.matthewtgm.lib.mixins.networking.NetHandlerPlayClientMixin",
+    "xyz.matthewtgm.lib.mixins.networking.NetworkManagerMixin",
+    "xyz.matthewtgm.lib.mixins.render.RenderMixin"
   ]
 }
