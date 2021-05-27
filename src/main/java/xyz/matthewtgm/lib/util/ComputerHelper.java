@@ -19,6 +19,7 @@
 package xyz.matthewtgm.lib.util;
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -27,7 +28,7 @@ public class ComputerHelper {
 
     public static String getClipboardString() {
         try {
-            Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+            Transferable transferable = getClipboard().getContents(null);
             if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.stringFlavor))
                 return (String) transferable.getTransferData(DataFlavor.stringFlavor);
             return "";
@@ -40,12 +41,16 @@ public class ComputerHelper {
     public static boolean setClipboardString(String input) {
         try {
             StringSelection selection = new StringSelection(input);
-            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
+            getClipboard().setContents(selection, null);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static Clipboard getClipboard() {
+        return Toolkit.getDefaultToolkit().getSystemClipboard();
     }
 
 }

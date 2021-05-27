@@ -18,6 +18,7 @@
 
 package xyz.matthewtgm.lib.util;
 
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -26,11 +27,17 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Used to enhance bits of code relating to the Minecraft {@link GuiScreen}.
@@ -80,6 +87,91 @@ public class GuiHelper {
             Minecraft.getMinecraft().displayGuiScreen(toOpen);
             toOpen = null;
         }
+    }
+
+    public static class Editor {
+
+        @Getter private static final Map<Class<? extends GuiScreen>, List<GuiEditRunnable>> editMap = new ConcurrentHashMap<>();
+
+        public static void addEdit(Class<? extends GuiScreen> screenClz, GuiEditRunnable edit) {
+            if (screenClz == null) return;
+            if (edit == null) return;
+            editMap.putIfAbsent(screenClz, new ArrayList<>());
+            editMap.get(screenClz).add(edit);
+        }
+
+        public static void addEdits(Class<? extends GuiScreen> screenClz, GuiEditRunnable... edits) {
+            if (screenClz == null) return;
+            if (edits == null) return;
+            for (GuiEditRunnable runnable : edits)
+                addEdit(screenClz, runnable);
+        }
+
+        public static void removeEdit(Class<? extends GuiScreen> screenClz, GuiEditRunnable edit) {
+            if (screenClz == null) return;
+            if (edit == null) return;
+            if (editMap.containsKey(screenClz)) {
+                List<GuiEditRunnable> edits = editMap.get(screenClz);
+                if (edits != null && !edits.isEmpty())
+                    edits.remove(edit);
+            }
+        }
+
+        public static void removeEdits(Class<? extends GuiScreen> screenClz, GuiEditRunnable... edits) {
+            if (screenClz == null) return;
+            if (edits == null) return;
+            for (GuiEditRunnable runnable : edits)
+                removeEdit(screenClz, runnable);
+        }
+
+        @SubscribeEvent
+        protected void onGuiInit(GuiScreenEvent.InitGuiEvent event) {
+            List<GuiEditRunnable> edits = editMap.get(event.gui.getClass());
+            if (edits != null && !edits.isEmpty())
+                for (GuiEditRunnable runnable : edits)
+                    runnable.init(event.gui, event.buttonList);
+        }
+
+        @SubscribeEvent
+        protected void onGuiActionPerformed(GuiScreenEvent.ActionPerformedEvent event) {
+            List<GuiEditRunnable> edits = editMap.get(event.gui.getClass());
+            if (edits != null && !edits.isEmpty())
+                for (GuiEditRunnable runnable : edits)
+                    runnable.actionPerformed(event.gui, event.buttonList, event.button);
+        }
+
+        @SubscribeEvent
+        protected void onGuiDrawn(GuiScreenEvent.DrawScreenEvent event) {
+            List<GuiEditRunnable> edits = editMap.get(event.gui.getClass());
+            if (edits != null && !edits.isEmpty())
+                for (GuiEditRunnable runnable : edits)
+                    runnable.draw(event.gui, event.mouseX, event.mouseY, event.renderPartialTicks);
+        }
+
+        @SubscribeEvent
+        protected void onGuiInit(GuiScreenEvent.KeyboardInputEvent event) {
+            List<GuiEditRunnable> edits = editMap.get(event.gui.getClass());
+            if (edits != null && !edits.isEmpty())
+                for (GuiEditRunnable runnable : edits)
+                    runnable.keyTyped(event.gui, Keyboard.getEventCharacter(), Keyboard.getEventKey());
+        }
+
+        @SubscribeEvent
+        protected void onGuiInit(GuiScreenEvent.MouseInputEvent event) {
+            List<GuiEditRunnable> edits = editMap.get(event.gui.getClass());
+            if (edits != null && !edits.isEmpty())
+                for (GuiEditRunnable runnable : edits)
+                    runnable.mouseClicked(event.gui, Mouse.getEventButton(), MouseHelper.getMouseX(), MouseHelper.getMouseY(), Mouse.getEventDWheel());
+        }
+
+        public interface GuiEditRunnable {
+            void init(GuiScreen screen, List<GuiButton> buttonList);
+            default void actionPerformed(GuiScreen screen, List<GuiButton> buttonList, GuiButton clicked) {};
+            void draw(GuiScreen screen, int mouseX, int mouseY, float partialTicks);
+            default void keyTyped(GuiScreen screen, char typedChar, int keyCode) {};
+            default void mouseClicked(GuiScreen screen, int button, int mouseX, int mouseY, int wheel) {};
+        }
+
     }
 
 }

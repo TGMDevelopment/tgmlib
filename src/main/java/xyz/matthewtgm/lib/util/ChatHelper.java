@@ -18,29 +18,17 @@
 
 package xyz.matthewtgm.lib.util;
 
-import net.minecraft.util.StringUtils;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 
-public class StringHelper {
+public class ChatHelper {
 
-    public static String getLongestString(Object[] strings) {
-        String longestString = "";
-        int longest = 0;
-        for (Object o : strings) {
-            String string = (String) o;
-            if (string.length() > longest) {
-                longestString = string;
-                longest = string.length();
-            }
-        }
-        return longestString;
+    public static ChatComponentText buildSimple(String input) {
+        return new ChatComponentText(input);
     }
 
-    public static int getLongestStringWidth(Object[] strings) {
-        return getLongestString(strings).length();
-    }
-
-    public static String removeColourCodes(String input) {
-        return StringUtils.stripControlCodes(input);
+    public static ChatComponentTranslation buildTranslated(String input) {
+        return new ChatComponentTranslation(input);
     }
 
 }

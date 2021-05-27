@@ -19,6 +19,7 @@
 package xyz.matthewtgm.lib.util;
 
 import lombok.Getter;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -73,6 +74,11 @@ public class ForgeUtils {
             return false;
         }
         return loaded;
+    }
+
+    public static boolean isDevelopmentEnvironment() {
+        Object o = Launch.blackboard.get("fml.deobfuscatedEnvironment");
+        return o != null && (boolean)o;
     }
 
 }
