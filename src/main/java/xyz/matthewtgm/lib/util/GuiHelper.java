@@ -52,6 +52,28 @@ public class GuiHelper {
         }
     }
 
+    public static boolean isHoveringOverButton(List<GuiButton> buttonList) {
+        int mouseX = MouseHelper.getMouseX();
+        int mouseY = MouseHelper.getMouseY();
+        return buttonList.stream().anyMatch(btn -> (mouseX >= btn.xPosition && mouseX <= btn.xPosition + btn.width) && (mouseY >= btn.yPosition && mouseY <= btn.yPosition + btn.height));
+    }
+
+    public static boolean isHoveringOverButton(List<GuiButton> buttonList, int id) {
+        int mouseX = MouseHelper.getMouseX();
+        int mouseY = MouseHelper.getMouseY();
+        return buttonList.stream().anyMatch(btn -> (mouseX >= btn.xPosition && mouseX <= btn.xPosition + btn.width) && (mouseY >= btn.yPosition && mouseY <= btn.yPosition + btn.height) && btn.id == id);
+    }
+
+    public static boolean isHoveringOverButton(List<GuiButton> buttonList, GuiButton button) {
+        int mouseX = MouseHelper.getMouseX();
+        int mouseY = MouseHelper.getMouseY();
+        return buttonList.stream().anyMatch(btn -> (mouseX >= btn.xPosition && mouseX <= btn.xPosition + btn.width) && (mouseY >= btn.yPosition && mouseY <= btn.yPosition + btn.height) && btn == button);
+    }
+
+    public static void drawTooltip(List<String> textLines, int x, int y) {
+        net.minecraftforge.fml.client.config.GuiUtils.drawHoveringText(textLines, x, y, ScreenHelper.getScaledWidth(), ScreenHelper.getScaledHeight(), -1, Minecraft.getMinecraft().fontRendererObj);
+    }
+
     /**
      * Opens a {@link GuiScreen}. (will be most commonly used in commands.)
      *

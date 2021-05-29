@@ -92,7 +92,7 @@ jar {
     manifest.attributes(
             'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
             'MixinConfigs': 'mixins.tgmlib.json',
-            'FMLCorePlugin': 'ga.matthewtgm.tgmlib.mixins.TGMLibLoadingPlugin',
+            'FMLCorePlugin': 'xyz.matthewtgm.lib.mixins.TGMLibLoadingPlugin',
             'FMLCorePluginContainsFMLMod': true,
             'ForceLoadAsMod': true
     )

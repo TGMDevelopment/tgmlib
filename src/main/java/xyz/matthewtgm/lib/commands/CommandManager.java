@@ -19,6 +19,7 @@
 package xyz.matthewtgm.lib.commands;
 
 import xyz.matthewtgm.lib.commands.bettercommands.Command;
+import xyz.matthewtgm.lib.util.ArrayHelper;
 import xyz.matthewtgm.lib.util.ExceptionHelper;
 import lombok.Getter;
 import net.minecraft.command.CommandBase;
@@ -54,6 +55,8 @@ public class CommandManager {
                 Object instance = clazz.newInstance();
                 Command command = (Command) clazz.getAnnotation(Command.class);
                 Method processMethod = getProcessMethod(clazz);
+                boolean processMethodHasSenderParam = ArrayHelper.contains(processMethod.getParameterTypes(), EntityPlayer.class);
+                boolean processMethodHasArgsParam = ArrayHelper.contains(processMethod.getParameterTypes(), String[].class);
                 ArgumentMethod[] argumentMethods = getArgumentMethods(clazz);
                 CommandBase theCommand;
                 register(theCommand = new CommandBase() {
@@ -78,14 +81,18 @@ public class CommandManager {
                     }
 
                     @Override
-                    public void processCommand(ICommandSender sender, String[] args) throws CommandException {
+                    public void processCommand(ICommandSender sender, String[] args) {
                         ExceptionHelper.tryCatch(() -> {
-                            processMethod.invoke(instance, sender, args);
+                            EntityPlayer trueSender = (EntityPlayer) sender;
+                            execute(processMethod, instance, trueSender, args, processMethodHasSenderParam, processMethodHasArgsParam);
                             if (!(args.length <= 0)) {
                                 for (ArgumentMethod method : argumentMethods) {
                                     String arg = args[method.argument.index()];
-                                    if (arg != null && arg.equalsIgnoreCase(method.argument.name()) || Arrays.stream(method.argument.aliases()).anyMatch(alias -> alias.equalsIgnoreCase(arg)))
-                                        method.method.invoke(instance, (Object) args);
+                                    if (arg != null && arg.equalsIgnoreCase(method.argument.name()) || Arrays.stream(method.argument.aliases()).anyMatch(alias -> alias.equalsIgnoreCase(arg))) {
+                                        boolean methodHasSenderParam = ArrayHelper.contains(method.getMethod().getParameterTypes(), EntityPlayer.class);
+                                        boolean methodHasArgsParam = ArrayHelper.contains(method.getMethod().getParameterTypes(), String[].class);
+                                        execute(method.getMethod(), instance, trueSender, args, methodHasSenderParam, methodHasArgsParam);
+                                    }
                                 }
                             }
                         });
@@ -99,6 +106,17 @@ public class CommandManager {
                                 ret.add(option);
                         }
                         return new ArrayList<>(ret);
+                    }
+
+                    private void execute(Method method, Object instance, EntityPlayer sender, String[] args, boolean hasSender, boolean hasArgs) throws Exception {
+                        if (!hasSender && !hasArgs)
+                            method.invoke(instance);
+                        if (hasSender && !hasArgs)
+                            method.invoke(instance, sender);
+                        if (!hasSender && hasArgs)
+                            method.invoke(instance, (Object) args);
+                        if (hasSender && hasArgs)
+                            method.invoke(instance, sender, args);
                     }
                 });
                 commandMap.put(clazz, theCommand);
@@ -122,7 +140,7 @@ public class CommandManager {
         for (Method method : clazz.getDeclaredMethods()) {
             if (!method.isAccessible())
                 method.setAccessible(true);
-            if (method.isAnnotationPresent(Command.Process.class) && method.getParameterTypes() != null && !Arrays.asList(method.getParameterTypes()).isEmpty() && method.getParameterTypes()[0].isAssignableFrom(EntityPlayer.class) && method.getParameterTypes()[1].isAssignableFrom(String[].class))
+            if (method.isAnnotationPresent(Command.Process.class))
                 ret = method;
         }
         return ret;
@@ -133,7 +151,7 @@ public class CommandManager {
         for (Method method : clazz.getDeclaredMethods()) {
             if (!method.isAccessible())
                 method.setAccessible(true);
-            if (method.isAnnotationPresent(Command.Argument.class) && method.getParameterTypes() != null && !Arrays.asList(method.getParameterTypes()).isEmpty() && method.getParameterTypes()[0].isAssignableFrom(String[].class))
+            if (method.isAnnotationPresent(Command.Argument.class))
                 methodList.add(new ArgumentMethod(method, method.getAnnotation(Command.Argument.class)));
         }
         return methodList.toArray(new ArgumentMethod[0]);

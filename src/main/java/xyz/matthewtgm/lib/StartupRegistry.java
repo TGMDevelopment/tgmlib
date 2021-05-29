@@ -18,19 +18,24 @@
 
 package xyz.matthewtgm.lib;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import xyz.matthewtgm.lib.commands.CommandManager;
 import xyz.matthewtgm.lib.commands.bettercommands.Command;
+import xyz.matthewtgm.lib.gui.GuiTransButton;
 import xyz.matthewtgm.lib.gui.betterguis.AugmentedGuiScreen;
 import xyz.matthewtgm.lib.gui.betterguis.AugmentedScreenManager;
 import xyz.matthewtgm.lib.gui.betterguis.elements.impl.ButtonElement;
 import xyz.matthewtgm.lib.gui.betterguis.elements.impl.TextFieldElement;
 import xyz.matthewtgm.lib.gui.betterguis.elements.other.ElementText;
-import xyz.matthewtgm.lib.util.ChatHandler;
-import xyz.matthewtgm.lib.util.MessageQueue;
-import xyz.matthewtgm.lib.util.Notifications;
+import xyz.matthewtgm.lib.util.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class StartupRegistry {
 
@@ -48,6 +53,43 @@ public class StartupRegistry {
             if (args.length <= 0) {
                 ChatHandler.sendMessage(ChatHandler.tgmLibChatPrefix, EnumChatFormatting.RED + "This command requires arguments! Press tab with the command entered in chat to see options.");
             }
+        }
+
+        @Command.Argument(name = "guitest")
+        protected void guiTest(String[] args) {
+            boolean tooltip = ArrayHelper.contains(args, "tooltip");
+            boolean hoverButtonChecks = ArrayHelper.contains(args, "buttonHovers");
+            GuiHelper.open(new GuiScreen() {
+
+                public void initGui() {
+                    buttonList.add(new GuiTransButton(0, width / 2 - 50, height - 20, 100, 20, "Close") {
+                        public boolean mousePressed(final Minecraft mc, final int mouseX, final int mouseY) {
+                            if (super.mousePressed(mc, mouseX, mouseY))
+                                mc.displayGuiScreen(null);
+                            return false;
+                        }
+                    });
+                    buttonList.add(new GuiTransButton(1, width / 2 - 50, height - 50, 100, 20, "Eee") {
+                        public boolean mousePressed(final Minecraft mc, final int mouseX, final int mouseY) {
+                            if (super.mousePressed(mc, mouseX, mouseY))
+                                ChatHandler.sendMessage("Eee!");
+                            return false;
+                        }
+                    });
+                }
+
+                public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
+                    if (tooltip)
+                        GuiHelper.drawTooltip(new ArrayList<>(Collections.singletonList("Hello, World!")), mouseX, mouseY);
+                    if (hoverButtonChecks) {
+                        System.out.println("Simple hover check:" + GuiHelper.isHoveringOverButton(buttonList));
+                        System.out.println("Hover check for button with id 1:" + GuiHelper.isHoveringOverButton(buttonList, 1));
+                        System.out.println("Hover check for back button: " + GuiHelper.isHoveringOverButton(buttonList, buttonList.get(0)));
+                    }
+                    super.drawScreen(mouseX, mouseY, partialTicks);
+                }
+
+            });
         }
 
         @Command.Argument(name = "notitest1")
