@@ -19,6 +19,7 @@
 package xyz.matthewtgm.lib.util;
 
 import lombok.Getter;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -29,15 +30,23 @@ public class ScreenHelper {
    private static ScaledResolution resolution;
 
    public static int getScaledWidth() {
+       makeNullChecks();
        return resolution.getScaledWidth();
    }
 
    public static int getScaledHeight() {
+       makeNullChecks();
        return resolution.getScaledHeight();
    }
 
    public static int getScaleFactor() {
+       makeNullChecks();
        return resolution.getScaleFactor();
+   }
+
+   private static void makeNullChecks() {
+       if (resolution == null)
+           resolution = new ScaledResolution(Minecraft.getMinecraft());
    }
 
    @SubscribeEvent

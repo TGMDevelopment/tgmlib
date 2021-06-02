@@ -19,11 +19,31 @@
 package xyz.matthewtgm.lib.util;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class ArrayHelper {
 
-    public static boolean contains(Object[] array, Object check) {
+    public static <T> List<T> convert(T[] array) {
+        return Arrays.asList(array);
+    }
+
+    public static <T> Object[] convert(List<T> list) {
+        return list.toArray();
+    }
+
+    public static <T> boolean contains(T[] array, T check) {
         return Arrays.asList(array).contains(check);
+    }
+
+    public static <T> Stream<T> filter(List<T> list, Predicate<? super T> predicate) {
+        return list.stream().filter(predicate);
+    }
+
+    public static <T> Stream<T> filter(T[] array, Predicate<? super T> predicate) {
+        return convert(array).stream().filter(predicate);
     }
 
 }

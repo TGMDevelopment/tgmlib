@@ -19,6 +19,7 @@
 package xyz.matthewtgm.lib.util;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.StringUtils;
 
@@ -28,6 +29,28 @@ import java.awt.*;
 public class EnhancedFontRenderer {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
+
+    public static FontRenderer getFontRenderer() {
+        return mc.fontRendererObj;
+    }
+
+    /**
+     * @param input The input to return the width of.
+     * @return The width of the given input.
+     * @author Mojang/Minecraft
+     */
+    public static int getWidth(CharSequence input) {
+        return getFontRenderer().getStringWidth(input.toString());
+    }
+
+    /**
+     * @param input The input to return the width of.
+     * @return The width of the given input.
+     * @author Mojang/Minecraft
+     */
+    public static int getWidth(char input) {
+        return getFontRenderer().getCharWidth(input);
+    }
 
     /**
      * Renders a string of text to the screen.
@@ -39,7 +62,7 @@ public class EnhancedFontRenderer {
      * @author MatthewTGM
      */
     public static void drawText(String text, float x, float y, int colour, boolean dropShadow) {
-        mc.fontRendererObj.drawString(text, x, y, colour, dropShadow);
+        getFontRenderer().drawString(text, x, y, colour, dropShadow);
     }
 
     /**
@@ -102,7 +125,7 @@ public class EnhancedFontRenderer {
             int col = ColourUtils.getChroma(x, y).getRGB();
             String charStr = String.valueOf(c);
             drawText(charStr, x, y, col, dropShadow);
-            x += mc.fontRendererObj.getStringWidth(charStr);
+            x += getWidth(charStr);
         }
     }
 
@@ -119,7 +142,7 @@ public class EnhancedFontRenderer {
             int col = ColourUtils.getChroma(x, y).getRGB();
             String charStr = String.valueOf(c);
             drawText(charStr, x, y, col, dropShadow);
-            x += mc.fontRendererObj.getStringWidth(charStr);
+            x += getWidth(charStr);
         }
     }
 
@@ -133,7 +156,7 @@ public class EnhancedFontRenderer {
      * @author Minecraft/Mojang
      */
     public static void drawCenteredText(String text, float x, float y, int colour, boolean dropShadow) {
-        drawText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, colour, dropShadow);
+        drawText(text, (x - getWidth(text) / 2), y, colour, dropShadow);
     }
 
     /**
@@ -146,7 +169,7 @@ public class EnhancedFontRenderer {
      * @author Minecraft/Mojang
      */
     public static void drawCenteredText(String text, double x, double y, int colour, boolean dropShadow) {
-        drawText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, colour, dropShadow);
+        drawText(text, (x - getWidth(text) / 2), y, colour, dropShadow);
     }
 
     /**
@@ -213,7 +236,7 @@ public class EnhancedFontRenderer {
      * @author MatthewTGM
      */
     public static void drawCenteredChromaText(String text, float x, float y, boolean textShadow) {
-        drawChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, textShadow);
+        drawChromaText(text, (x - getWidth(text) / 2), y, textShadow);
     }
 
     /**
@@ -224,7 +247,7 @@ public class EnhancedFontRenderer {
      * @author MatthewTGM
      */
     public static void drawCenteredChromaText(String text, double x, double y, boolean textShadow) {
-        drawChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, textShadow);
+        drawChromaText(text, (x - getWidth(text) / 2), y, textShadow);
     }
 
     /**
@@ -235,7 +258,7 @@ public class EnhancedFontRenderer {
      * @author MatthewTGM
      */
     public static void drawCenteredChromaText(String text, float x, float y) {
-        drawCenteredChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, false);
+        drawCenteredChromaText(text, (x - getWidth(text) / 2), y, false);
     }
 
     /**
@@ -246,7 +269,7 @@ public class EnhancedFontRenderer {
      * @author MatthewTGM
      */
     public static void drawCenteredChromaText(String text, double x, double y) {
-        drawCenteredChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, false);
+        drawCenteredChromaText(text, (x - getWidth(text) / 2), y, false);
     }
 
     /**
@@ -319,11 +342,11 @@ public class EnhancedFontRenderer {
         int colAlpha = Math.max(ColourUtils.getAlpha(colour), 4);
         int colBlack = new Color(0, 0, 0, colAlpha / 255).getRGB();
         String stripped = StringUtils.stripControlCodes(text);
-        mc.fontRendererObj.drawString(stripped,1, 0, colBlack);
-        mc.fontRendererObj.drawString(stripped, -1, 0, colBlack);
-        mc.fontRendererObj.drawString(stripped, 0, 1, colBlack);
-        mc.fontRendererObj.drawString(stripped, 0, -1, colBlack);
-        mc.fontRendererObj.drawString(text, 0, 0, colour);
+        drawText(stripped,1, 0, colBlack);
+        drawText(stripped, -1, 0, colBlack);
+        drawText(stripped, 0, 1, colBlack);
+        drawText(stripped, 0, -1, colBlack);
+        drawText(text, 0, 0, colour);
         GlStateManager.popMatrix();
     }
 
@@ -383,7 +406,7 @@ public class EnhancedFontRenderer {
             int col = ColourUtils.getChroma(x, y).getRGB();
             String charStr = String.valueOf(c);
             drawStyledText(charStr, x, y, col);
-            x += mc.fontRendererObj.getStringWidth(charStr);
+            x += getWidth(charStr);
         }
     }
 
@@ -399,7 +422,7 @@ public class EnhancedFontRenderer {
             int col = ColourUtils.getChroma(x, y).getRGB();
             String charStr = String.valueOf(c);
             drawStyledText(charStr, x, y, col);
-            x += mc.fontRendererObj.getStringWidth(charStr);
+            x += getWidth(charStr);
         }
     }
 
@@ -442,7 +465,7 @@ public class EnhancedFontRenderer {
      * @author MatthewTGM
      */
     public static void drawCenteredStyledText(String text, float x, float y, int colour) {
-        drawStyledText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, colour);
+        drawStyledText(text, (x - getWidth(text) / 2), y, colour);
     }
 
     /**
@@ -454,7 +477,7 @@ public class EnhancedFontRenderer {
      * @author MatthewTGM
      */
     public static void drawCenteredStyledText(String text, double x, double y, int colour) {
-        drawStyledText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y, colour);
+        drawStyledText(text, (x - getWidth(text) / 2), y, colour);
     }
 
     /**
@@ -497,7 +520,7 @@ public class EnhancedFontRenderer {
      * @author MatthewTGM
      */
     public static void drawCenteredStyledChromaText(String text, float x, float y) {
-        drawStyledChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y);
+        drawStyledChromaText(text, (x - getWidth(text) / 2), y);
     }
 
     /**
@@ -508,7 +531,7 @@ public class EnhancedFontRenderer {
      * @author MatthewTGM
      */
     public static void drawCenteredStyledChromaText(String text, double x, double y) {
-        drawStyledChromaText(text, (x - mc.fontRendererObj.getStringWidth(text) / 2), y);
+        drawStyledChromaText(text, (x - getWidth(text) / 2), y);
     }
 
     /**

@@ -16,3 +16,6 @@ gradle-app.setting
 
 # Minecraft
 /run/
+
+# TGMLib
+/legacy-builds/

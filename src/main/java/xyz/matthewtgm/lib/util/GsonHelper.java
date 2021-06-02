@@ -18,18 +18,20 @@
 
 package xyz.matthewtgm.lib.util;
 
-public class ObjectHelper {
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-    public static <T> T ensureNotNull(Object o) {
-        T ret;
-        try {
-            if (o == null) ret = (T) o.getClass().newInstance();
-            else ret = (T) o;
-        } catch (Exception e) {
-            e.printStackTrace();
-            ret = ensureNotNull(o);
-        }
-        return ret;
+public class GsonHelper {
+
+    private static final Gson gson = new GsonBuilder().create();
+    private static final Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
+
+    public static Gson getGson() {
+        return gson;
+    }
+
+    public static Gson getGsonPretty() {
+        return gsonPretty;
     }
 
 }

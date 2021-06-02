@@ -60,27 +60,23 @@ public class CommandManager {
                 ArgumentMethod[] argumentMethods = getArgumentMethods(clazz);
                 CommandBase theCommand;
                 register(theCommand = new CommandBase() {
-                    @Override
+
                     public String getCommandName() {
                         return command.name();
                     }
 
-                    @Override
                     public List<String> getCommandAliases() {
                         return Arrays.asList(command.aliases());
                     }
 
-                    @Override
                     public String getCommandUsage(ICommandSender sender) {
                         return command.usage();
                     }
 
-                    @Override
                     public int getRequiredPermissionLevel() {
                         return command.permissionLevel();
                     }
 
-                    @Override
                     public void processCommand(ICommandSender sender, String[] args) {
                         ExceptionHelper.tryCatch(() -> {
                             EntityPlayer trueSender = (EntityPlayer) sender;
@@ -98,7 +94,6 @@ public class CommandManager {
                         });
                     }
 
-                    @Override
                     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
                         List<String> ret = new ArrayList<>();
                         for (String option  : command.tabCompleteOptions()) {

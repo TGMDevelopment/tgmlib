@@ -70,9 +70,8 @@ public class TitleHandler {
             int stringWidth = mc.fontRendererObj.getStringWidth(titleString);
 
             float scale = 4; // Scale is normally 4, but if its larger than the screen, scale it down...
-            if (stringWidth * scale > (scaledWidth * 0.9F)) {
+            if (stringWidth * scale > (scaledWidth * 0.9F))
                 scale = (scaledWidth * 0.9F) / (float) stringWidth;
-            }
 
             GlStateManager.pushMatrix();
             GlStateManager.translate((float) (scaledWidth / 2), (float) (scaledHeight / 2), 0.0F);
@@ -81,7 +80,7 @@ public class TitleHandler {
             GlStateManager.pushMatrix();
             GlStateManager.scale(scale, scale, scale);
 
-            mc.fontRendererObj.drawString(titleString, (float) (-mc.fontRendererObj.getStringWidth(titleString) / 2), -20.0F, titleColour == null ? 0xFF0000 : titleColour.getRGBA(), true);
+            EnhancedFontRenderer.drawText(titleString, (float) (-mc.fontRendererObj.getStringWidth(titleString) / 2), -20.0F, titleColour == null ? 0xFF0000 : titleColour.getRGBA(), true);
 
             GlStateManager.popMatrix();
             GlStateManager.popMatrix();
