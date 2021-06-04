@@ -34,10 +34,12 @@ buildscript {
     }
     dependencies {
         classpath 'com.github.asbyth:ForgeGradle:f6500bf402'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
         classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
@@ -46,6 +48,13 @@ version = project.mod_ver
 group = project.mod_group
 
 sourceCompatibility = targetCompatibility = 1.8
+
+Dependency[] deps = [
+        new Dependency("xyz.matthewtgm", "JsonTGM", "1.2", true, (String[])["gson"]),
+        new Dependency("xyz.matthewtgm", "TGMConfig", "1.5", true),
+        new Dependency("org.spongepowered", "mixin", "0.7.11-SNAPSHOT", true, (String[])["launchwrapper", "guava", "gson", "commons-io"], true),
+        new Dependency("org.projectlombok", "lombok", "1.18.16", false, true)
+]
 
 sourceSets {
     main {
@@ -74,19 +83,33 @@ minecraft {
 }
 
 dependencies {
-    compile('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
-        exclude module: 'launchwrapper'
-        exclude module: 'guava'
-        exclude module: 'gson'
-        exclude module: 'commons-io'
+    for (Dependency dep : deps) {
+        compile(dep.getFullDep()) {
+            if (dep.getExcluded().length > 0) {
+                for (String excluded : dep.getExcluded()) {
+                    exclude module: excluded
+                }
+            }
+        }
+        if (dep.isAnnotationProc()) annotationProcessor(dep.getFullDep())
     }
-    annotationProcessor('org.spongepowered:mixin:0.7.11-SNAPSHOT')
+}
 
-    compile('xyz.matthewtgm:JsonTGM:1.2')
-    compile('xyz.matthewtgm:TGMConfig:1.5')
+shadowJar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    dependencies {
+        include(dependency('org.spongepowered:mixin:0.7.11-SNAPSHOT'))
 
-    implementation('org.projectlombok:lombok:1.18.16')
-    annotationProcessor('org.projectlombok:lombok:1.18.16')
+        for (Dependency dep : deps)
+            if (dep.isShade())
+                include(dependency(dep.getFullDep()))
+    }
+
+    exclude('LICENSE.txt')
+    exclude('dummyThing')
+    exclude('module-info.class')
+
+    classifier = ''
 }
 
 jar {
@@ -100,12 +123,7 @@ jar {
             'ForceLoadAsMod': true
     )
 
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
-    exclude 'LICENSE.txt'
 }
 
 mixin {
@@ -133,4 +151,59 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+/* Custom dependency stuff. */
+@SuppressWarnings("unused")
+class Dependency {
+
+    String group
+    String name
+    String version
+    String[] excluded
+    boolean shade
+    boolean annotationProc
+    final String fullDep
+
+    Dependency(String group, String name, String version, boolean shade) {
+        this.group = group
+        this.name = name
+        this.version = version
+        this.shade = shade
+        this.excluded = []
+        this.annotationProc = false
+
+        this.fullDep = group + ":" + name + ":" + version
+    }
+    Dependency(String group, String name, String version, boolean shade, String[] excluded) {
+        this.group = group
+        this.name = name
+        this.version = version
+        this.shade = shade
+        this.excluded = excluded
+        this.annotationProc = false
+
+        this.fullDep = group + ":" + name + ":" + version
+    }
+    Dependency(String group, String name, String version, boolean shade, boolean annotationProc) {
+        this.group = group
+        this.name = name
+        this.version = version
+        this.shade = shade
+        this.excluded = []
+        this.annotationProc = annotationProc
+
+        this.fullDep = group + ":" + name + ":" + version
+    }
+    Dependency(String group, String name, String version, boolean shade, String[] excluded, boolean annotationProc) {
+        this.group = group
+        this.name = name
+        this.version = version
+        this.shade = shade
+        this.excluded = excluded
+        this.annotationProc = annotationProc
+
+        this.fullDep = group + ":" + name + ":" + version
+    }
+
 }
