@@ -21,6 +21,7 @@ package xyz.matthewtgm.lib.util;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -43,6 +44,23 @@ public class ScreenHelper {
        makeNullChecks();
        return resolution.getScaleFactor();
    }
+
+   public static void updateOrtho() {
+       updateOrtho(Minecraft.getMinecraft().gameSettings.guiScale);
+   }
+
+    public static void updateOrtho(int scaleFactor) {
+        updateOrtho(new CustomScaledResolution(Minecraft.getMinecraft(), scaleFactor));
+    }
+
+    public static void updateOrtho(CustomScaledResolution res) {
+        GlStateManager.matrixMode(5889);
+        GlStateManager.loadIdentity();
+        GlStateManager.ortho(0.0d, res.getScaledWidth_double(), res.getScaledHeight_double(), 0.0d, 1000.0d, 3000.0d);
+        GlStateManager.matrixMode(5888);
+        GlStateManager.loadIdentity();
+        GlStateManager.translate(0.0f, 0.0f, -2000.0f);
+    }
 
    private static void makeNullChecks() {
        if (resolution == null) resolution = new ScaledResolution(Minecraft.getMinecraft());

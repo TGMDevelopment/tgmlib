@@ -20,12 +20,11 @@ package xyz.matthewtgm.lib.config;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import xyz.matthewtgm.lib.config.gui.ConfigMenuCategoryElement;
 import xyz.matthewtgm.lib.config.gui.ConfigMenuElement;
-import xyz.matthewtgm.lib.util.ExceptionHelper;
-import xyz.matthewtgm.lib.util.GuiHelper;
-import xyz.matthewtgm.lib.util.RenderHelper;
+import xyz.matthewtgm.lib.util.*;
 
 import java.awt.*;
 import java.io.IOException;
@@ -51,20 +50,12 @@ public class ConfigScreenGenerator {
         public final ConfigMenu menu;
         public final List<ConfigMenu.ConfigOptionHolder> options;
 
-        private Integer originalGuiScale;
-
         GuiConfigScreen(ConfigMenu menu, List<ConfigMenu.ConfigOptionHolder> options) {
             this.menu = menu;
             this.options = options;
         }
 
-        public void setWorldAndResolution(Minecraft mc, int width, int height) {
-            fixGuiScale();
-            super.setWorldAndResolution(mc, width, height);
-        }
-
         public void initGui() {
-            fixGuiScale();
             configMenuElements.clear();
             for (ConfigMenu.ConfigOptionHolder optionHolder : options) if (categories.stream().noneMatch(category -> category.equalsIgnoreCase(optionHolder.option.category()))) categories.add(optionHolder.option.category());
             AtomicInteger yCategoryOffset = new AtomicInteger(0);
@@ -76,6 +67,7 @@ public class ConfigScreenGenerator {
 
         public void drawScreen(int mouseX, int mouseY, float partialTicks) {
             fixGuiScale();
+
             GuiHelper.drawBackground(this, 60);
             RenderHelper.drawHollowRect(10, 10, width - 20, height - 20, new Color(255, 255, 255, 255).getRGB());
             int categoryDividerX = 120;
@@ -90,13 +82,6 @@ public class ConfigScreenGenerator {
             for (ConfigMenuElement element : configMenuElements) if (element != null) element.render(mouseX, mouseY, partialTicks);
 
             super.drawScreen(mouseX, mouseY, partialTicks);
-        }
-
-        public void onGuiClosed() {
-            System.out.println(originalGuiScale);
-            System.out.println(mc.gameSettings.guiScale);
-            mc.gameSettings.guiScale = originalGuiScale;
-            originalGuiScale = null;
         }
 
         protected void keyTyped(char typedChar, int keyCode) throws IOException {
@@ -121,9 +106,12 @@ public class ConfigScreenGenerator {
         }
 
         private void fixGuiScale() {
-            Minecraft mc = Minecraft.getMinecraft();
-            if (originalGuiScale == null) originalGuiScale = mc.gameSettings.guiScale;
-            mc.gameSettings.guiScale = 2;
+            CustomScaledResolution res = new CustomScaledResolution(mc, 2);
+            ScreenHelper.updateOrtho(res);
+            int scaledWidth = res.getScaledWidth();
+            int scaledHeight = res.getScaledHeight();
+            if (width != scaledWidth) width = scaledWidth;
+            if (height != scaledHeight) height = scaledHeight;
         }
 
     }
