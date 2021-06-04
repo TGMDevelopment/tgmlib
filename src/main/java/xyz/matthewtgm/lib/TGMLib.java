@@ -18,6 +18,7 @@
 
 package xyz.matthewtgm.lib;
 
+import xyz.matthewtgm.lib.startup.StartupRegistry;
 import xyz.matthewtgm.lib.util.*;
 import xyz.matthewtgm.lib.util.betterkeybinds.KeyBindManager;
 import net.minecraftforge.fml.common.Mod;
@@ -27,6 +28,8 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(name = TGMLib.NAME, version = TGMLib.VERSION, modid = TGMLib.ID)
 public class TGMLib {
+
+    // TODO | 2021/06/03 | Resource caching.
 
     @Mod.Instance
     private static TGMLib INSTANCE;

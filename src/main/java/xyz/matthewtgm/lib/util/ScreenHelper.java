@@ -45,8 +45,7 @@ public class ScreenHelper {
    }
 
    private static void makeNullChecks() {
-       if (resolution == null)
-           resolution = new ScaledResolution(Minecraft.getMinecraft());
+       if (resolution == null) resolution = new ScaledResolution(Minecraft.getMinecraft());
    }
 
    @SubscribeEvent

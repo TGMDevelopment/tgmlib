@@ -18,6 +18,7 @@
 
 package xyz.matthewtgm.lib.mixins;
 
+import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.Mixins;
@@ -25,7 +26,7 @@ import org.spongepowered.asm.mixin.Mixins;
 import java.util.Map;
 
 
-@IFMLLoadingPlugin.SortingIndex(99)
+@IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
 public class TGMLibLoadingPlugin implements IFMLLoadingPlugin {
 
     public TGMLibLoadingPlugin() {

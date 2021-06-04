@@ -34,6 +34,10 @@ public class EnhancedFontRenderer {
         return mc.fontRendererObj;
     }
 
+    public static int getFontHeight() {
+        return mc.fontRendererObj.FONT_HEIGHT;
+    }
+
     /**
      * @param input The input to return the width of.
      * @return The width of the given input.

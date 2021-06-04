@@ -47,9 +47,7 @@ public class GuiHelper {
     private static GuiScreen toOpen;
 
     public static void fixDisplayString(GuiButton button, String display) {
-        if (!button.displayString.equals(display)) {
-            button.displayString = display;
-        }
+        if (!button.displayString.equals(display)) button.displayString = display;
     }
 
     public static boolean isHoveringOverButton(List<GuiButton> buttonList) {
@@ -94,13 +92,11 @@ public class GuiHelper {
             float f = 32.0F;
             worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
             worldrenderer.pos(0.0D, screen.height, 0.0D).tex(0.0D, ((float)screen.height / 32.0F + (float)0)).color(64, 64, 64, 255).endVertex();
-            worldrenderer.pos(screen.width, screen.height, 0.0D).tex(((float)screen.width / 32.0F), (double)((float)screen.height / 32.0F + (float)0)).color(64, 64, 64, 255).endVertex();
+            worldrenderer.pos(screen.width, screen.height, 0.0D).tex(((float)screen.width / 32.0F), ((float)screen.height / 32.0F + (float)0)).color(64, 64, 64, 255).endVertex();
             worldrenderer.pos(screen.width, 0.0D, 0.0D).tex(((float)screen.width / 32.0F), 0).color(64, 64, 64, 255).endVertex();
             worldrenderer.pos(0.0D, 0.0D, 0.0D).tex(0.0D, 0).color(64, 64, 64, 255).endVertex();
             tessellator.draw();
-            return;
-        }
-        Gui.drawRect(0, 0, screen.width, screen.height, new Color(0, 0, 0, 60).getRGB());
+        } else Gui.drawRect(0, 0, screen.width, screen.height, new Color(0, 0, 0, alpha).getRGB());
     }
 
     @SubscribeEvent
