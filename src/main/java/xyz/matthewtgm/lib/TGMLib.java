@@ -18,18 +18,18 @@
 
 package xyz.matthewtgm.lib;
 
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import xyz.matthewtgm.lib.startup.StartupRegistry;
 import xyz.matthewtgm.lib.util.*;
 import xyz.matthewtgm.lib.util.betterkeybinds.KeyBindManager;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(name = TGMLib.NAME, version = TGMLib.VERSION, modid = TGMLib.ID)
 public class TGMLib {
-
-    // TODO | 2021/06/03 | Resource caching.
 
     @Mod.Instance
     private static TGMLib INSTANCE;
@@ -40,11 +40,22 @@ public class TGMLib {
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
-        logger.info("Registering listeners...");
-        ForgeUtils.registerEventListeners(new KeyBindManager(), new ScreenHelper(), new GuiHelper(), new GuiHelper.Editor(), new HypixelHelper(), new TitleHandler(), new Notifications(), new MessageQueue());
-        logger.info("Listeners registered!");
+        StartupRegistry startupRegistry = new StartupRegistry();
+        startupRegistry.init(logger);
 
-        StartupRegistry.init(logger);
+        logger.info("Registering listeners...");
+        ForgeUtils.registerEventListeners(startupRegistry, new KeyBindManager(), new ScreenHelper(), new GuiHelper(), new GuiHelper.Editor(), new HypixelHelper(), new TitleHandler(), new Notifications(), new MessageQueue());
+        logger.info("Listeners registered!");
+    }
+
+    @Mod.EventHandler
+    public void onInit(FMLInitializationEvent event) {
+        logger.info("Downloading resources...");
+        ResourceCaching.download("TGMLib", "button_light.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/button_light.png");
+        ResourceCaching.download("TGMLib", "button_dark.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/button_dark.png");
+        ResourceCaching.download("TGMLib", "switch_on.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/config_framework/switch_on.png");
+        ResourceCaching.download("TGMLib", "switch_off.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/config_framework/switch_off.png");
+        logger.info("Resources downloaded!");
     }
 
     public static TGMLib getInstance() {

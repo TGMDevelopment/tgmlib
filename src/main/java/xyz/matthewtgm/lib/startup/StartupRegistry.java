@@ -18,18 +18,39 @@
 
 package xyz.matthewtgm.lib.startup;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.matthewtgm.lib.commands.CommandManager;
 import org.apache.logging.log4j.Logger;
+import xyz.matthewtgm.lib.util.RenderHelper;
+
+import java.awt.*;
 
 public class StartupRegistry {
 
     /**
      * SHOULD ONLY BE USED IN TGMLib CLASSES.
      */
-    public static void init(Logger logger) {
+    public void init(Logger logger) {
         logger.info("Registering commands...");
         CommandManager.register(TGMLibCommand.class);
         logger.info("Commands registered!");
+    }
+
+    @SubscribeEvent
+    protected void onWorldRendered(RenderLivingEvent.Post event) {
+        if (TGMLibCommand.drawThreeDimText && !(event.entity instanceof EntityPlayer)) {
+            RenderHelper.drawThreeDimensionalText(event.entity.getDisplayName().getFormattedText(), event.x, event.y + 3, event.z, true, true, new Color(255, 255, 255));
+            RenderHelper.drawThreeDimensionalText(round(event.entity.posX) + " / " + round(event.entity.posY) + " / " + round(event.entity.posZ), event.x, event.y + 2, event.z, false, true, new Color(255, 255, 255));
+        }
+    }
+
+    private String round(double integer) {
+        return String.valueOf(Math.round(integer));
     }
 
 }

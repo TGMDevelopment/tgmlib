@@ -71,11 +71,15 @@ public class ColourRGB {
     }
 
     public int getRGB() {
-        return new Color(r, g, b).getRGB();
+        return toJavaColor().getRGB();
     }
 
     public int getRGBA() {
-        return new Color(r, g, b, a).getRGB();
+        return toJavaColor().getRGB();
+    }
+
+    public Color toJavaColor() {
+        return new Color(r, g, b, a);
     }
 
     @Override

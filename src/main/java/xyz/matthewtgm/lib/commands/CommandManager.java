@@ -96,7 +96,23 @@ public class CommandManager {
 
                     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
                         List<String> ret = new ArrayList<>();
-                        for (String option  : command.tabCompleteOptions()) if (option.startsWith(args[args.length - 1])) ret.add(option);
+                        if (args.length == 1) {
+                            for (String option : command.tabCompleteOptions()) {
+                                if (option.startsWith(args[args.length - 1])) {
+                                    ret.add(option);
+                                }
+                            }
+                        } else {
+                            for (ArgumentMethod argMethod : argumentMethods) {
+                                if (argMethod.argument.name().equalsIgnoreCase(args[0])) {
+                                    for (String argOption : argMethod.argument.tabCompleteOptions()) {
+                                        if (argOption.startsWith(args[args.length - 1])) {
+                                            ret.add(argOption);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         return new ArrayList<>(ret);
                     }
 

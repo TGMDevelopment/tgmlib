@@ -37,8 +37,11 @@ public abstract class ConfigMenu {
     public final GuiScreen screen;
 
     public ConfigMenu() {
+        load();
         discoverOptions();
         this.screen = ConfigScreenGenerator.generate(this, options);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(this::load));
     }
 
     public abstract String title();
@@ -54,7 +57,6 @@ public abstract class ConfigMenu {
         ExceptionHelper.tryCatch(() -> {
             for (ConfigOptionHolder optionHolder : options) {
                 if (config().containsKey(optionHolder.field.getName())) optionHolder.field.set($this, config().get(optionHolder.field.getName()));
-                else optionHolder.field.set($this, null);
             }
         });
     }
@@ -66,15 +68,17 @@ public abstract class ConfigMenu {
     private void discoverOptions() {
         for (Field field : getClass().getDeclaredFields()) {
             field.setAccessible(true);
-            if (field.isAnnotationPresent(ConfigOption.class)) options.add(new ConfigOptionHolder(field, field.getAnnotation(ConfigOption.class)));
+            if (field.isAnnotationPresent(ConfigOption.class)) options.add(new ConfigOptionHolder(field, this, field.getAnnotation(ConfigOption.class)));
         }
     }
 
     public static class ConfigOptionHolder {
         public final Field field;
+        public final Object instance;
         public final ConfigOption option;
-        public ConfigOptionHolder(Field field, ConfigOption option) {
+        public ConfigOptionHolder(Field field, Object instance, ConfigOption option) {
             this.field = field;
+            this.instance = instance;
             this.option = option;
         }
         public String toString() {

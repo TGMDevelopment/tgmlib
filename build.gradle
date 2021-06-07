@@ -33,9 +33,9 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.github.asbyth:ForgeGradle:f6500bf402'
+        classpath 'com.github.asbyth:ForgeGradle:6f5327738d'
         classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
-        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+        classpath 'com.github.LxGaming:MixinGradle:0.6-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -79,7 +79,7 @@ minecraft {
 
     replace("@VER@", project.mod_ver)
 
-    mappings = project.minecraft_mappings
+    mappings = "stable_22"
 }
 
 dependencies {

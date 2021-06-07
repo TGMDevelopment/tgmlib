@@ -18,11 +18,15 @@
 
 package xyz.matthewtgm.lib.util;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -31,6 +35,16 @@ import java.awt.*;
  * Used to make Minecraft rendering easier.
  */
 public class RenderHelper {
+
+    private static final Minecraft mc = Minecraft.getMinecraft();
+
+    public static void bindTexture(ResourceLocation location) {
+        mc.getTextureManager().bindTexture(location);
+    }
+
+    public static void bindTexture(String textureName, DynamicTexture texture) {
+        bindTexture(mc.getTextureManager().getDynamicTextureLocation(textureName, texture));
+    }
 
     /**
      * Draws a rounded rectangle using arcs.
@@ -76,25 +90,19 @@ public class RenderHelper {
     }
 
     private static void drawArc(int x, int y, int radius, int startAngle, int endAngle, Color color) {
-
         GL11.glPushMatrix();
         GL11.glEnable(3042);
         GL11.glDisable(3553);
         GL11.glBlendFunc(770, 771);
         GL11.glColor4f((float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, (float) color.getAlpha() / 255);
-
         WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
-
         worldRenderer.begin(6, DefaultVertexFormats.POSITION);
         worldRenderer.pos(x, y, 0).endVertex();
-
         for (int i = (int) (startAngle / 360.0 * 100); i <= (int) (endAngle / 360.0 * 100); i++) {
             double angle = (Math.PI * 2 * i / 100) + Math.toRadians(180);
             worldRenderer.pos(x + Math.sin(angle) * radius, y + Math.cos(angle) * radius, 0).endVertex();
         }
-
         Tessellator.getInstance().draw();
-
         GL11.glEnable(3553);
         GL11.glDisable(3042);
         GL11.glPopMatrix();
@@ -111,9 +119,7 @@ public class RenderHelper {
         GL11.glLineWidth((float) thickness);
         GL11.glColor4d(color.getRed() / 255.0, color.getGreen() / 255.0, color.getBlue() / 255.0, color.getAlpha() / 255.0);
         GL11.glBegin(GL11.GL_LINE_STRIP);
-        for (double i = startAngle; i <= endAngle; i += 1) {
-            GL11.glVertex2d(x + radius + Math.sin(Math.toRadians(i)) * radius, y + radius + Math.cos(Math.toRadians(i)) * radius);
-        }
+        for (double i = startAngle; i <= endAngle; i += 1) GL11.glVertex2d(x + radius + Math.sin(Math.toRadians(i)) * radius, y + radius + Math.cos(Math.toRadians(i)) * radius);
         GL11.glEnd();
         GL11.glDisable(GL11.GL_LINE_SMOOTH);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -135,13 +141,11 @@ public class RenderHelper {
             left = right;
             right = i;
         }
-
         if (top < bottom) {
             int j = top;
             top = bottom;
             bottom = j;
         }
-
         float f3 = (float) (color >> 24 & 255) / 255.0F;
         float f = (float) (color >> 16 & 255) / 255.0F;
         float f1 = (float) (color >> 8 & 255) / 255.0F;
@@ -184,7 +188,6 @@ public class RenderHelper {
             startX = endX;
             endX = i;
         }
-
         drawRect(startX, y, endX + 1, y + 1, color);
     }
 
@@ -194,8 +197,54 @@ public class RenderHelper {
             startY = endY;
             endY = i;
         }
-
         drawRect(x, startY + 1, x + 1, endY, color);
+    }
+
+    // FIXME: 2021/06/05 | Doesn't render text.
+    public static void drawThreeDimensionalText(String text, double x, double y, double z, boolean drawBackground, boolean followPlayerView, Color color) {
+        FontRenderer fontrenderer = Minecraft.getMinecraft().fontRendererObj;
+        float f = 1.6f;
+        float f2 = 0.016666668f * f;
+        GlStateManager.pushMatrix();
+        GlStateManager.translate((float) x, (float) y, (float) z);
+        GL11.glNormal3f(0.0f, 1.0f, 0.0f);
+        if (followPlayerView) {
+            GlStateManager.rotate(-mc.getRenderManager().playerViewY, 0.0f, 1.0f, 0.0f);
+            int xMultiplier = 1;
+            if (mc.gameSettings != null && mc.gameSettings.thirdPersonView == 2) xMultiplier = -1;
+            GlStateManager.rotate(mc.getRenderManager().playerViewX * (float)xMultiplier, 1.0f, 0.0f, 0.0f);
+        }
+        GlStateManager.scale(-f2, -f2, f2);
+        GlStateManager.disableLighting();
+        if (drawBackground) {
+            GlStateManager.depthMask(false);
+            GlStateManager.disableDepth();
+        }
+        GlStateManager.enableBlend();
+        if (drawBackground) {
+            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+            Tessellator tessellator = Tessellator.getInstance();
+            WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+            int i = 0;
+            int j = fontrenderer.getStringWidth(text) / 2;
+            GlStateManager.depthMask(true);
+            GlStateManager.disableTexture2D();
+            worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+            worldrenderer.pos(-j - 1, -1 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldrenderer.pos(-j - 1, 8 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldrenderer.pos(j + 1, 8 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldrenderer.pos(j + 1, -1 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            tessellator.draw();
+        }
+        GlStateManager.enableTexture2D();
+        fontrenderer.drawString(text, -fontrenderer.getStringWidth(text) / 2, 0, 553648127);
+        GlStateManager.enableDepth();
+        GlStateManager.depthMask(true);
+        fontrenderer.drawString(text, -fontrenderer.getStringWidth(text) / 2, 0, -1);
+        GlStateManager.enableLighting();
+        GlStateManager.disableBlend();
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+        GlStateManager.popMatrix();
     }
 
 }

@@ -20,13 +20,14 @@ package xyz.matthewtgm.lib.config.gui;
 
 import lombok.Getter;
 import lombok.Setter;
+import xyz.matthewtgm.lib.config.ConfigMenu;
 
 public abstract class ConfigMenuElement {
 
-    @Getter @Setter
-    private int x;
-    @Getter @Setter
-    private int y;
+    @Getter
+    private final ConfigMenu menu;
+    @Getter
+    private final ConfigMenu.ConfigOptionHolder optionHolder;
     @Getter @Setter
     private int width;
     @Getter @Setter
@@ -34,20 +35,29 @@ public abstract class ConfigMenuElement {
     @Getter
     private final Runnable onClick;
 
-    public ConfigMenuElement(int x, int y, int width, int height, Runnable onClick) {
-        this.x = x;
-        this.y = y;
+    private int x;
+    private int y;
+
+    public ConfigMenuElement(ConfigMenu menu, ConfigMenu.ConfigOptionHolder optionHolder, int width, int height, Runnable onClick) {
+        this.menu = menu;
+        this.optionHolder = optionHolder;
         this.width = width;
         this.height = height;
         this.onClick = onClick;
     }
 
-    public abstract void render(int mouseX, int mouseY, float partialTicks);
+    public abstract void render(int xPos, int yPos, int mouseX, int mouseY, float partialTicks);
     public abstract void mouse(int mouseX, int mouseY, int button);
     public abstract void keyboard(char typedChar, int keyCode);
 
+    public void onRender(int xPos, int yPos, int mouseX, int mouseY, float partialTicks) {
+        render(xPos, yPos, mouseX, mouseY, partialTicks);
+        this.x = xPos;
+        this.y = yPos;
+    }
+
     public boolean isMouseOver(int mouseX, int mouseY) {
-        return (mouseX >= getX() && mouseX <= getX() + getWidth()) && (mouseY >= getY() && mouseY <= getY() + getHeight());
+        return (mouseX >= x && mouseX <= x + getWidth()) && (mouseY >= y && mouseY <= y + getHeight());
     }
 
 }

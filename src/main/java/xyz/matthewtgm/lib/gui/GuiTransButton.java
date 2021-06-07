@@ -67,7 +67,7 @@ public class GuiTransButton extends GuiButton {
             GlStateManager.blendFunc(770, 771);
             this.mouseDragged(mc, mouseX, mouseY);
             if (chroma) {
-                EnhancedFontRenderer.drawCenteredChromaText(displayString, xPosition + width / 2, xPosition + (height - 8) / 2);
+                EnhancedFontRenderer.drawCenteredChromaText(displayString, xPosition + width / 2, yPosition + (height - 8) / 2);
                 return;
             }
             int j = 14737632;

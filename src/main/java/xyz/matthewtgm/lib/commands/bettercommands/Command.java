@@ -42,6 +42,7 @@ public @interface Command {
     @interface Argument {
         String name();
         String[] aliases() default {};
+        String[] tabCompleteOptions() default {};
         int index() default 0;
     }
 

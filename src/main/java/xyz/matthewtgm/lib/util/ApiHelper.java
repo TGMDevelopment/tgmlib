@@ -23,12 +23,22 @@ import xyz.matthewtgm.json.parsing.JsonParser;
 import xyz.matthewtgm.lib.TGMLib;
 import org.apache.commons.io.IOUtils;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ApiHelper {
+
+    public static Object getPageContent(URL url) {
+        try {
+            return url.getContent();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "EMPTY";
+        }
+    }
 
     /**
      * @param url The url to fetch from.

@@ -35,7 +35,7 @@ public class EnhancedFontRenderer {
     }
 
     public static int getFontHeight() {
-        return mc.fontRendererObj.FONT_HEIGHT;
+        return getFontRenderer().FONT_HEIGHT;
     }
 
     /**
@@ -54,6 +54,14 @@ public class EnhancedFontRenderer {
      */
     public static int getWidth(char input) {
         return getFontRenderer().getCharWidth(input);
+    }
+
+    public static String trimToWidth(String text, int width, boolean reverse) {
+        return getFontRenderer().trimStringToWidth(text, width, reverse);
+    }
+
+    public static String trimToWidth(String text, int width) {
+        return getFontRenderer().trimStringToWidth(text, width, false);
     }
 
     /**
@@ -92,10 +100,10 @@ public class EnhancedFontRenderer {
      * @param dropShadow Whether or not to render a dropshadow under the text.
      * @author MatthewTGM
      */
-    public static void drawScaledText(String text, int scale, float x, float y, int colour, boolean dropShadow) {
+    public static void drawScaledText(String text, float scale, float x, float y, int colour, boolean dropShadow) {
         GlStateManager.pushMatrix();
-        GlStateManager.scale(scale, scale, 0);
-        drawText(text, x, y, colour, dropShadow);
+        GlStateManager.scale(scale, scale, 0f);
+        drawText(text, x / scale, y / scale, colour, dropShadow);
         GlStateManager.popMatrix();
     }
 
@@ -109,11 +117,8 @@ public class EnhancedFontRenderer {
      * @param dropShadow Whether or not to render a dropshadow under the text.
      * @author MatthewTGM
      */
-    public static void drawScaledText(String text, int scale, double x, double y, int colour, boolean dropShadow) {
-        GlStateManager.pushMatrix();
-        GlStateManager.scale(scale, scale, 0);
-        drawText(text, x, y, colour, dropShadow);
-        GlStateManager.popMatrix();
+    public static void drawScaledText(String text, float scale, double x, double y, int colour, boolean dropShadow) {
+        drawScaledText(text, scale, (float) x, (float) y, colour, dropShadow);
     }
 
     /**
@@ -142,12 +147,7 @@ public class EnhancedFontRenderer {
      * @author Wyvest
      */
     public static void drawChromaText(String text, double x, double y, boolean dropShadow) {
-        for (char c : text.toCharArray()) {
-            int col = ColourUtils.getChroma(x, y).getRGB();
-            String charStr = String.valueOf(c);
-            drawText(charStr, x, y, col, dropShadow);
-            x += getWidth(charStr);
-        }
+        drawChromaText(text, (float) x, (float) y, dropShadow);
     }
 
     /**
@@ -173,7 +173,7 @@ public class EnhancedFontRenderer {
      * @author Minecraft/Mojang
      */
     public static void drawCenteredText(String text, double x, double y, int colour, boolean dropShadow) {
-        drawText(text, (x - getWidth(text) / 2), y, colour, dropShadow);
+        drawCenteredText(text, (float) x, (float) y, colour, dropShadow);
     }
 
     /**
@@ -197,7 +197,7 @@ public class EnhancedFontRenderer {
      * @author MatthewTGM
      */
     public static void drawText(String text, double x, double y, int colour) {
-        drawText(text, (float) x, (float) y, colour, false);
+        drawText(text, x, y, colour, false);
     }
 
     /**
@@ -209,11 +209,8 @@ public class EnhancedFontRenderer {
      * @param colour The colour of the text.
      * @author MatthewTGM
      */
-    public static void drawScaledText(String text, int scale, float x, float y, int colour) {
-        GlStateManager.pushMatrix();
-        GlStateManager.scale(scale, scale, 0);
-        drawText(text, x, y, colour);
-        GlStateManager.popMatrix();
+    public static void drawScaledText(String text, float scale, float x, float y, int colour) {
+        drawScaledText(text, scale, x, y, colour, false);
     }
 
     /**
@@ -225,11 +222,8 @@ public class EnhancedFontRenderer {
      * @param colour The colour of the text.
      * @author MatthewTGM
      */
-    public static void drawScaledText(String text, int scale, double x, double y, int colour) {
-        GlStateManager.pushMatrix();
-        GlStateManager.scale(scale, scale, 0);
-        drawText(text, x, y, colour);
-        GlStateManager.popMatrix();
+    public static void drawScaledText(String text, float scale, double x, double y, int colour) {
+        drawScaledText(text, scale, (float) x, (float) y, colour);
     }
 
     /**
@@ -251,7 +245,7 @@ public class EnhancedFontRenderer {
      * @author MatthewTGM
      */
     public static void drawCenteredChromaText(String text, double x, double y, boolean textShadow) {
-        drawChromaText(text, (x - getWidth(text) / 2), y, textShadow);
+        drawCenteredChromaText(text, (float) x, (float) y, textShadow);
     }
 
     /**
@@ -273,7 +267,7 @@ public class EnhancedFontRenderer {
      * @author MatthewTGM
      */
     public static void drawCenteredChromaText(String text, double x, double y) {
-        drawCenteredChromaText(text, (x - getWidth(text) / 2), y, false);
+        drawCenteredChromaText(text, (float) x, (float) y);
     }
 
     /**
@@ -297,7 +291,7 @@ public class EnhancedFontRenderer {
      * @author MatthewTGM
      */
     public static void drawCenteredText(String text, double x, double y, int colour) {
-        drawText(text, x, y, colour, false);
+        drawCenteredText(text, (float) x, (float) y, colour);
     }
 
     /**
@@ -312,7 +306,7 @@ public class EnhancedFontRenderer {
     public static void drawCenteredScaledText(String text, int scale, float x, float y, int colour) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 0);
-        drawCenteredText(text, x, y, colour);
+        drawCenteredText(text, x / scale, y / scale, colour);
         GlStateManager.popMatrix();
     }
 
@@ -328,7 +322,7 @@ public class EnhancedFontRenderer {
     public static void drawCenteredScaledText(String text, int scale, double x, double y, int colour) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 0);
-        drawCenteredText(text, x, y, colour);
+        drawCenteredText(text, x / scale, y / scale, colour);
         GlStateManager.popMatrix();
     }
 
@@ -378,7 +372,7 @@ public class EnhancedFontRenderer {
     public static void drawScaledStyledText(String text, int scale, float x, float y, int colour) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 0);
-        drawStyledText(text, x, y, colour);
+        drawStyledText(text, x / scale, y / scale, colour);
         GlStateManager.popMatrix();
     }
 
@@ -394,7 +388,7 @@ public class EnhancedFontRenderer {
     public static void drawScaledStyledText(String text, int scale, double x, double y, int colour) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 0);
-        drawStyledText(text, x, y, colour);
+        drawStyledText(text, x / scale, y / scale, colour);
         GlStateManager.popMatrix();
     }
 
@@ -441,7 +435,7 @@ public class EnhancedFontRenderer {
     public static void drawStyledChromaScaledText(String text, int scale, float x, float y) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 0);
-        drawStyledChromaText(text, x, y);
+        drawStyledChromaText(text, x / scale, y / scale);
         GlStateManager.popMatrix();
     }
 
@@ -456,7 +450,7 @@ public class EnhancedFontRenderer {
     public static void drawStyledChromaScaledText(String text, int scale, double x, double y) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 0);
-        drawStyledChromaText(text, x, y);
+        drawStyledChromaText(text, x / scale, y / scale);
         GlStateManager.popMatrix();
     }
 
@@ -496,7 +490,7 @@ public class EnhancedFontRenderer {
     public static void drawCenteredStyledScaledText(String text, int scale, float x, float y, int colour) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 0);
-        drawCenteredStyledText(text, x, y, colour);
+        drawCenteredStyledText(text, x / scale, y / scale, colour);
         GlStateManager.popMatrix();
     }
 
@@ -512,7 +506,7 @@ public class EnhancedFontRenderer {
     public static void drawCenteredStyledScaledText(String text, int scale, double x, double y, int colour) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 0);
-        drawCenteredStyledText(text, x, y, colour);
+        drawCenteredStyledText(text, x / scale, y / scale, colour);
         GlStateManager.popMatrix();
     }
 
@@ -549,7 +543,7 @@ public class EnhancedFontRenderer {
     public static void drawCenteredStyledChromaScaledText(String text, int scale, float x, float y) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 0);
-        drawCenteredStyledChromaText(text, x, y);
+        drawCenteredStyledChromaText(text, x / scale, y / scale);
         GlStateManager.popMatrix();
     }
 
@@ -564,7 +558,7 @@ public class EnhancedFontRenderer {
     public static void drawCenteredStyledChromaScaledText(String text, int scale, double x, double y) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 0);
-        drawCenteredStyledChromaText(text, x, y);
+        drawCenteredStyledChromaText(text, x / scale, y / scale);
         GlStateManager.popMatrix();
     }
 

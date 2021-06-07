@@ -72,6 +72,15 @@ public class GuiHelper {
         net.minecraftforge.fml.client.config.GuiUtils.drawHoveringText(textLines, x, y, ScreenHelper.getScaledWidth(), ScreenHelper.getScaledHeight(), -1, Minecraft.getMinecraft().fontRendererObj);
     }
 
+    public static void forceGuiScale(GuiScreen screen, int scale) {
+        CustomScaledResolution res = new CustomScaledResolution(Minecraft.getMinecraft(), scale);
+        ScreenHelper.updateOrtho(res);
+        int scaledWidth = res.getScaledWidth();
+        int scaledHeight = res.getScaledHeight();
+        if (screen.width != scaledWidth) screen.width = scaledWidth;
+        if (screen.height != scaledHeight) screen.height = scaledHeight;
+    }
+
     /**
      * Opens a {@link GuiScreen}. (will be most commonly used in commands.)
      *

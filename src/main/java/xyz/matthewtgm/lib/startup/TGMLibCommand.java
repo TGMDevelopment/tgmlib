@@ -18,32 +18,23 @@
 
 package xyz.matthewtgm.lib.startup;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import xyz.matthewtgm.lib.commands.bettercommands.Command;
 import xyz.matthewtgm.lib.config.ConfigMenu;
 import xyz.matthewtgm.lib.config.ConfigOption;
 import xyz.matthewtgm.lib.config.ConfigOptionType;
-import xyz.matthewtgm.lib.util.ArrayHelper;
-import xyz.matthewtgm.lib.util.ChatHandler;
-import xyz.matthewtgm.lib.util.MessageQueue;
-import xyz.matthewtgm.lib.util.Notifications;
+import xyz.matthewtgm.lib.util.*;
 import xyz.matthewtgm.lib.util.global.GlobalMinecraft;
 import xyz.matthewtgm.tgmconfig.TGMConfig;
 
 import java.io.File;
 
-@Command(name = "tgmlib", tabCompleteOptions = {"notitest1", "notitest2", "messagequeuetest", "configframeworktest"})
+@Command(name = "tgmlib", tabCompleteOptions = {"notitest1", "notitest2", "messagequeuetest", "threedimtexttest", "configframeworktest"})
 public class TGMLibCommand {
 
-    static TGMLibCommand $this = null;
-    private final TestConfigMenu testConfigMenu;
+    private final TestConfigMenu testConfigMenu = new TestConfigMenu();
+    static boolean drawThreeDimText = false;
     public final TGMConfig config = new TGMConfig("tgmlib", new File(GlobalMinecraft.getGameDirectory(), "config"));
-
-    public TGMLibCommand() {
-        $this = this;
-        testConfigMenu = new TestConfigMenu();
-    }
 
     @Command.Process
     protected void process(String[] args) {
@@ -68,7 +59,12 @@ public class TGMLibCommand {
         MessageQueue.queue("Custom delay - 50 ticks", 50);
     }
 
-    @Command.Argument(name = "configframeworktest")
+    @Command.Argument(name = "threedimtexttest")
+    protected void threeDimTextTest() {
+        drawThreeDimText = !drawThreeDimText;
+    }
+
+    @Command.Argument(name = "configframeworktest", tabCompleteOptions = {"load", "save", "open"})
     protected void configFrameworkTest(String[] args) {
         if (ArrayHelper.contains(args, "load")) {
             logTestConfigBools("Load pre");
@@ -79,6 +75,7 @@ public class TGMLibCommand {
             logTestConfigBools("Save pre");
             testConfigMenu.standardBoolean = !testConfigMenu.standardBoolean;
             testConfigMenu.standardTrueBoolean = !testConfigMenu.standardTrueBoolean;
+            testConfigMenu.standardFalseBoolean = !testConfigMenu.standardFalseBoolean;
             testConfigMenu.save();
             logTestConfigBools("Save post");
         }
@@ -88,9 +85,14 @@ public class TGMLibCommand {
     private void logTestConfigBools(String pre) {
         System.out.println(pre + " standard boolean log: " + testConfigMenu.standardBoolean);
         System.out.println(pre + " standard true boolean log: " + testConfigMenu.standardTrueBoolean);
+        System.out.println(pre + " standard false boolean log: " + testConfigMenu.standardFalseBoolean);
     }
 
-    public static class TestConfigMenu extends ConfigMenu {
+    public TGMConfig getConfig() {
+        return config;
+    }
+
+    public class TestConfigMenu extends ConfigMenu {
 
         @ConfigOption(
                 name = "Standard boolean",
@@ -106,12 +108,26 @@ public class TGMLibCommand {
         )
         public boolean standardTrueBoolean = true;
 
+        @ConfigOption(
+                name = "Standard false boolean",
+                category = "False bools",
+                type = ConfigOptionType.SWITCH
+        )
+        public boolean standardFalseBoolean = false;
+
+        @ConfigOption(
+                name = "Standard string",
+                category = "Strings",
+                type = ConfigOptionType.TEXT
+        )
+        public String standardString = "";
+
         public String title() {
             return "Test";
         }
 
         public TGMConfig config() {
-            return $this.config;
+            return getConfig();
         }
 
     }

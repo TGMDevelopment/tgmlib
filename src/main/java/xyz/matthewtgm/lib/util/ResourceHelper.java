@@ -16,11 +16,26 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.lib.config;
+package xyz.matthewtgm.lib.util;
 
-public enum ConfigOptionType {
-    SWITCH,
-    TEXT,
-    //DROPDOWN,
-    COLOUR
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.util.ResourceLocation;
+
+import javax.imageio.ImageIO;
+import java.net.URI;
+
+public class ResourceHelper {
+
+    public static ResourceLocation download(String name, String url) {
+        DynamicTexture texture;
+        try {
+            texture = new DynamicTexture(ImageIO.read(URI.create(url).toURL()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            texture = new DynamicTexture(16, 16);
+        }
+        return Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(name, texture);
+    }
+
 }
