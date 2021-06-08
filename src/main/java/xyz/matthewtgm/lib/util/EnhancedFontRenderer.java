@@ -21,7 +21,13 @@ package xyz.matthewtgm.lib.util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.Vec3;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
@@ -559,6 +565,53 @@ public class EnhancedFontRenderer {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 0);
         drawCenteredStyledChromaText(text, x / scale, y / scale);
+        GlStateManager.popMatrix();
+    }
+
+    public static void drawThreeDimensionalText(String text, Vec3 pos, boolean drawBackground, Color color) {
+        FontRenderer fontrenderer = Minecraft.getMinecraft().fontRendererObj;
+        float f = 1.6f;
+        float f2 = 0.016666668f * f;
+        EntityPlayer player = mc.thePlayer;
+        double x = (pos.xCoord - player.posX);
+        double y = (pos.yCoord - player.posY);
+        double z = (pos.zCoord - player.posZ);
+        System.out.println("X: " + x + "\nY: " + y + "\nZ: " + z);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate((float) x, (float) y, (float) z);
+        GL11.glNormal3f(0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(-mc.getRenderManager().playerViewY, 0.0f, 1.0f, 0.0f);
+        int xMultiplier = 1;
+        if (mc.gameSettings != null && mc.gameSettings.thirdPersonView == 2) xMultiplier = -1;
+        GlStateManager.rotate(mc.getRenderManager().playerViewX * (float)xMultiplier, 1.0f, 0.0f, 0.0f);
+        GlStateManager.scale(-f2, -f2, f2);
+        GlStateManager.disableLighting();
+        GlStateManager.enableBlend();
+        if (drawBackground) {
+            GlStateManager.depthMask(false);
+            GlStateManager.disableDepth();
+            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+            Tessellator tessellator = Tessellator.getInstance();
+            WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+            int i = 0;
+            int j = fontrenderer.getStringWidth(text) / 2;
+            GlStateManager.depthMask(true);
+            GlStateManager.disableTexture2D();
+            worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+            worldrenderer.pos(-j - 1, -1 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldrenderer.pos(-j - 1, 8 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldrenderer.pos(j + 1, 8 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldrenderer.pos(j + 1, -1 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            tessellator.draw();
+        }
+        GlStateManager.enableTexture2D();
+        fontrenderer.drawString(text, -fontrenderer.getStringWidth(text) / 2, 0, 553648127);
+        GlStateManager.enableDepth();
+        GlStateManager.depthMask(true);
+        fontrenderer.drawString(text, -fontrenderer.getStringWidth(text) / 2, 0, -1);
+        GlStateManager.enableLighting();
+        GlStateManager.disableBlend();
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         GlStateManager.popMatrix();
     }
 

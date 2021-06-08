@@ -94,7 +94,7 @@ public class ConfigScreenGenerator {
                                 case TEXT:
                                     try {
                                         configMenuElements.add(new ConfigMenuTextFieldElement(menu, optionHolder, width - 20, 20, (CharSequence) optionHolder.field.get(optionHolder.instance), () -> {}));
-                                    } catch (IllegalAccessException e) {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                     break;

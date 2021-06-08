@@ -18,15 +18,21 @@
 
 package xyz.matthewtgm.lib.startup;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.matthewtgm.lib.commands.CommandManager;
 import org.apache.logging.log4j.Logger;
+import xyz.matthewtgm.lib.util.EnhancedFontRenderer;
+import xyz.matthewtgm.lib.util.EntityHelper;
 import xyz.matthewtgm.lib.util.RenderHelper;
+import xyz.matthewtgm.lib.util.global.GlobalMinecraft;
 
 import java.awt.*;
 
@@ -42,10 +48,13 @@ public class StartupRegistry {
     }
 
     @SubscribeEvent
-    protected void onWorldRendered(RenderLivingEvent.Post event) {
-        if (TGMLibCommand.drawThreeDimText && !(event.entity instanceof EntityPlayer)) {
-            RenderHelper.drawThreeDimensionalText(event.entity.getDisplayName().getFormattedText(), event.x, event.y + 3, event.z, true, true, new Color(255, 255, 255));
-            RenderHelper.drawThreeDimensionalText(round(event.entity.posX) + " / " + round(event.entity.posY) + " / " + round(event.entity.posZ), event.x, event.y + 2, event.z, false, true, new Color(255, 255, 255));
+    protected void onWorldRendered(RenderWorldLastEvent event) {
+        if (TGMLibCommand.drawThreeDimText) {
+            for (Entity entity : GlobalMinecraft.getWorld().getEntities(Entity.class, entity -> true)) {
+                if (!(entity instanceof EntityPlayer)) {
+                    EnhancedFontRenderer.drawThreeDimensionalText(entity.getDisplayName().getFormattedText(), new Vec3(entity.posX, entity.posY, entity.posZ), true, new Color(255, 255, 255));
+                }
+            }
         }
     }
 

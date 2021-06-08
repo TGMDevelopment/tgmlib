@@ -19,12 +19,15 @@
 package xyz.matthewtgm.lib.util.global;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -38,6 +41,26 @@ import java.io.File;
 public class GlobalMinecraft {
 
     private static final Minecraft instance = Minecraft.getMinecraft();
+
+    public static GuiScreen getCurrentScreen() {
+        return instance.currentScreen;
+    }
+
+    public static ServerData getCurrentServerData() {
+        return instance.getCurrentServerData();
+    }
+
+    public static NetHandlerPlayClient getNetHandler() {
+        return instance.getNetHandler();
+    }
+
+    public static SoundHandler getSoundHandler() {
+        return instance.getSoundHandler();
+    }
+
+    public static String getVersion() {
+        return instance.getVersion();
+    }
 
     public static ItemRenderer getItemRenderer() {
         return instance.getItemRenderer();

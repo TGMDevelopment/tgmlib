@@ -25,7 +25,7 @@ import net.minecraft.entity.Entity;
 
 public class EntityHelper {
 
-    private static Minecraft mc = Minecraft.getMinecraft();
+    private static final Minecraft mc = Minecraft.getMinecraft();
 
     public static int getLoadedEntityCount() {
         if (mc.theWorld == null) return 0;
