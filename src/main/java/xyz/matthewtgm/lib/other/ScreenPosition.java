@@ -62,6 +62,16 @@ public class ScreenPosition {
         return this;
     }
 
+    public ScreenPosition addX(int amount) {
+        x += amount;
+        return this;
+    }
+
+    public ScreenPosition addY(int amount) {
+        y += amount;
+        return this;
+    }
+
     public ScreenPosition setPosition(int x, int y) {
         this.x = x;
         this.y = y;
@@ -69,11 +79,11 @@ public class ScreenPosition {
     }
 
     private int calculateX(int x) {
-        return x - ScreenHelper.getScaledWidth() / GlobalMinecraft.getDisplayWidth();
+        return (ScreenHelper.getScaledWidth() / x);
     }
 
     private int calculateY(int y) {
-        return y - ScreenHelper.getScaledHeight() / GlobalMinecraft.getDisplayHeight();
+        return (ScreenHelper.getScaledHeight() / y);
     }
 
 }
