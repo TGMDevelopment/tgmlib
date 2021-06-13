@@ -25,14 +25,11 @@ import xyz.matthewtgm.lib.util.global.GlobalMinecraft;
 
 public class ScreenPosition {
 
-    private int rawX, rawY;
     private int x, y;
 
     public ScreenPosition(int x, int y) {
-        this.x = calculateX(x);
-        this.y = calculateY(y);
-        this.rawX = x;
-        this.rawY = y;
+        this.x = x;
+        this.y = y;
     }
 
     public ScreenPosition(JsonObject<String, Number> jsonObject) {
@@ -44,11 +41,11 @@ public class ScreenPosition {
     }
 
     public ScreenPosition clone() {
-        return new ScreenPosition(rawX, rawY);
+        return new ScreenPosition(x, y);
     }
 
     public int getX() {
-        return x;
+        return calculateX(x);
     }
 
     public ScreenPosition setX(int x) {
@@ -57,15 +54,7 @@ public class ScreenPosition {
     }
 
     public int getY() {
-        return y;
-    }
-
-    public int getRawX() {
-        return rawX;
-    }
-
-    public int getRawY() {
-        return rawY;
+        return calculateY(y);
     }
 
     public ScreenPosition setY(int y) {
@@ -74,10 +63,8 @@ public class ScreenPosition {
     }
 
     public ScreenPosition setPosition(int x, int y) {
-        this.x = calculateX(x);
-        this.y = calculateY(y);
-        this.rawX = x;
-        this.rawY = y;
+        this.x = x;
+        this.y = y;
         return this;
     }
 
