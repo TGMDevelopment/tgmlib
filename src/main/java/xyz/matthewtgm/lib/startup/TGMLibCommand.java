@@ -18,18 +18,20 @@
 
 package xyz.matthewtgm.lib.startup;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
 import xyz.matthewtgm.lib.commands.bettercommands.Command;
 import xyz.matthewtgm.lib.config.ConfigMenu;
 import xyz.matthewtgm.lib.config.ConfigOption;
 import xyz.matthewtgm.lib.config.ConfigOptionType;
+import xyz.matthewtgm.lib.other.ScreenPosition;
 import xyz.matthewtgm.lib.util.*;
 import xyz.matthewtgm.lib.util.global.GlobalMinecraft;
 import xyz.matthewtgm.tgmconfig.TGMConfig;
 
 import java.io.File;
 
-@Command(name = "tgmlib", tabCompleteOptions = {"notitest1", "notitest2", "messagequeuetest", "threedimtexttest", "configframeworktest"})
+@Command(name = "tgmlib", tabCompleteOptions = {"notitest1", "notitest2", "positiontest", "messagequeuetest", "threedimtexttest", "configframeworktest"})
 public class TGMLibCommand {
 
     private final TestConfigMenu testConfigMenu = new TestConfigMenu();
@@ -49,6 +51,11 @@ public class TGMLibCommand {
     @Command.Argument(name = "notitest2")
     protected void notificationTest2() {
         Notifications.push("Test Clickable Notification", "Test Clickable Description", () -> ChatHandler.sendMessage(ChatHandler.tgmLibChatPrefix, "Notification clicked!"));
+    }
+
+    @Command.Argument(name = "positiontest")
+    protected void positionTest() {
+        GuiHelper.open(new GuiPositionTest());
     }
 
     @Command.Argument(name = "messagequeuetest")
@@ -90,6 +97,16 @@ public class TGMLibCommand {
 
     public TGMConfig getConfig() {
         return config;
+    }
+
+    public class GuiPositionTest extends GuiScreen {
+
+        public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+            ScreenPosition position = new ScreenPosition(mouseX, mouseY);
+            EnhancedFontRenderer.drawCenteredText("Hello, World!", position.getX(), position.getY(), -1);
+            super.drawScreen(mouseX, mouseY, partialTicks);
+        }
+
     }
 
     public class TestConfigMenu extends ConfigMenu {

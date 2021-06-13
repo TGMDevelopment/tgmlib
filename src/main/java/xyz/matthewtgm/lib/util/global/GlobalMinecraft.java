@@ -42,6 +42,14 @@ public class GlobalMinecraft {
 
     private static final Minecraft instance = Minecraft.getMinecraft();
 
+    public static int getDisplayWidth() {
+        return instance.displayWidth;
+    }
+
+    public static int getDisplayHeight() {
+        return instance.displayHeight;
+    }
+
     public static GuiScreen getCurrentScreen() {
         return instance.currentScreen;
     }

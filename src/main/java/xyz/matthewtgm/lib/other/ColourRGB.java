@@ -38,6 +38,10 @@ public class ColourRGB {
         this.a = 255;
     }
 
+    public ColourRGB clone() {
+        return new ColourRGB(r, g, b, a);
+    }
+
     public int getR() {
         return r;
     }
