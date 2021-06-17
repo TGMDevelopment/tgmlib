@@ -29,13 +29,6 @@ group = project.mod_group
 
 sourceCompatibility = targetCompatibility = 1.8
 
-Dependency[] deps = [
-        new Dependency("xyz.matthewtgm", "JsonTGM", "1.6", true, (String[])["gson"]),
-        new Dependency("xyz.matthewtgm", "TGMConfig", "1.7.3", true),
-        new Dependency("org.spongepowered", "mixin", "0.7.11-SNAPSHOT", true, (String[])["launchwrapper", "guava", "gson", "commons-io"], true),
-        new Dependency("org.projectlombok", "lombok", "1.18.16", false, true)
-]
-
 minecraft {
     version = project.forge_ver
     runDir = "run"
@@ -64,20 +57,19 @@ configurations {
 
 /* Define dependencies, also where dependencies are automatically handled. */
 dependencies {
-    for (Dependency dep : deps) {
-        if (dep.isShade()) shade(dep.getFullDep()) {
-            if (dep.getExcluded() != null && dep.getExcluded().length > 0)
-                for (String excluded : dep.getExcluded())
-                    exclude module: excluded
-        }
-        else implementation(dep.getFullDep()) {
-            if (dep.getExcluded() != null && !Arrays.asList(dep.getExcluded()).isEmpty())
-                for (String excluded : dep.getExcluded())
-                    exclude module: excluded
-        }
-
-        if (dep.getAnnotationProc()) annotationProcessor(dep.getFullDep())
+    shade('xyz.matthewtgm:JsonTGM:1.6') {
+        exclude module: 'gson'
     }
+    shade('xyz.matthewtgm:TGMConfig:1.7.3')
+    shade('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+        exclude module: 'gson'
+        exclude module: 'commons-io'
+    }
+    annotationProcessor('org.spongepowered:mixin:0.7.11-SNAPSHOT')
+    compileOnly('org.projectlombok:lombok:1.18.16')
+    annotationProcessor('org.projectlombok:lombok:1.18.16')
 }
 
 /* Disable mixin refMap warnings. */
@@ -138,61 +130,3 @@ task moveResources {
 moveResources.dependsOn(processResources)
 classes.dependsOn(moveResources)
 reobfJar.dependsOn(shadowJar)
-
-/* Custom dependency stuff. */
-@SuppressWarnings("unused")
-class Dependency {
-
-    String group
-    String name
-    String version
-    String[] excluded
-    boolean shade
-    boolean annotationProc
-    final String fullDep
-
-    Dependency(String group, String name, String version, boolean shade) {
-        this.group = group
-        this.name = name
-        this.version = version
-        this.shade = shade
-        this.excluded = []
-        this.annotationProc = false
-
-        this.fullDep = group + ":" + name + ":" + version
-    }
-
-    Dependency(String group, String name, String version, boolean shade, String[] excluded) {
-        this.group = group
-        this.name = name
-        this.version = version
-        this.shade = shade
-        this.excluded = excluded
-        this.annotationProc = false
-
-        this.fullDep = group + ":" + name + ":" + version
-    }
-
-    Dependency(String group, String name, String version, boolean shade, boolean annotationProc) {
-        this.group = group
-        this.name = name
-        this.version = version
-        this.shade = shade
-        this.excluded = []
-        this.annotationProc = annotationProc
-
-        this.fullDep = group + ":" + name + ":" + version
-    }
-
-    Dependency(String group, String name, String version, boolean shade, String[] excluded, boolean annotationProc) {
-        this.group = group
-        this.name = name
-        this.version = version
-        this.shade = shade
-        this.excluded = excluded
-        this.annotationProc = annotationProc
-
-        this.fullDep = group + ":" + name + ":" + version
-    }
-
-}
