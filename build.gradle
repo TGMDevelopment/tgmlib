@@ -19,13 +19,14 @@
 plugins {
     id "net.minecraftforge.gradle.forge" version "6f5327738d"
     id "com.github.johnrengelman.shadow" version "6.1.0"
-    id "org.spongepowered.mixin" version "0.6-SNAPSHOT"
+    id "org.spongepowered.mixin" version "d75e32e"
     id "java"
 }
 
 archivesBaseName = project.mod_name
 version = project.mod_ver
 group = project.mod_group
+def modId = project.mod_id
 
 sourceCompatibility = targetCompatibility = 1.8
 
@@ -61,6 +62,8 @@ dependencies {
         exclude module: 'gson'
     }
     shade('xyz.matthewtgm:TGMConfig:1.7.3')
+    compileOnly('org.projectlombok:lombok:1.18.16')
+    annotationProcessor('org.projectlombok:lombok:1.18.16')
     shade('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
         exclude module: 'launchwrapper'
         exclude module: 'guava'
@@ -68,8 +71,6 @@ dependencies {
         exclude module: 'commons-io'
     }
     annotationProcessor('org.spongepowered:mixin:0.7.11-SNAPSHOT')
-    compileOnly('org.projectlombok:lombok:1.18.16')
-    annotationProcessor('org.projectlombok:lombok:1.18.16')
 }
 
 /* Disable mixin refMap warnings. */
@@ -127,6 +128,16 @@ task moveResources {
     }
 }
 
+task moveRefmap {
+    doLast {
+        if (file("${buildDir}/tmp/compileJava/mixins.${modId}.refmap.json").exists()) {
+            ant.move file: "${buildDir}/tmp/compileJava/mixins.${modId}.refmap.json",
+                    todir: "${buildDir}/classes/java"
+        }
+    }
+}
+
 moveResources.dependsOn(processResources)
 classes.dependsOn(moveResources)
+reobfJar.dependsOn(moveRefmap)
 reobfJar.dependsOn(shadowJar)
