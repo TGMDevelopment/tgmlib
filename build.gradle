@@ -134,6 +134,7 @@ task moveResources {
 
 moveResources.dependsOn(processResources)
 classes.dependsOn(moveResources)
+reobfJar.dependsOn(shadowJar)
 
 /* Custom dependency stuff. */
 @SuppressWarnings("unused")
