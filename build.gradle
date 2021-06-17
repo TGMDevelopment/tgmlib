@@ -16,32 +16,12 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-buildscript {
-    repositories {
-        jcenter()
-        maven {
-            name = "Forge"
-            url = "http://maven.minecraftforge.net"
-        }
-        maven {
-            name = "JitPack"
-            url = "https://jitpack.io"
-        }
-        maven {
-            name = "Sponge"
-            url = 'https://repo.spongepowered.org/maven'
-        }
-    }
-    dependencies {
-        classpath 'com.github.asbyth:ForgeGradle:6f5327738d'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
-        classpath 'com.github.LxGaming:MixinGradle:0.6-SNAPSHOT'
-    }
+plugins {
+    id "net.minecraftforge.gradle.forge" version "6f5327738d"
+    id "com.github.johnrengelman.shadow" version "6.1.0"
+    id "org.spongepowered.mixin" version "0.6-SNAPSHOT"
+    id "java"
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'java'
 
 archivesBaseName = project.mod_name
 version = project.mod_ver
@@ -56,87 +36,80 @@ Dependency[] deps = [
         new Dependency("org.projectlombok", "lombok", "1.18.16", false, true)
 ]
 
-sourceSets {
-    main {
-        output.resourcesDir = "build/classes/main"
-    }
-}
-
-repositories {
-    maven {
-        name = "JitPack"
-        url = "https://jitpack.io"
-    }
-    maven {
-        name = "Sponge"
-        url = "https://repo.spongepowered.org/maven/"
-    }
-}
-
 minecraft {
     version = project.forge_ver
     runDir = "run"
-
     replace("@VER@", project.mod_ver)
-
     mappings = "stable_22"
 }
 
+/* Add available repositories to areas where dependencies can be downloaded. */
+repositories {
+    mavenCentral()
+    maven {
+        name = "SpongePowered"
+        url = 'https://repo.spongepowered.org/maven/'
+    }
+    maven {
+        name = "JitPack"
+        url = 'https://jitpack.io/'
+    }
+}
+
+/* Adds a configuration for shading libraries. */
+configurations {
+    shade
+    compileOnly.extendsFrom(shade)
+}
+
+/* Define dependencies, also where dependencies are automatically handled. */
 dependencies {
     for (Dependency dep : deps) {
-        compile(dep.getFullDep()) {
-            if (dep.getExcluded().length > 0) {
-                for (String excluded : dep.getExcluded()) {
+        if (dep.isShade()) shade(dep.getFullDep()) {
+            if (dep.getExcluded() != null && dep.getExcluded().length > 0)
+                for (String excluded : dep.getExcluded())
                     exclude module: excluded
-                }
-            }
         }
-        if (dep.isAnnotationProc()) annotationProcessor(dep.getFullDep())
+        else implementation(dep.getFullDep()) {
+            if (dep.getExcluded() != null && !Arrays.asList(dep.getExcluded()).isEmpty())
+                for (String excluded : dep.getExcluded())
+                    exclude module: excluded
+        }
+        if (dep.getAnnotationProc()) annotationProcessor(dep.getFullDep())
     }
 }
 
-shadowJar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    dependencies {
-        include(dependency('org.spongepowered:mixin:0.7.11-SNAPSHOT'))
-
-        for (Dependency dep : deps)
-            if (dep.isShade())
-                include(dependency(dep.getFullDep()))
-    }
-
-    exclude('LICENSE.txt')
-    exclude('dummyThing')
-    exclude('module-info.class')
-
-    classifier = ''
+/* Disable mixin refMap warnings. */
+mixin {
+    disableRefMapWarning = true
 }
 
+/* Set the duplicatesStrategy and define configs.  */
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
     manifest.attributes(
             'TweakClass': 'xyz.matthewtgm.libs.mixins.TGMLibTweaker',
             'MixinConfigs': 'mixins.tgmlib.json',
             'TweakOrder': 0
     )
-
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
 }
 
-mixin {
-    defaultObfuscationEnv = "searge"
-    add sourceSets.main, "mixins.tgmlib.refmap.json"
+/* Makes the shade configuration work and re-define the duplicatesStrategy. */
+shadowJar {
+    configurations = [project.configurations.shade]
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveClassifier.set('')
 }
 
-processResources {
-    inputs.files "src/main/resources"
-    outputs.dir "build/classes/main"
-    copy {
-        from("src/main/resources")
-        into("build/classes/main")
-    }
+/* Force the Gradle wrapper version and distrbution type. */
+wrapper {
+    gradleVersion = "6.1"
+    distributionType = Wrapper.DistributionType.ALL
+}
 
+/* Process the mcmod.info. */
+processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
@@ -150,6 +123,17 @@ processResources {
         exclude 'mcmod.info'
     }
 }
+
+/* Move the resources to the working directory for runs. */
+task moveResources {
+    doLast {
+        ant.move file: "${buildDir}/resources/main",
+                todir: "${buildDir}/classes/java"
+    }
+}
+
+moveResources.dependsOn(processResources)
+classes.dependsOn(moveResources)
 
 /* Custom dependency stuff. */
 @SuppressWarnings("unused")
@@ -173,6 +157,7 @@ class Dependency {
 
         this.fullDep = group + ":" + name + ":" + version
     }
+
     Dependency(String group, String name, String version, boolean shade, String[] excluded) {
         this.group = group
         this.name = name
@@ -183,6 +168,7 @@ class Dependency {
 
         this.fullDep = group + ":" + name + ":" + version
     }
+
     Dependency(String group, String name, String version, boolean shade, boolean annotationProc) {
         this.group = group
         this.name = name
@@ -193,6 +179,7 @@ class Dependency {
 
         this.fullDep = group + ":" + name + ":" + version
     }
+
     Dependency(String group, String name, String version, boolean shade, String[] excluded, boolean annotationProc) {
         this.group = group
         this.name = name
