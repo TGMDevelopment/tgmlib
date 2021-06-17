@@ -140,4 +140,4 @@ task moveRefmap {
 moveResources.dependsOn(processResources)
 classes.dependsOn(moveResources)
 reobfJar.dependsOn(moveRefmap)
-reobfJar.dependsOn(shadowJar)
+jar.finalizedBy(shadowJar)
