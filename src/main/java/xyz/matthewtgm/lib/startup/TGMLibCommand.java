@@ -102,7 +102,7 @@ public class TGMLibCommand {
     public class GuiPositionTest extends GuiScreen {
 
         public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-            ScreenPosition position = new ScreenPosition(mouseX, mouseY);
+            ScreenPosition position = new ScreenPosition(353, 530);
             EnhancedFontRenderer.drawCenteredText("Hello, World!", position.getX(), position.getY(), -1);
             super.drawScreen(mouseX, mouseY, partialTicks);
         }

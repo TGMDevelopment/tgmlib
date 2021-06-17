@@ -28,8 +28,7 @@ public class ScreenPosition {
     private int x, y;
 
     public ScreenPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
+        setPosition(x, y);
     }
 
     public ScreenPosition(JsonObject<String, Number> jsonObject) {
@@ -79,11 +78,19 @@ public class ScreenPosition {
     }
 
     private int calculateX(int x) {
-        return (ScreenHelper.getScaledWidth() / x);
+        int width = GlobalMinecraft.getDisplayWidth();
+        int ret = -(width - x);
+        if (ret < 0) ret = Math.max(x, 0);
+        if (ret > width) ret = width;
+        return ret;
     }
 
     private int calculateY(int y) {
-        return (ScreenHelper.getScaledHeight() / y);
+        int height = GlobalMinecraft.getDisplayHeight();
+        int ret = -(height - y);
+        if (ret < 0) ret = Math.max(y, 0);
+        if (ret > height) ret = height;
+        return ret;
     }
 
 }

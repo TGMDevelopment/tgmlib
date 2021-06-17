@@ -50,8 +50,8 @@ group = project.mod_group
 sourceCompatibility = targetCompatibility = 1.8
 
 Dependency[] deps = [
-        new Dependency("xyz.matthewtgm", "JsonTGM", "1.3.1", true, (String[])["gson"]),
-        new Dependency("xyz.matthewtgm", "TGMConfig", "1.7.1", true),
+        new Dependency("xyz.matthewtgm", "JsonTGM", "1.6", true, (String[])["gson"]),
+        new Dependency("xyz.matthewtgm", "TGMConfig", "1.7.3", true),
         new Dependency("org.spongepowered", "mixin", "0.7.11-SNAPSHOT", true, (String[])["launchwrapper", "guava", "gson", "commons-io"], true),
         new Dependency("org.projectlombok", "lombok", "1.18.16", false, true)
 ]
@@ -116,11 +116,9 @@ jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest.attributes(
-            'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+            'TweakClass': 'xyz.matthewtgm.libs.mixins.TGMLibTweaker',
             'MixinConfigs': 'mixins.tgmlib.json',
-            'FMLCorePlugin': 'xyz.matthewtgm.lib.mixins.TGMLibLoadingPlugin',
-            'FMLCorePluginContainsFMLMod': true,
-            'ForceLoadAsMod': true
+            'TweakOrder': 0
     )
 
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
