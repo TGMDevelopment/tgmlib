@@ -75,6 +75,7 @@ dependencies {
                 for (String excluded : dep.getExcluded())
                     exclude module: excluded
         }
+
         if (dep.getAnnotationProc()) annotationProcessor(dep.getFullDep())
     }
 }
@@ -82,6 +83,8 @@ dependencies {
 /* Disable mixin refMap warnings. */
 mixin {
     disableRefMapWarning = true
+    defaultObfuscationEnv = 'searge'
+    add sourceSets.main, 'mixins.tgmlib.refmap.json'
 }
 
 /* Set the duplicatesStrategy and define configs.  */

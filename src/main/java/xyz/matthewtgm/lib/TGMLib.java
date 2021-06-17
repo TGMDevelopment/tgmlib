@@ -18,7 +18,6 @@
 
 package xyz.matthewtgm.lib;
 
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import xyz.matthewtgm.lib.startup.StartupRegistry;
