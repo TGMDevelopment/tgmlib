@@ -18,12 +18,15 @@
 
 package xyz.matthewtgm.lib.startup;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
+import xyz.matthewtgm.lib.TGMLib;
 import xyz.matthewtgm.lib.commands.bettercommands.Command;
 import xyz.matthewtgm.lib.config.ConfigMenu;
 import xyz.matthewtgm.lib.config.ConfigOption;
 import xyz.matthewtgm.lib.config.ConfigOptionType;
+import xyz.matthewtgm.lib.gui.menus.GuiCosmeticSelector;
 import xyz.matthewtgm.lib.other.ScreenPosition;
 import xyz.matthewtgm.lib.util.*;
 import xyz.matthewtgm.lib.util.global.GlobalMinecraft;
@@ -31,7 +34,7 @@ import xyz.matthewtgm.tgmconfig.TGMConfig;
 
 import java.io.File;
 
-@Command(name = "tgmlib", tabCompleteOptions = {"notitest1", "notitest2", "positiontest", "messagequeuetest", "threedimtexttest", "configframeworktest"})
+@Command(name = "tgmlib", tabCompleteOptions = {"cosmetics", "notitest1", "notitest2", "positiontest", "messagequeuetest", "threedimtexttest", "configframeworktest"})
 public class TGMLibCommand {
 
     private final TestConfigMenu testConfigMenu = new TestConfigMenu();
@@ -41,6 +44,11 @@ public class TGMLibCommand {
     @Command.Process
     protected void process(String[] args) {
         if (args.length <= 0) ChatHandler.sendMessage(ChatHandler.tgmLibChatPrefix, EnumChatFormatting.RED + "This command requires arguments! Press tab with the command entered in chat to see options.");
+    }
+
+    @Command.Argument(name = "cosmetics")
+    protected void cosmetics() {
+        GuiHelper.open(new GuiCosmeticSelector());
     }
 
     @Command.Argument(name = "notitest1")

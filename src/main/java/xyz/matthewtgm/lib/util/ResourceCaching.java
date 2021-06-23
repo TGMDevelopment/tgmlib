@@ -35,7 +35,7 @@ public class ResourceCaching {
     @Getter
     private static final Map<String, Map<String, ResourceLocation>> cache = new HashMap<>();
 
-    public static ResourceLocation download(String modName, String resourceName, String url) {
+    public static ResourceLocation download(String modName, String subFolder, String resourceName, String url) {
         cache.putIfAbsent(modName, new HashMap<>());
         File modAssets = new File(Minecraft.getMinecraft().mcDataDir, "mod_assets");
         if (!modAssets.exists()) if (!modAssets.mkdirs()) throw new IllegalStateException("Failed to create mod_assets directory in the Minecraft data directory.");
@@ -43,6 +43,11 @@ public class ResourceCaching {
         if (!theModsAssets.exists()) if (!theModsAssets.mkdirs()) throw new IllegalStateException("Failed to create " + modName + "'s assets directory.");
 
         File resourceFile = new File(theModsAssets, resourceName);
+        if (subFolder != null && !subFolder.isEmpty()) {
+            File theSubFolder = new File(theModsAssets, subFolder);
+            if (!theSubFolder.exists()) if (!theSubFolder.mkdirs()) throw new IllegalStateException("Failed to create " + modName + "'s assets directory.");
+            resourceFile = new File(theSubFolder, resourceName);
+        }
         if (resourceFile.exists()) {
             try {
                 return cache.get(modName).putIfAbsent(resourceName, Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(resourceName, new DynamicTexture(ImageIO.read(resourceFile))));
@@ -55,6 +60,10 @@ public class ResourceCaching {
 
         DynamicTexture texture = downloadResourceToFile(resourceFile, url);
         return cache.get(modName).putIfAbsent(resourceName, Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(resourceName, texture));
+    }
+
+    public static ResourceLocation download(String modName, String resourceName, String url) {
+        return download(modName, null, resourceName, url);
     }
 
     public static ResourceLocation getFromCache(String modName, String resourceName) {

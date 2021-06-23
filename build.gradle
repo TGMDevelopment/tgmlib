@@ -23,17 +23,16 @@ plugins {
     id "java"
 }
 
-archivesBaseName = project.mod_name
-version = project.mod_ver
-group = project.mod_group
-def modId = project.mod_id
+archivesBaseName = "${mod_name}-${mod_ver}"
+version = mod_ver
+group = mod_group
 
 sourceCompatibility = targetCompatibility = 1.8
 
 minecraft {
-    version = project.forge_ver
+    version = forge_ver
     runDir = "run"
-    replace("@VER@", project.mod_ver)
+    replace("@VER@", mod_ver)
     mappings = "stable_22"
 }
 
@@ -53,16 +52,17 @@ repositories {
 /* Adds a configuration for shading libraries. */
 configurations {
     shade
-    compileOnly.extendsFrom(shade)
+    implementation.extendsFrom(shade)
 }
 
 /* Define dependencies, also where dependencies are automatically handled. */
 dependencies {
-    shade('xyz.matthewtgm:JsonTGM:1.6') {
+    shade('xyz.matthewtgm:JsonTGM:1.8.1') {
         exclude module: 'gson'
     }
     shade('xyz.matthewtgm:TGMConfig:1.7.3')
-    compileOnly('org.projectlombok:lombok:1.18.16')
+    shade('org.java-websocket:Java-WebSocket:1.5.1')
+    implementation('org.projectlombok:lombok:1.18.16')
     annotationProcessor('org.projectlombok:lombok:1.18.16')
     shade('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
         exclude module: 'launchwrapper'
@@ -76,45 +76,67 @@ dependencies {
 /* Disable mixin refMap warnings. */
 mixin {
     disableRefMapWarning = true
-    defaultObfuscationEnv = 'searge'
     add sourceSets.main, 'mixins.tgmlib.refmap.json'
 }
 
-/* Set the duplicatesStrategy and define configs.  */
+/* Set the duplicatesStrategy and define configs. */
 jar {
+    archiveName = "${archivesBaseName}.jar"
+    enabled = false
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest.attributes(
             'TweakClass': 'xyz.matthewtgm.libs.mixins.TGMLibTweaker',
             'MixinConfigs': 'mixins.tgmlib.json',
-            'TweakOrder': 0
+            'TweakOrder': 0,
+            'FMLCorePluginContainsFMLMod': true,
+            'ForceLoadAsMod': true
     )
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+}
+
+/* Disabled source jars. */
+sourceJar {
+    enabled = false
 }
 
 /* Makes the shade configuration work and re-define the duplicatesStrategy. */
 shadowJar {
     configurations = [project.configurations.shade]
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    archiveBaseName.set(archivesBaseName)
+    archiveVersion.set('')
     archiveClassifier.set('')
 }
 
-/* Force the Gradle wrapper version and distrbution type. */
+/* Force the Gradle wrapper version and distribution type. */
 wrapper {
-    gradleVersion = "6.1"
+    gradleVersion = "6.8.1"
     distributionType = Wrapper.DistributionType.ALL
+}
+
+/* Make shadow reobfuscate using SEARGE. */
+reobf {
+    shadowJar {
+        mappingType = 'SEARGE'
+    }
 }
 
 /* Process the mcmod.info. */
 processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.minecraft.version
+    inputs.property 'name', mod_name
+    inputs.property 'modid', mod_id
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-
-        expand 'version': project.version, 'mcversion': project.minecraft.version
+        expand (
+                'version':project.version,
+                'mcversion':project.minecraft.version,
+                'name':mod_name,
+                'modid': mod_id
+        )
     }
-
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
@@ -128,16 +150,6 @@ task moveResources {
     }
 }
 
-task moveRefmap {
-    doLast {
-        if (file("${buildDir}/tmp/compileJava/mixins.${modId}.refmap.json").exists()) {
-            ant.move file: "${buildDir}/tmp/compileJava/mixins.${modId}.refmap.json",
-                    todir: "${buildDir}/classes/java"
-        }
-    }
-}
-
 moveResources.dependsOn(processResources)
 classes.dependsOn(moveResources)
-reobfJar.dependsOn(moveRefmap)
-jar.finalizedBy(shadowJar)
+reobfJar.dependsOn(shadowJar)

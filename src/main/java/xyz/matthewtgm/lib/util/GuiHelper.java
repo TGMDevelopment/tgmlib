@@ -81,6 +81,10 @@ public class GuiHelper {
         if (screen.height != scaledHeight) screen.height = scaledHeight;
     }
 
+    public static void forceGuiScale(GuiScreen screen, GuiScale scale) {
+        forceGuiScale(screen, scale.getScale());
+    }
+
     /**
      * Opens a {@link GuiScreen}. (will be most commonly used in commands.)
      *
@@ -168,7 +172,7 @@ public class GuiHelper {
         }
 
         @SubscribeEvent
-        protected void onGuiDrawn(GuiScreenEvent.DrawScreenEvent event) {
+        protected void onGuiDrawn(GuiScreenEvent.DrawScreenEvent.Post event) {
             List<GuiEditRunnable> edits = editMap.get(event.gui.getClass());
             if (edits != null && !edits.isEmpty())
                 for (GuiEditRunnable runnable : edits)
@@ -192,6 +196,7 @@ public class GuiHelper {
         }
 
         public interface GuiEditRunnable {
+            Minecraft mc = Minecraft.getMinecraft();
             void init(GuiScreen screen, List<GuiButton> buttonList);
             default void actionPerformed(GuiScreen screen, List<GuiButton> buttonList, GuiButton clicked) {};
             void draw(GuiScreen screen, int mouseX, int mouseY, float partialTicks);
@@ -199,6 +204,19 @@ public class GuiHelper {
             default void mouseClicked(GuiScreen screen, int button, int mouseX, int mouseY, int wheel) {};
         }
 
+    }
+
+    public enum GuiScale {
+        AUTO(0),
+        SMALL(1),
+        NORMAL(2),
+        LARGE(3);
+
+        @Getter
+        private final int scale;
+        GuiScale(int scale) {
+            this.scale = scale;
+        }
     }
 
 }

@@ -24,8 +24,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Multithreading {
 
     private static final AtomicInteger threadCount = new AtomicInteger(0);
-    private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(50, 50, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), (r) -> new Thread(r, String.format("Thread %s", threadCount.incrementAndGet())));
-    private static final ScheduledExecutorService runnableExecutor = Executors.newScheduledThreadPool(10, r -> new Thread("TGMLib Thread " + threadCount.incrementAndGet()));
+    private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(50, 50, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), (r) -> new Thread(r, String.format("TGMLib Thread %s", threadCount.incrementAndGet())));
+    private static final ScheduledExecutorService runnableExecutor = new ScheduledThreadPoolExecutor(threadCount.incrementAndGet());
 
     /**
      * @param runnable The code to run asynchronously.

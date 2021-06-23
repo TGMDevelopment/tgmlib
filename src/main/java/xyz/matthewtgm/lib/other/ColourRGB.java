@@ -18,6 +18,8 @@
 
 package xyz.matthewtgm.lib.other;
 
+import xyz.matthewtgm.json.objects.JsonObject;
+
 import java.awt.*;
 
 public class ColourRGB {
@@ -38,6 +40,18 @@ public class ColourRGB {
         this.a = 255;
     }
 
+    public ColourRGB(Color color) {
+        this(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    }
+
+    public ColourRGB(int rgba) {
+        Color color = new Color(rgba);
+        this.r = color.getRed();
+        this.g = color.getGreen();
+        this.b = color.getBlue();
+        this.a = color.getAlpha();
+    }
+
     public ColourRGB clone() {
         return new ColourRGB(r, g, b, a);
     }
@@ -46,32 +60,36 @@ public class ColourRGB {
         return r;
     }
 
-    public void setR(int r) {
+    public ColourRGB setR(int r) {
         this.r = r;
+        return this;
     }
 
     public int getG() {
         return g;
     }
 
-    public void setG(int g) {
+    public ColourRGB setG(int g) {
         this.g = g;
+        return this;
     }
 
     public int getB() {
         return b;
     }
 
-    public void setB(int b) {
+    public ColourRGB setB(int b) {
         this.b = b;
+        return this;
     }
 
     public int getA() {
         return a;
     }
 
-    public void setA(int a) {
+    public ColourRGB setA(int a) {
         this.a = a;
+        return this;
     }
 
     public int getRGB() {
@@ -84,6 +102,10 @@ public class ColourRGB {
 
     public Color toJavaColor() {
         return new Color(r, g, b, a);
+    }
+
+    public String toJson() {
+        return new JsonObject<>().add("r", r).add("g", g).add("b", b).add("a", a).toJson();
     }
 
     @Override

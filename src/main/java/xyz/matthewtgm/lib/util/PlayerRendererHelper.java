@@ -40,17 +40,14 @@ public class PlayerRendererHelper {
      */
     public static void addLayer(LayerRenderer layer) {
         try {
-
             Method method = RendererLivingEntity.class.getDeclaredMethod("addLayer", LayerRenderer.class);
             method.setAccessible(true);
-
             Field field = RenderManager.class.getDeclaredField("skinMap");
             field.setAccessible(true);
 
             for (Object render : ((Map<RenderPlayer, Object>) field.get(Minecraft.getMinecraft().getRenderManager())).values()) {
                 method.invoke(render, layer);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
