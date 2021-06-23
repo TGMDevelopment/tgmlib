@@ -35,7 +35,9 @@ public class ChromaDragonWingsCosmetic extends BaseWingsCosmetic {
     }
 
     public ColourRGB colour() {
-        return new ColourRGB(ColourUtils.timeBasedChroma()).setA(255);
+        ColourRGB value = new ColourRGB(ColourUtils.timeBasedChroma());
+        value.setA(255);
+        return value;
 
     }
 

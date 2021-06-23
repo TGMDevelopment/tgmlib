@@ -60,36 +60,32 @@ public class ColourRGB {
         return r;
     }
 
-    public ColourRGB setR(int r) {
+    public void setR(int r) {
         this.r = r;
-        return this;
     }
 
     public int getG() {
         return g;
     }
 
-    public ColourRGB setG(int g) {
+    public void setG(int g) {
         this.g = g;
-        return this;
     }
 
     public int getB() {
         return b;
     }
 
-    public ColourRGB setB(int b) {
+    public void setB(int b) {
         this.b = b;
-        return this;
     }
 
     public int getA() {
         return a;
     }
 
-    public ColourRGB setA(int a) {
+    public void setA(int a) {
         this.a = a;
-        return this;
     }
 
     public int getRGB() {
