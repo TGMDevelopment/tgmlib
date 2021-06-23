@@ -152,4 +152,4 @@ task moveResources {
 
 moveResources.dependsOn(processResources)
 classes.dependsOn(moveResources)
-reobfJar.dependsOn(shadowJar)
+jar.finalizedBy(shadowJar)
