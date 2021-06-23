@@ -94,11 +94,6 @@ jar {
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
 }
 
-/* Disabled source jars. */
-sourceJar {
-    enabled = false
-}
-
 /* Makes the shade configuration work and re-define the duplicatesStrategy. */
 shadowJar {
     configurations = [project.configurations.shade]
