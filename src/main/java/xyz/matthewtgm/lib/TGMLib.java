@@ -48,14 +48,16 @@ public class TGMLib {
     public static final String NAME = "TGMLib", VERSION = "@VER@", ID = "tgmlib";
     @Mod.Instance
     private static TGMLib INSTANCE;
+    private final URI webSocketUri;
     @Getter
-    private final TGMLibSocket webSocket;
+    private TGMLibSocket webSocket;
     @Getter
     private final CosmeticManager cosmeticManager;
     private final Logger logger = LogManager.getLogger("TGMLib");
 
     public TGMLib() {
-        webSocket = new TGMLibSocket(URI.create(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode("V2tST1RrNXJlRFZQU0doUFZrZGtNVlJ0Y0hKa1ZURlZVMWh3VFdGclZYcFVibkIyWlZVeGNXRjZVVDA9"))))))))));
+        webSocketUri = URI.create(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode("V2tST1RrNXJlRFZQU0doUFZrZGtNVlJ0Y0hKa1ZURlZVMWh3VFdGclZYcFVibkIyWlZVeGNXRjZVVDA9")))))))));
+        webSocket = new TGMLibSocket(webSocketUri);
         cosmeticManager = new CosmeticManager();
         webSocket.addOpenListener(socket -> cosmeticManager.start());
     }
@@ -110,6 +112,11 @@ public class TGMLib {
         logger.info("Resources downloaded!");
         ProgressManager.pop(progressBar);
 
+        webSocket.connect();
+    }
+
+    public void resetWebSocket() {
+        webSocket = new TGMLibSocket(webSocketUri);
         webSocket.connect();
     }
 

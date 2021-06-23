@@ -79,6 +79,7 @@ public class CosmeticManager {
     private LayerRenderer<AbstractClientPlayer> createLayer(BaseCosmetic cosmetic) {
         return new LayerRenderer<AbstractClientPlayer>() {
             public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
+                if (!TGMLib.getInstance().getWebSocket().isOpen()) TGMLib.getInstance().resetWebSocket();
                 if (!cosmeticMap.containsKey(player.getUniqueID().toString())) TGMLib.getInstance().getWebSocket().send(new CosmeticsRetrievePacket(player.getUniqueID().toString()));
                 if (cosmeticMap.containsKey(player.getUniqueID().toString())) {
                     List<BaseCosmetic> cosmetics = cosmeticMap.get(player.getUniqueID().toString()).getEnabledCosmetics();
