@@ -56,7 +56,6 @@ public class TGMLib {
 
     public TGMLib() {
         webSocket = new TGMLibSocket(URI.create(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode("V2tST1RrNXJlRFZQU0doUFZrZGtNVlJ0Y0hKa1ZURlZVMWh3VFdGclZYcFVibkIyWlZVeGNXRjZVVDA9"))))))))));
-        //webSocket = new TGMLibSocket(URI.create("ws://localhost:2298"));
         cosmeticManager = new CosmeticManager();
         webSocket.addOpenListener(socket -> cosmeticManager.start());
     }

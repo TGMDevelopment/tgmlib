@@ -22,6 +22,7 @@ import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -46,6 +47,7 @@ public class CosmeticManager {
     private final List<BaseCosmetic> cosmetics = new ArrayList<>();
     @Getter
     private final Map<String, PlayerCosmeticsHolder> cosmeticMap = new HashMap<>();
+    private final Map<String, BaseCosmetic> registeredLayers = new HashMap<>();
     private final Logger logger = LogManager.getLogger(TGMLib.NAME + " (" + getClass().getSimpleName() + ")");
 
     public void start() {
@@ -87,6 +89,18 @@ public class CosmeticManager {
                 return false;
             }
         };
+    }
+
+    @SubscribeEvent
+    public void onPlayerRendered(RenderPlayerEvent.Pre event) {
+        if (registeredLayers.size() != cosmetics.size()) {
+            for (BaseCosmetic cosmetic : cosmetics) {
+                if (!registeredLayers.containsKey(cosmetic.getId())) {
+                    event.renderer.addLayer(createLayer(cosmetic));
+                    registeredLayers.putIfAbsent(cosmetic.getId(), cosmetic);
+                }
+            }
+        }
     }
 
     @SubscribeEvent
