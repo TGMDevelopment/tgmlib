@@ -29,6 +29,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.java_websocket.client.WebSocketClient;
 import xyz.matthewtgm.lib.cosmetics.CosmeticManager;
 import xyz.matthewtgm.lib.gui.menus.GuiCosmeticSelector;
 import xyz.matthewtgm.lib.other.HitBox;
@@ -58,6 +59,7 @@ public class TGMLib {
     public TGMLib() {
         webSocketUri = URI.create(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode("V2tST1RrNXJlRFZQU0doUFZrZGtNVlJ0Y0hKa1ZURlZVMWh3VFdGclZYcFVibkIyWlZVeGNXRjZVVDA9")))))))));
         webSocket = new TGMLibSocket(webSocketUri);
+        addSocketSettings(webSocket);
         cosmeticManager = new CosmeticManager();
         webSocket.addOpenListener(socket -> cosmeticManager.start());
     }
@@ -107,6 +109,7 @@ public class TGMLib {
         ResourceCaching.download("TGMLib", "cosmetics/cloaks/exclusive", "johnny_jth_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/exclusive/johnny_jth_cloak.png");
         ResourceCaching.download("TGMLib", "cosmetics/cloaks", "minecoin_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/minecoin_cloak.png");
         ResourceCaching.download("TGMLib", "cosmetics/cloaks", "partner_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/partner_cloak.png");
+        ResourceCaching.download("TGMLib", "cosmetics/cloaks/exclusive", "wyvest_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/exclusive/wyvest_cloak.png");
 
         ResourceCaching.download("TGMLib", "cosmetics/wings", "dragon_wings.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/wings/dragon_wings.png");
         logger.info("Resources downloaded!");
@@ -115,9 +118,9 @@ public class TGMLib {
         webSocket.connect();
     }
 
-    public void resetWebSocket() {
-        webSocket = new TGMLibSocket(webSocketUri);
-        webSocket.connect();
+    public void addSocketSettings(WebSocketClient socketClient) {
+        socketClient.setConnectionLostTimeout(Integer.MAX_VALUE);
+        socketClient.setTcpNoDelay(true);
     }
 
     public static TGMLib getInstance() {

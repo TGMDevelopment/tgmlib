@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_6455;
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.java_websocket.handshake.ServerHandshake;
 import xyz.matthewtgm.json.objects.JsonObject;
 import xyz.matthewtgm.json.parsing.JsonParser;
@@ -69,6 +70,11 @@ public class TGMLibSocket extends WebSocketClient {
     }
 
     public void onError(Exception ex) {
+        if (ex instanceof WebsocketNotConnectedException) {
+            reconnect();
+            return;
+        }
+
         logger.error("An unexpected error occurred!", ex);
         ChatHandler.sendMessage(ChatHandler.tgmLibChatPrefix, String.format("%s%sAn exception was thrown from the TGMLib WebSocket!", EnumChatFormatting.RED, EnumChatFormatting.BOLD));
     }
@@ -85,7 +91,6 @@ public class TGMLibSocket extends WebSocketClient {
     private void handleMessage(String message) {
         if (!JsonHelper.isValidJson(message)) return;
         JsonObject<String, Object> packet = JsonParser.parseObj(message);
-        logger.info(packet);
         Class<? extends BasePacket> packetClazz = packets.inverse().get(packet.getAsFloat("id"));
         BasePacket thePacket = null;
         try {

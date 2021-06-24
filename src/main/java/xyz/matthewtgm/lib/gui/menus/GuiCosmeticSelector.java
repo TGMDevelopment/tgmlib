@@ -99,7 +99,7 @@ public class GuiCosmeticSelector extends GuiScreen {
                         libSocket.send(new CosmeticsTogglePacket(mc.getSession().getProfile().getId().toString(), ownedCosmetic.getId()));
                         new Thread(() -> {
                             try {
-                                Thread.sleep(250);
+                                Thread.sleep(500);
                                 boolean toggled = cosmeticsHolder.getEnabledCosmetics().contains(ownedCosmetic);
                                 displayString = String.format("%s (%s%s%s)", ownedCosmetic.getName(), toggled ? EnumChatFormatting.GREEN : EnumChatFormatting.RED, toggled ? "ON" : "OFF", EnumChatFormatting.RESET);
                             } catch (Exception e) {
@@ -112,7 +112,7 @@ public class GuiCosmeticSelector extends GuiScreen {
             };
             buttonList.add(button);
             xOff.set(xPos + button.getButtonWidth() + 5);
-            if (xPos > width - button.getButtonWidth()) {
+            if (xPos > width - button.getButtonWidth() * 2) {
                 xOff.set(5);
                 yOff.set(yPos + button.height + 5);
             }

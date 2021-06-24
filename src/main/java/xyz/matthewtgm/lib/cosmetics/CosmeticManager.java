@@ -22,7 +22,6 @@ import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -33,6 +32,7 @@ import xyz.matthewtgm.lib.cosmetics.impl.cloaks.DeveloperCloakCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.cloaks.MinecoinCloakCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.cloaks.PartnerCloakCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.cloaks.exclusive.JohnnyJthCloakCosmetic;
+import xyz.matthewtgm.lib.cosmetics.impl.cloaks.exclusive.WyvestCloakCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.wings.ChromaDragonWingsCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.wings.DragonWingsCosmetic;
 import xyz.matthewtgm.lib.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
@@ -41,13 +41,12 @@ import xyz.matthewtgm.lib.util.PlayerRendererHelper;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class CosmeticManager {
-
+public class CosmeticManager extends Thread {
     @Getter
     private final List<BaseCosmetic> cosmetics = new ArrayList<>();
     @Getter
     private final Map<String, PlayerCosmeticsHolder> cosmeticMap = new HashMap<>();
-    private final Map<String, BaseCosmetic> registeredLayers = new HashMap<>();
+    private static final List<String> madeRequestsFor = new ArrayList<>();
     private final Logger logger = LogManager.getLogger(TGMLib.NAME + " (" + getClass().getSimpleName() + ")");
 
     public void start() {
@@ -64,6 +63,7 @@ public class CosmeticManager {
         cosmetics.add(new JohnnyJthCloakCosmetic());
         cosmetics.add(new MinecoinCloakCosmetic());
         cosmetics.add(new PartnerCloakCosmetic());
+        cosmetics.add(new WyvestCloakCosmetic());
 
         cosmetics.add(new DragonWingsCosmetic());
         cosmetics.add(new ChromaDragonWingsCosmetic());
@@ -79,8 +79,11 @@ public class CosmeticManager {
     private LayerRenderer<AbstractClientPlayer> createLayer(BaseCosmetic cosmetic) {
         return new LayerRenderer<AbstractClientPlayer>() {
             public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
-                if (!TGMLib.getInstance().getWebSocket().isOpen()) TGMLib.getInstance().resetWebSocket();
-                if (!cosmeticMap.containsKey(player.getUniqueID().toString())) TGMLib.getInstance().getWebSocket().send(new CosmeticsRetrievePacket(player.getUniqueID().toString()));
+                if (!TGMLib.getInstance().getWebSocket().isOpen() && TGMLib.getInstance().getWebSocket().isClosed() || !TGMLib.getInstance().getWebSocket().isOpen() && TGMLib.getInstance().getWebSocket().isClosing()) TGMLib.getInstance().getWebSocket().reconnect();
+                if (!cosmeticMap.containsKey(player.getUniqueID().toString()) && !madeRequestsFor.contains(player.getUniqueID().toString())) {
+                    TGMLib.getInstance().getWebSocket().send(new CosmeticsRetrievePacket(player.getUniqueID().toString()));
+                    madeRequestsFor.add(player.getUniqueID().toString());
+                }
                 if (cosmeticMap.containsKey(player.getUniqueID().toString())) {
                     List<BaseCosmetic> cosmetics = cosmeticMap.get(player.getUniqueID().toString()).getEnabledCosmetics();
                     if (cosmetics.contains(cosmetic)) cosmetic.render(player, limbSwing, limbSwingAmount, partialTicks, tickAge, netHeadYaw, netHeadPitch, scale);
@@ -90,18 +93,6 @@ public class CosmeticManager {
                 return false;
             }
         };
-    }
-
-    @SubscribeEvent
-    public void onPlayerRendered(RenderPlayerEvent.Pre event) {
-        if (registeredLayers.size() != cosmetics.size()) {
-            for (BaseCosmetic cosmetic : cosmetics) {
-                if (!registeredLayers.containsKey(cosmetic.getId())) {
-                    event.renderer.addLayer(createLayer(cosmetic));
-                    registeredLayers.putIfAbsent(cosmetic.getId(), cosmetic);
-                }
-            }
-        }
     }
 
     @SubscribeEvent
