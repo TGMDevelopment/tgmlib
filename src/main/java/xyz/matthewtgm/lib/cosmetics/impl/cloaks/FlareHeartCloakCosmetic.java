@@ -16,21 +16,21 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.lib.cosmetics.impl.cloaks.partners;
+package xyz.matthewtgm.lib.cosmetics.impl.cloaks;
 
 import net.minecraft.util.ResourceLocation;
 import xyz.matthewtgm.lib.cosmetics.BaseCloakCosmetic;
 import xyz.matthewtgm.lib.other.GifResourceLocation;
 import xyz.matthewtgm.lib.util.ResourceCaching;
 
-public class DarkCheeseIglooCloakCosmetic extends BaseCloakCosmetic {
+public class FlareHeartCloakCosmetic extends BaseCloakCosmetic {
 
     private final GifResourceLocation texture;
     private int tick;
 
-    public DarkCheeseIglooCloakCosmetic() {
-        super("DarkCheese's Igloo Cloak", "DARK_CHEESE_IGLOO_CLOAK");
-        this.texture = new GifResourceLocation(ResourceCaching.getResourceFileFromCache("TGMLib", "cosmetics/cloaks/partners", "darkcheese_igloo.gif"), 1);
+    public FlareHeartCloakCosmetic() {
+        super("Flare Heart Cloak", "FLARE_HEART_CLOAK");
+        this.texture = new GifResourceLocation(ResourceCaching.getResourceFileFromCache("TGMLib", "cosmetics/cloaks", "flare_heart_cloak.gif"), 1);
     }
 
     public ResourceLocation texture() {

@@ -110,6 +110,7 @@ public class TGMLib {
         ResourceCaching.download("TGMLib", "cosmetics/cloaks/exclusive", "johnny_jth_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/exclusive/johnny_jth_cloak.png");
         ResourceCaching.download("TGMLib", "cosmetics/cloaks", "minecoin_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/minecoin_cloak.png");
         ResourceCaching.download("TGMLib", "cosmetics/cloaks", "partner_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/partner_cloak.png");
+        ResourceCaching.download("TGMLib", "cosmetics/cloaks", "flare_heart_cloak.gif", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/flare_heart_cloak.gif");
         ResourceCaching.download("TGMLib", "cosmetics/cloaks/exclusive", "wyvest_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/exclusive/wyvest_cloak.png");
 
         ResourceCaching.download("TGMLib", "cosmetics/wings", "dragon_wings.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/wings/dragon_wings.png");

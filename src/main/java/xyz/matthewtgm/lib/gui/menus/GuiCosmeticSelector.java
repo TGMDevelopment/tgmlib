@@ -95,7 +95,7 @@ public class GuiCosmeticSelector extends GuiScreen {
             GuiTransButton button = new GuiTransButton(buttonId.getAndAdd(1), xPos, yPos, 150, 20, String.format("%s (%s%s%s)", ownedCosmetic.getName(), toggled ? EnumChatFormatting.GREEN : EnumChatFormatting.RED, toggled ? "ON" : "OFF", EnumChatFormatting.RESET)) {
                 public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                     if (super.mousePressed(mc, mouseX, mouseY)) {
-                        for (BaseCosmetic enabledCosmetic : cosmeticsHolder.getEnabledCosmetics()) if (enabledCosmetic.getType().equals(ownedCosmetic.getType())) libSocket.send(new CosmeticsTogglePacket(mc.getSession().getProfile().getId().toString(), enabledCosmetic.getId()));
+                        for (BaseCosmetic enabledCosmetic : cosmeticsHolder.getEnabledCosmetics()) if (!enabledCosmetic.getId().equalsIgnoreCase(ownedCosmetic.getId()) && enabledCosmetic.getType().equals(ownedCosmetic.getType())) libSocket.send(new CosmeticsTogglePacket(mc.getSession().getProfile().getId().toString(), enabledCosmetic.getId()));
                         libSocket.send(new CosmeticsTogglePacket(mc.getSession().getProfile().getId().toString(), ownedCosmetic.getId()));
                         new Thread(() -> {
                             try {

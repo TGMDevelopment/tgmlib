@@ -29,6 +29,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.lib.TGMLib;
 import xyz.matthewtgm.lib.cosmetics.impl.cloaks.DeveloperCloakCosmetic;
+import xyz.matthewtgm.lib.cosmetics.impl.cloaks.FlareHeartCloakCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.cloaks.MinecoinCloakCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.cloaks.PartnerCloakCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.cloaks.exclusive.JohnnyJthCloakCosmetic;
@@ -62,6 +63,7 @@ public class CosmeticManager {
         logger.info("Initializing cosmetics...");
         cosmetics.add(new DarkCheeseIglooCloakCosmetic());
         cosmetics.add(new DeveloperCloakCosmetic());
+        cosmetics.add(new FlareHeartCloakCosmetic());
         cosmetics.add(new JohnnyJthCloakCosmetic());
         cosmetics.add(new MinecoinCloakCosmetic());
         cosmetics.add(new PartnerCloakCosmetic());
