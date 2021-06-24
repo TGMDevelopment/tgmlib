@@ -34,6 +34,7 @@ import xyz.matthewtgm.lib.TGMLib;
 import xyz.matthewtgm.lib.socket.packets.BasePacket;
 import xyz.matthewtgm.lib.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
 import xyz.matthewtgm.lib.socket.packets.impl.cosmetics.CosmeticsTogglePacket;
+import xyz.matthewtgm.lib.startup.TGMLibCommand;
 import xyz.matthewtgm.lib.util.ChatHandler;
 
 import java.net.URI;
@@ -52,7 +53,13 @@ public class TGMLibSocket extends WebSocketClient {
     }
 
     public void connect() {
+        logger.info("Connecting to socket.");
         super.connect();
+    }
+
+    public void reconnect() {
+        logger.info("Reconnecting to socket.");
+        super.reconnect();
     }
 
     public void onOpen(ServerHandshake handshake) {
@@ -84,13 +91,10 @@ public class TGMLibSocket extends WebSocketClient {
         super.send(packet.toJson().toJson());
     }
 
-    public void reconnect() {
-        connect();
-    }
-
     private void handleMessage(String message) {
         if (!JsonHelper.isValidJson(message)) return;
         JsonObject<String, Object> packet = JsonParser.parseObj(message);
+        if (TGMLibCommand.logPackets) logger.warn(JsonHelper.makePretty(packet));
         Class<? extends BasePacket> packetClazz = packets.inverse().get(packet.getAsFloat("id"));
         BasePacket thePacket = null;
         try {

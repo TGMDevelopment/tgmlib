@@ -156,7 +156,7 @@ public class GuiHelper {
         }
 
         @SubscribeEvent
-        protected void onGuiInit(GuiScreenEvent.InitGuiEvent event) {
+        protected void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event) {
             List<GuiEditRunnable> edits = editMap.get(event.gui.getClass());
             if (edits != null && !edits.isEmpty())
                 for (GuiEditRunnable runnable : edits)
@@ -164,7 +164,7 @@ public class GuiHelper {
         }
 
         @SubscribeEvent
-        protected void onGuiActionPerformed(GuiScreenEvent.ActionPerformedEvent event) {
+        protected void onGuiActionPerformed(GuiScreenEvent.ActionPerformedEvent.Post event) {
             List<GuiEditRunnable> edits = editMap.get(event.gui.getClass());
             if (edits != null && !edits.isEmpty())
                 for (GuiEditRunnable runnable : edits)
@@ -180,7 +180,7 @@ public class GuiHelper {
         }
 
         @SubscribeEvent
-        protected void onGuiInit(GuiScreenEvent.KeyboardInputEvent event) {
+        protected void onGuiInit(GuiScreenEvent.KeyboardInputEvent.Post event) {
             List<GuiEditRunnable> edits = editMap.get(event.gui.getClass());
             if (edits != null && !edits.isEmpty())
                 for (GuiEditRunnable runnable : edits)
@@ -188,7 +188,7 @@ public class GuiHelper {
         }
 
         @SubscribeEvent
-        protected void onGuiInit(GuiScreenEvent.MouseInputEvent event) {
+        protected void onGuiInit(GuiScreenEvent.MouseInputEvent.Post event) {
             List<GuiEditRunnable> edits = editMap.get(event.gui.getClass());
             if (edits != null && !edits.isEmpty())
                 for (GuiEditRunnable runnable : edits)
@@ -198,10 +198,10 @@ public class GuiHelper {
         public interface GuiEditRunnable {
             Minecraft mc = Minecraft.getMinecraft();
             void init(GuiScreen screen, List<GuiButton> buttonList);
-            default void actionPerformed(GuiScreen screen, List<GuiButton> buttonList, GuiButton clicked) {};
+            default void actionPerformed(GuiScreen screen, List<GuiButton> buttonList, GuiButton clicked) {}
             void draw(GuiScreen screen, int mouseX, int mouseY, float partialTicks);
-            default void keyTyped(GuiScreen screen, char typedChar, int keyCode) {};
-            default void mouseClicked(GuiScreen screen, int button, int mouseX, int mouseY, int wheel) {};
+            default void keyTyped(GuiScreen screen, char typedChar, int keyCode) {}
+            default void mouseClicked(GuiScreen screen, int button, int mouseX, int mouseY, int wheel) {}
         }
 
     }

@@ -60,6 +60,7 @@ public class TGMLib {
         webSocketUri = URI.create(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode("V2tST1RrNXJlRFZQU0doUFZrZGtNVlJ0Y0hKa1ZURlZVMWh3VFdGclZYcFVibkIyWlZVeGNXRjZVVDA9")))))))));
         webSocket = new TGMLibSocket(webSocketUri);
         addSocketSettings(webSocket);
+
         cosmeticManager = new CosmeticManager();
         webSocket.addOpenListener(socket -> cosmeticManager.start());
     }
@@ -76,6 +77,7 @@ public class TGMLib {
         GuiHelper.Editor.addEdit(GuiIngameMenu.class, new GuiHelper.Editor.GuiEditRunnable() {
             public void init(GuiScreen screen, List<GuiButton> buttonList) {
                 HitBox cosmeticsButtonHitBox = generateCosmeticsButtonHitBox(screen);
+                LogManager.getLogger("GuiIngameMenu Editor").warn("{} | {} | {} | {}", cosmeticsButtonHitBox.getX(), cosmeticsButtonHitBox.getY(), cosmeticsButtonHitBox.getWidth(), cosmeticsButtonHitBox.getHeight());
                 buttonList.add(new GuiButton(763454237, (int) cosmeticsButtonHitBox.getX(), (int) cosmeticsButtonHitBox.getY(), (int) cosmeticsButtonHitBox.getWidth(), (int) cosmeticsButtonHitBox.getHeight(), "TGMLib Cosmetics") {
                     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                         if (super.mousePressed(mc, mouseX, mouseY)) mc.displayGuiScreen(new GuiCosmeticSelector(screen));
@@ -105,6 +107,7 @@ public class TGMLib {
         ResourceCaching.download("TGMLib", "switch_off.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/config_framework/switch_off.png");
 
         /* Cosmetics. */
+        ResourceCaching.download("TGMLib", "cosmetics/cloaks/partners", "darkcheese_igloo.gif", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/partners/darkcheese_igloo.gif");
         ResourceCaching.download("TGMLib", "cosmetics/cloaks", "developer_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/developer_cloak.png");
         ResourceCaching.download("TGMLib", "cosmetics/cloaks/exclusive", "johnny_jth_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/exclusive/johnny_jth_cloak.png");
         ResourceCaching.download("TGMLib", "cosmetics/cloaks", "minecoin_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/minecoin_cloak.png");

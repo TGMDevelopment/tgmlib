@@ -21,12 +21,14 @@ package xyz.matthewtgm.lib.startup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
 import xyz.matthewtgm.lib.TGMLib;
 import xyz.matthewtgm.lib.commands.bettercommands.Command;
 import xyz.matthewtgm.lib.config.ConfigMenu;
 import xyz.matthewtgm.lib.config.ConfigOption;
 import xyz.matthewtgm.lib.config.ConfigOptionType;
 import xyz.matthewtgm.lib.gui.menus.GuiCosmeticSelector;
+import xyz.matthewtgm.lib.other.GifResourceLocation;
 import xyz.matthewtgm.lib.other.ScreenPosition;
 import xyz.matthewtgm.lib.util.*;
 import xyz.matthewtgm.lib.util.global.GlobalMinecraft;
@@ -39,35 +41,42 @@ public class TGMLibCommand {
 
     private final TestConfigMenu testConfigMenu = new TestConfigMenu();
     static boolean drawThreeDimText = false;
+    public static boolean logPackets = false;
     public final TGMConfig config = new TGMConfig("tgmlib", new File(GlobalMinecraft.getGameDirectory(), "config"));
 
     @Command.Process
-    protected void process(String[] args) {
+    private void process(String[] args) {
         if (args.length <= 0) ChatHandler.sendMessage(ChatHandler.tgmLibChatPrefix, EnumChatFormatting.RED + "This command requires arguments! Press tab with the command entered in chat to see options.");
     }
 
     @Command.Argument(name = "cosmetics")
-    protected void cosmetics() {
+    private void cosmetics() {
+        System.out.println("Opening cosmetics menu...");
         GuiHelper.open(new GuiCosmeticSelector());
     }
 
+    @Command.Argument(name = "logpackets")
+    private void logPackets() {
+        logPackets = !logPackets;
+    }
+
     @Command.Argument(name = "notitest1")
-    protected void notificationTest1() {
+    private void notificationTest1() {
         Notifications.push("Test Notification", "Test Description");
     }
 
     @Command.Argument(name = "notitest2")
-    protected void notificationTest2() {
+    private void notificationTest2() {
         Notifications.push("Test Clickable Notification", "Test Clickable Description", () -> ChatHandler.sendMessage(ChatHandler.tgmLibChatPrefix, "Notification clicked!"));
     }
 
     @Command.Argument(name = "positiontest")
-    protected void positionTest() {
+    private void positionTest() {
         GuiHelper.open(new GuiPositionTest());
     }
 
     @Command.Argument(name = "messagequeuetest")
-    protected void messageQueueTest() {
+    private void messageQueueTest() {
         MessageQueue.queue("Default delay - 25 ticks");
         MessageQueue.queue("Default delay 2 - 25 ticks");
         MessageQueue.queue("Default delay 3 - 25 ticks");
@@ -75,12 +84,12 @@ public class TGMLibCommand {
     }
 
     @Command.Argument(name = "threedimtexttest")
-    protected void threeDimTextTest() {
+    private void threeDimTextTest() {
         drawThreeDimText = !drawThreeDimText;
     }
 
     @Command.Argument(name = "configframeworktest", tabCompleteOptions = {"load", "save", "open"})
-    protected void configFrameworkTest(String[] args) {
+    private void configFrameworkTest(String[] args) {
         if (ArrayHelper.contains(args, "load")) {
             logTestConfigBools("Load pre");
             testConfigMenu.load();
@@ -107,7 +116,7 @@ public class TGMLibCommand {
         return config;
     }
 
-    public class GuiPositionTest extends GuiScreen {
+    public static class GuiPositionTest extends GuiScreen {
 
         public void drawScreen(int mouseX, int mouseY, float partialTicks) {
             ScreenPosition position = new ScreenPosition(353, 530);

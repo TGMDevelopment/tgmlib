@@ -33,6 +33,7 @@ import xyz.matthewtgm.lib.cosmetics.impl.cloaks.MinecoinCloakCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.cloaks.PartnerCloakCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.cloaks.exclusive.JohnnyJthCloakCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.cloaks.exclusive.WyvestCloakCosmetic;
+import xyz.matthewtgm.lib.cosmetics.impl.cloaks.partners.DarkCheeseIglooCloakCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.wings.ChromaDragonWingsCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.wings.DragonWingsCosmetic;
 import xyz.matthewtgm.lib.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
@@ -59,6 +60,7 @@ public class CosmeticManager extends Thread {
 
     private void initCosmetics() {
         logger.info("Initializing cosmetics...");
+        cosmetics.add(new DarkCheeseIglooCloakCosmetic());
         cosmetics.add(new DeveloperCloakCosmetic());
         cosmetics.add(new JohnnyJthCloakCosmetic());
         cosmetics.add(new MinecoinCloakCosmetic());
