@@ -60,9 +60,7 @@ public class TGMLib {
         webSocketUri = URI.create(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode(new String(Base64.getDecoder().decode("V2tST1RrNXJlRFZQU0doUFZrZGtNVlJ0Y0hKa1ZURlZVMWh3VFdGclZYcFVibkIyWlZVeGNXRjZVVDA9")))))))));
         webSocket = new TGMLibSocket(webSocketUri);
         addSocketSettings(webSocket);
-
         cosmeticManager = new CosmeticManager();
-        webSocket.addOpenListener(socket -> cosmeticManager.start());
     }
 
     @Mod.EventHandler
@@ -118,7 +116,12 @@ public class TGMLib {
         logger.info("Resources downloaded!");
         ProgressManager.pop(progressBar);
 
-        webSocket.connect();
+        try {
+            webSocket.connectBlocking();
+            cosmeticManager.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void addSocketSettings(WebSocketClient socketClient) {

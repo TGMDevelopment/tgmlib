@@ -21,28 +21,19 @@ package xyz.matthewtgm.lib.other;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.resources.FileResourcePack;
-import net.minecraft.client.resources.FolderResourcePack;
-import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.asm.FMLSanityChecker;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
+import java.io.*;
 import java.util.Iterator;
 
 public class GifResourceLocation {
 
     @Getter
-    private final ResourceLocation gifLocation;
-    @Getter
-    private final File location;
+    private final File gif;
     private final int fps;
     private int frames;
 
@@ -54,23 +45,20 @@ public class GifResourceLocation {
 
     private final ResourceLocation[] textures;
 
-    public GifResourceLocation(ResourceLocation gifLocation, File location, int fpt) {
-        this.gifLocation = gifLocation;
-        this.location = location;
+    public GifResourceLocation(File gif, int fpt) {
+        this.gif = gif;
         this.fps = fpt;
         ResourceLocation[] newTextures;
         try {
-            InputStream stream = open(gifLocation);
+            InputStream stream = new FileInputStream(gif);
             ImageInputStream imageStream = ImageIO.createImageInputStream(stream);
             Iterator<ImageReader> readers = ImageIO.getImageReaders(imageStream);
-            if (!readers.hasNext()) throw new IOException("No suitable reader found for image" + gifLocation);
+            if (!readers.hasNext()) throw new IOException("No suitable reader found for image" + gif);
             ImageReader reader = readers.next();
             reader.setInput(imageStream);
             int frames = reader.getNumImages(true);
             this.frames = frames;
-            System.out.println(frames);
             BufferedImage[] images = new BufferedImage[frames];
-            System.out.println(Arrays.asList(images));
             for(int i = 0; i < frames; i++) images[i] = reader.read(i);
             BufferedImage first = images[0];
             this.width = first.getWidth();
@@ -98,38 +86,6 @@ public class GifResourceLocation {
             }
         }
         currentTick++;
-    }
-
-    private InputStream open(ResourceLocation loc) throws IOException {
-        IResourcePack mcPack = getMcPack();
-        IResourcePack miscPack = getMiscPack();
-        IResourcePack fmlPack = getFmlPack();
-        IResourcePack locationPack = getLocationPack();
-        if (miscPack.resourceExists(loc)) return miscPack.getInputStream(loc);
-        else if (fmlPack.resourceExists(loc)) return fmlPack.getInputStream(loc);
-        else if (locationPack.resourceExists(loc)) return locationPack.getInputStream(loc);
-        return mcPack.getInputStream(loc);
-    }
-
-    private IResourcePack getMcPack() {
-        return Minecraft.getMinecraft().mcDefaultResourcePack;
-    }
-
-    private IResourcePack getMiscPack() {
-        return createResourcePack(new File(Minecraft.getMinecraft().mcDataDir, "resources"));
-    }
-
-    private IResourcePack getFmlPack() {
-        return createResourcePack(FMLSanityChecker.fmlLocation);
-    }
-
-    private IResourcePack getLocationPack() {
-        return createResourcePack(location);
-    }
-
-    private IResourcePack createResourcePack(File file) {
-        if (file.isDirectory()) return new FolderResourcePack(file);
-        else return new FileResourcePack(file);
     }
 
 }

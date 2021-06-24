@@ -42,7 +42,7 @@ import xyz.matthewtgm.lib.util.PlayerRendererHelper;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class CosmeticManager extends Thread {
+public class CosmeticManager {
     @Getter
     private final List<BaseCosmetic> cosmetics = new ArrayList<>();
     @Getter

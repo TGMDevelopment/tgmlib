@@ -70,6 +70,16 @@ public class ResourceCaching {
         return cache.get(modName).get(resourceName);
     }
 
+    public static File getResourceFileFromCache(String modName, String subFolder, String resourceName) {
+        File modAssets = new File(Minecraft.getMinecraft().mcDataDir, "mod_assets");
+        if (!modAssets.exists()) throw new IllegalStateException("Trying to access resources before they've ever existed!");
+        File theModsAssets = new File(modAssets, modName);
+        if (!theModsAssets.exists()) throw new IllegalStateException("The mod provided doesn't even have any resources cached!");
+        File sub = new File(theModsAssets, subFolder);
+        if (!sub.exists()) throw new IllegalStateException("The sub folder provided doesn't exist!");
+        return new File(sub, resourceName);
+    }
+
     private static DynamicTexture downloadResourceToFile(File resourceFile, String url) {
         try {
             return createFile(resourceFile, url);

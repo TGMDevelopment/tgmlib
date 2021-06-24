@@ -18,15 +18,10 @@
 
 package xyz.matthewtgm.lib.cosmetics.impl.cloaks.partners;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
-import xyz.matthewtgm.lib.TGMLib;
 import xyz.matthewtgm.lib.cosmetics.BaseCloakCosmetic;
 import xyz.matthewtgm.lib.other.GifResourceLocation;
 import xyz.matthewtgm.lib.util.ResourceCaching;
-
-import java.io.File;
-import java.util.Arrays;
 
 public class DarkCheeseIglooCloakCosmetic extends BaseCloakCosmetic {
 
@@ -34,8 +29,7 @@ public class DarkCheeseIglooCloakCosmetic extends BaseCloakCosmetic {
 
     public DarkCheeseIglooCloakCosmetic() {
         super("DarkCheese's Igloo Cloak", "DARK_CHEESE_IGLOO_CLOAK");
-        System.out.println(Arrays.asList(new File(Minecraft.getMinecraft().mcDataDir, "mod_assets/" + TGMLib.NAME + "/cosmetics/cloaks/partners").listFiles()));
-        this.texture = new GifResourceLocation(ResourceCaching.getFromCache("TGMLib", "darkcheese_igloo.gif"), new File(Minecraft.getMinecraft().mcDataDir, "mod_assets/" + TGMLib.NAME + "/cosmetics/cloaks/partners"), 1);
+        this.texture = new GifResourceLocation(ResourceCaching.getResourceFileFromCache("TGMLib", "cosmetics/cloaks/partners", "darkcheese_igloo.gif"), 1);
     }
 
     public ResourceLocation texture() {
