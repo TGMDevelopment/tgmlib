@@ -18,31 +18,22 @@
 
 package xyz.matthewtgm.lib.cosmetics.impl.cloaks;
 
-import net.minecraft.util.ResourceLocation;
-import xyz.matthewtgm.lib.cosmetics.BaseCloakCosmetic;
+import xyz.matthewtgm.lib.cosmetics.BaseAnimatedCloakCosmetic;
 import xyz.matthewtgm.lib.other.GifResourceLocation;
 import xyz.matthewtgm.lib.util.ResourceCaching;
 
-public class FlareHeartCloakCosmetic extends BaseCloakCosmetic {
-
-    private final GifResourceLocation texture;
-    private int tick;
+public class FlareHeartCloakCosmetic extends BaseAnimatedCloakCosmetic {
 
     public FlareHeartCloakCosmetic() {
         super("Flare Heart Cloak", "FLARE_HEART_CLOAK");
-        this.texture = new GifResourceLocation(ResourceCaching.getResourceFileFromCache("TGMLib", "cosmetics/cloaks", "flare_heart_cloak.gif"), 1);
     }
 
-    public ResourceLocation texture() {
-        return texture.getTexture();
+    public GifResourceLocation gif() {
+        return new GifResourceLocation(ResourceCaching.getResourceFileFromCache("TGMLib", "cosmetics/cloaks", "flare_heart_cloak.gif"));
     }
 
-    public void tick() {
-        tick++;
-        if (tick % 20 == 0) {
-            texture.update();
-            tick = 0;
-        }
+    public int fps() {
+        return 3;
     }
 
 }

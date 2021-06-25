@@ -31,8 +31,7 @@ import javax.imageio.ImageReader;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.Arrays;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,35 +40,29 @@ public class GifResourceLocation {
     @Getter
     private final File gif;
     private final int fps;
-    private int frames;
-
-    private int currentTick = 0;
-    private int currentFrame = 1;
-
-    @Getter private int width;
-    @Getter private int height;
-
     private final ResourceLocation[] textures;
+    private int frames;
+    private int currentTick = 0;
+    private int currentFrame = 0;
+    @Getter
+    private int width;
+    @Getter
+    private int height;
 
     public GifResourceLocation(File gif, int fpt) {
         this.gif = gif;
         this.fps = fpt;
         ResourceLocation[] newTextures;
         try {
-            String[] imageatt = new String[]{
-                    "imageLeftPosition",
-                    "imageTopPosition",
-                    "imageWidth",
-                    "imageHeight"
-            };
+            String[] imageatt = new String[] {"imageLeftPosition", "imageTopPosition", "imageWidth", "imageHeight"};
 
             ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
             ImageInputStream ciis = ImageIO.createImageInputStream(gif);
             reader.setInput(ciis);
 
             int noi = reader.getNumImages(true);
-            System.out.println(noi);
             newTextures = new ResourceLocation[noi];
+            this.frames = noi;
             BufferedImage master = null;
 
             for (int i = 0; i < noi; i++) {
@@ -81,22 +74,19 @@ public class GifResourceLocation {
 
                 for (int j = 0; j < children.getLength(); j++) {
                     Node nodeItem = children.item(j);
-
-                    if(nodeItem.getNodeName().equals("ImageDescriptor")){
+                    if (nodeItem.getNodeName().equals("ImageDescriptor")) {
                         Map<String, Integer> imageAttr = new HashMap<>();
-
                         for (int k = 0; k < imageatt.length; k++) {
                             NamedNodeMap attr = nodeItem.getAttributes();
                             Node attnode = attr.getNamedItem(imageatt[k]);
                             imageAttr.put(imageatt[k], Integer.valueOf(attnode.getNodeValue()));
                         }
-                        if(i==0){
+                        if (i == 0) {
                             master = new BufferedImage(imageAttr.get("imageWidth"), imageAttr.get("imageHeight"), BufferedImage.TYPE_INT_ARGB);
                         }
                         master.getGraphics().drawImage(image, imageAttr.get("imageLeftPosition"), imageAttr.get("imageTopPosition"), null);
                     }
                 }
-
                 ImageIO.write(master, "GIF", new File(i + ".gif"));
                 newTextures[i] = Minecraft.getMinecraft().renderEngine.getDynamicTextureLocation(frames + ".gif", new DynamicTexture(master));
             }
@@ -105,30 +95,23 @@ public class GifResourceLocation {
             e.printStackTrace();
             newTextures = new ResourceLocation[256];
         }
-        System.out.println(Arrays.toString(newTextures));
         textures = newTextures;
-        System.out.println(Arrays.toString(textures));
+    }
+
+    public GifResourceLocation(File gif) {
+        this(gif, 1);
     }
 
     public ResourceLocation getTexture() {
-        System.out.println(currentFrame);
-        System.out.println(Arrays.toString(textures));
-        ResourceLocation texture = textures[currentFrame];
-        System.out.println(texture);
-        return texture;
+        return textures[currentFrame];
     }
 
     public void update() {
-        if(currentTick > fps) {
+        if (currentTick > fps) {
             currentTick = 0;
             currentFrame++;
-            System.out.println("Updating frame.");
-            System.out.println(currentFrame);
-            System.out.println(fps);
-            System.out.println(currentTick);
-            System.out.println("Updating frame.");
-            if(currentFrame > frames - 1) {
-                currentFrame = 1;
+            if (currentFrame > frames - 1) {
+                currentFrame = 0;
             }
         }
         currentTick++;

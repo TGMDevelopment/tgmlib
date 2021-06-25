@@ -62,9 +62,9 @@ public class CosmeticManager {
 
     private void initCosmetics() {
         logger.info("Initializing cosmetics...");
-        //cosmetics.add(new DarkCheeseIglooCloakCosmetic());
+        cosmetics.add(new DarkCheeseIglooCloakCosmetic());
         cosmetics.add(new DeveloperCloakCosmetic());
-        //cosmetics.add(new FlareHeartCloakCosmetic());
+        cosmetics.add(new FlareHeartCloakCosmetic());
         cosmetics.add(new JohnnyJthCloakCosmetic());
         cosmetics.add(new MinecoinCloakCosmetic());
         cosmetics.add(new PartnerCloakCosmetic());
