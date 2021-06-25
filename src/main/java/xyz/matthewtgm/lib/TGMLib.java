@@ -114,6 +114,8 @@ public class TGMLib {
         ResourceCaching.download("TGMLib", "cosmetics/cloaks/exclusive", "wyvest_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/exclusive/wyvest_cloak.png");
 
         ResourceCaching.download("TGMLib", "cosmetics/wings", "dragon_wings.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/wings/dragon_wings.png");
+        ResourceCaching.download("TGMLib", "cosmetics/wings/exclusive", "tgm_wings.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/wings/tgm_wings.png");
+        //ResourceCaching.download("TGMLib", "cosmetics/wings/exclusive", "wyvest_wings.png", "");
         logger.info("Resources downloaded!");
         ProgressManager.pop(progressBar);
 

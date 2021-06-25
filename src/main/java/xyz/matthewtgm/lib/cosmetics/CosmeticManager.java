@@ -37,6 +37,7 @@ import xyz.matthewtgm.lib.cosmetics.impl.cloaks.exclusive.WyvestCloakCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.cloaks.partners.DarkCheeseIglooCloakCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.wings.ChromaDragonWingsCosmetic;
 import xyz.matthewtgm.lib.cosmetics.impl.wings.DragonWingsCosmetic;
+import xyz.matthewtgm.lib.cosmetics.impl.wings.TgmWingsCosmetic;
 import xyz.matthewtgm.lib.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
 import xyz.matthewtgm.lib.util.PlayerRendererHelper;
 
@@ -61,9 +62,9 @@ public class CosmeticManager {
 
     private void initCosmetics() {
         logger.info("Initializing cosmetics...");
-        cosmetics.add(new DarkCheeseIglooCloakCosmetic());
+        //cosmetics.add(new DarkCheeseIglooCloakCosmetic());
         cosmetics.add(new DeveloperCloakCosmetic());
-        cosmetics.add(new FlareHeartCloakCosmetic());
+        //cosmetics.add(new FlareHeartCloakCosmetic());
         cosmetics.add(new JohnnyJthCloakCosmetic());
         cosmetics.add(new MinecoinCloakCosmetic());
         cosmetics.add(new PartnerCloakCosmetic());
@@ -71,6 +72,7 @@ public class CosmeticManager {
 
         cosmetics.add(new DragonWingsCosmetic());
         cosmetics.add(new ChromaDragonWingsCosmetic());
+        cosmetics.add(new TgmWingsCosmetic());
         logger.info("Cosmetics initialized.");
     }
 

@@ -59,7 +59,7 @@ public class TGMLibSocket extends WebSocketClient {
 
     public void reconnect() {
         logger.info("Reconnecting to socket.");
-        super.reconnect();
+        new Thread(super::reconnect).start();
     }
 
     public void onOpen(ServerHandshake handshake) {

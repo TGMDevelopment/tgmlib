@@ -60,9 +60,7 @@ public abstract class BaseCloakCosmetic extends BaseCosmetic {
             float f2 = (float) (d0 * d3 + d2 * d4) * 100.0F;
             float f3 = (float) (d0 * d4 - d2 * d3) * 100.0F;
 
-            if (f2 < 0.0F) {
-                f2 = 0.0F;
-            }
+            if (f2 < 0.0F) f2 = 0.0F;
 
             float f4 = player.prevCameraYaw + (player.cameraYaw - player.prevCameraYaw) * partialTicks;
 
