@@ -65,17 +65,21 @@ public class TGMLib {
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
+        ProgressManager.ProgressBar progressBar = ProgressManager.push("TGMLib - Pre Initialization", 3);
+
+        progressBar.step("Initializing startup registry");
         StartupRegistry startupRegistry = new StartupRegistry();
         startupRegistry.init(logger);
 
+        progressBar.step("Registering event listeners");
         logger.info("Registering listeners...");
         ForgeUtils.registerEventListeners(startupRegistry, new KeyBindManager(), new ScreenHelper(), new GuiHelper(), new GuiHelper.Editor(), new HypixelHelper(), new TitleHandler(), new Notifications(), new MessageQueue());
         logger.info("Listeners registered!");
 
+        progressBar.step("Modifying game menus");
         GuiHelper.Editor.addEdit(GuiIngameMenu.class, new GuiHelper.Editor.GuiEditRunnable() {
             public void init(GuiScreen screen, List<GuiButton> buttonList) {
                 HitBox cosmeticsButtonHitBox = generateCosmeticsButtonHitBox(screen);
-                LogManager.getLogger("GuiIngameMenu Editor").warn("{} | {} | {} | {}", cosmeticsButtonHitBox.getX(), cosmeticsButtonHitBox.getY(), cosmeticsButtonHitBox.getWidth(), cosmeticsButtonHitBox.getHeight());
                 buttonList.add(new GuiButton(763454237, (int) cosmeticsButtonHitBox.getX(), (int) cosmeticsButtonHitBox.getY(), (int) cosmeticsButtonHitBox.getWidth(), (int) cosmeticsButtonHitBox.getHeight(), "TGMLib Cosmetics") {
                     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                         if (super.mousePressed(mc, mouseX, mouseY)) mc.displayGuiScreen(new GuiCosmeticSelector(screen));
@@ -92,39 +96,22 @@ public class TGMLib {
                 return new HitBox(screen.width / 2 - 50, screen.height - 22, 100, 20);
             }
         });
+
+        ProgressManager.pop(progressBar);
     }
 
     @Mod.EventHandler
     public void onInit(FMLInitializationEvent event) {
-        ProgressManager.ProgressBar progressBar = ProgressManager.push("TGMLib - Initialization", 1);
-        progressBar.step("Downloading/loading resources");
-        logger.info("Downloading/loading resources...");
-        ResourceCaching.download("TGMLib", "button_light.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/button_light.png");
-        ResourceCaching.download("TGMLib", "button_dark.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/button_dark.png");
-        ResourceCaching.download("TGMLib", "switch_on.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/config_framework/switch_on.png");
-        ResourceCaching.download("TGMLib", "switch_off.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/config_framework/switch_off.png");
-
-        /* Cosmetics. */
-        ResourceCaching.download("TGMLib", "cosmetics/cloaks/partners", "darkcheese_igloo.gif", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/partners/darkcheese_igloo.gif");
-        ResourceCaching.download("TGMLib", "cosmetics/cloaks", "developer_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/developer_cloak.png");
-        ResourceCaching.download("TGMLib", "cosmetics/cloaks/exclusive", "johnny_jth_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/exclusive/johnny_jth_cloak.png");
-        ResourceCaching.download("TGMLib", "cosmetics/cloaks", "minecoin_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/minecoin_cloak.png");
-        ResourceCaching.download("TGMLib", "cosmetics/cloaks", "partner_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/partner_cloak.png");
-        ResourceCaching.download("TGMLib", "cosmetics/cloaks", "flare_heart_cloak.gif", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/flare_heart_cloak.gif");
-        ResourceCaching.download("TGMLib", "cosmetics/cloaks/exclusive", "wyvest_cloak.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/cloaks/exclusive/wyvest_cloak.png");
-
-        ResourceCaching.download("TGMLib", "cosmetics/wings", "dragon_wings.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/wings/dragon_wings.png");
-        ResourceCaching.download("TGMLib", "cosmetics/wings/exclusive", "tgm_wings.png", "https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/resources/cosmetics/wings/tgm_wings.png");
-        //ResourceCaching.download("TGMLib", "cosmetics/wings/exclusive", "wyvest_wings.png", "");
-        logger.info("Resources downloaded!");
-        ProgressManager.pop(progressBar);
-
+        ProgressManager.ProgressBar progressBar = ProgressManager.push("TGMLib - Initialization", 2);
         try {
+            progressBar.step("Connecting to websocket");
             webSocket.connectBlocking();
+            progressBar.step("Initializing cosmetics");
             cosmeticManager.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        ProgressManager.pop(progressBar);
     }
 
     public void addSocketSettings(WebSocketClient socketClient) {

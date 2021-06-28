@@ -22,83 +22,38 @@ import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import xyz.matthewtgm.lib.util.ArrayHelper;
+import xyz.matthewtgm.lib.util.ImageHelper;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.metadata.IIOMetadata;
-import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Arrays;
 
 public class GifResourceLocation {
 
     @Getter
-    private final File gif;
+    private final InputStream gif;
     private final int fps;
     private final ResourceLocation[] textures;
     private int frames;
     private int currentTick = 0;
     private int currentFrame = 0;
-    @Getter
-    private int width;
-    @Getter
-    private int height;
 
-    public GifResourceLocation(File gif, int fpt) {
+    public GifResourceLocation(InputStream gif, int fpt) {
         this.gif = gif;
         this.fps = fpt;
-        ResourceLocation[] newTextures;
-        try {
-            String[] imageatt = new String[] {"imageLeftPosition", "imageTopPosition", "imageWidth", "imageHeight"};
-
-            ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
-            ImageInputStream ciis = ImageIO.createImageInputStream(gif);
-            reader.setInput(ciis);
-
-            int noi = reader.getNumImages(true);
-            newTextures = new ResourceLocation[noi];
-            this.frames = noi;
-            BufferedImage master = null;
-
-            for (int i = 0; i < noi; i++) {
-                BufferedImage image = reader.read(i);
-                IIOMetadata metadata = reader.getImageMetadata(i);
-
-                Node tree = metadata.getAsTree("javax_imageio_gif_image_1.0");
-                NodeList children = tree.getChildNodes();
-
-                for (int j = 0; j < children.getLength(); j++) {
-                    Node nodeItem = children.item(j);
-                    if (nodeItem.getNodeName().equals("ImageDescriptor")) {
-                        Map<String, Integer> imageAttr = new HashMap<>();
-                        for (int k = 0; k < imageatt.length; k++) {
-                            NamedNodeMap attr = nodeItem.getAttributes();
-                            Node attnode = attr.getNamedItem(imageatt[k]);
-                            imageAttr.put(imageatt[k], Integer.valueOf(attnode.getNodeValue()));
-                        }
-                        if (i == 0) {
-                            master = new BufferedImage(imageAttr.get("imageWidth"), imageAttr.get("imageHeight"), BufferedImage.TYPE_INT_ARGB);
-                        }
-                        master.getGraphics().drawImage(image, imageAttr.get("imageLeftPosition"), imageAttr.get("imageTopPosition"), null);
-                    }
-                }
-                ImageIO.write(master, "GIF", new File(i + ".gif"));
-                newTextures[i] = Minecraft.getMinecraft().renderEngine.getDynamicTextureLocation(frames + ".gif", new DynamicTexture(master));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            newTextures = new ResourceLocation[256];
+        BufferedImage[] gifFrames = ImageHelper.getGifFrames(gif);
+        this.frames = gifFrames.length;
+        ResourceLocation[] newTextures = new ResourceLocation[gifFrames.length];
+        for (BufferedImage gifFrame : gifFrames) {
+            int index = Arrays.asList(gifFrames).indexOf(gifFrame);
+            newTextures[index] = Minecraft.getMinecraft().renderEngine.getDynamicTextureLocation(index + ".gif", new DynamicTexture(gifFrame));
         }
         textures = newTextures;
     }
 
-    public GifResourceLocation(File gif) {
+    public GifResourceLocation(ByteArrayInputStream gif) {
         this(gif, 1);
     }
 

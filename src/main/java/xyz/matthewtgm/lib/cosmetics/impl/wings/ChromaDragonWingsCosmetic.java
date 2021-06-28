@@ -19,10 +19,10 @@
 package xyz.matthewtgm.lib.cosmetics.impl.wings;
 
 import net.minecraft.util.ResourceLocation;
+import xyz.matthewtgm.lib.Constants;
 import xyz.matthewtgm.lib.cosmetics.BaseWingsCosmetic;
 import xyz.matthewtgm.lib.other.ColourRGB;
 import xyz.matthewtgm.lib.util.ColourUtils;
-import xyz.matthewtgm.lib.util.ResourceCaching;
 
 public class ChromaDragonWingsCosmetic extends BaseWingsCosmetic {
 
@@ -31,7 +31,7 @@ public class ChromaDragonWingsCosmetic extends BaseWingsCosmetic {
     }
 
     public ResourceLocation texture() {
-        return ResourceCaching.getFromCache("TGMLib", "dragon_wings.png");
+        return Constants.generateCosmeticLocation("wings", "dragon_wings.png");
     }
 
     public ColourRGB colour() {

@@ -18,9 +18,13 @@
 
 package xyz.matthewtgm.lib.cosmetics.impl.cloaks.partners;
 
+import org.apache.commons.compress.utils.IOUtils;
+import xyz.matthewtgm.lib.Constants;
 import xyz.matthewtgm.lib.cosmetics.BaseAnimatedCloakCosmetic;
 import xyz.matthewtgm.lib.other.GifResourceLocation;
-import xyz.matthewtgm.lib.util.ResourceCaching;
+import xyz.matthewtgm.lib.util.ResourceHelper;
+
+import java.io.ByteArrayInputStream;
 
 public class DarkCheeseIglooCloakCosmetic extends BaseAnimatedCloakCosmetic {
 
@@ -29,7 +33,7 @@ public class DarkCheeseIglooCloakCosmetic extends BaseAnimatedCloakCosmetic {
     }
 
     public GifResourceLocation gif() {
-        return new GifResourceLocation(ResourceCaching.getResourceFileFromCache("TGMLib", "cosmetics/cloaks/partners", "darkcheese_igloo.gif"));
+        return new GifResourceLocation(new ByteArrayInputStream(ResourceHelper.toInputStream(Constants.generateCosmeticLocation("cloaks", "partners/darkcheese_igloo.gif")).toString().getBytes()));
     }
 
     public int fps() {

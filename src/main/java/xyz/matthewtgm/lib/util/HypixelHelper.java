@@ -26,6 +26,14 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import xyz.matthewtgm.json.annotations.JsonSerialize;
+import xyz.matthewtgm.json.annotations.JsonSerializeExcluded;
+import xyz.matthewtgm.json.annotations.JsonSerializeName;
+import xyz.matthewtgm.json.objects.JsonObject;
+import xyz.matthewtgm.json.parsing.JsonParser;
+import xyz.matthewtgm.json.util.JsonApiHelper;
+import xyz.matthewtgm.json.util.JsonSerializer;
+import xyz.matthewtgm.lib.startup.TGMLibCommand;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -33,7 +41,7 @@ public class HypixelHelper {
 
     private static int tickTimer = 0;
 
-    @Getter private static String locraw;
+    @Getter private static HypixelLocraw locraw;
     private static boolean allowLocrawCancel;
     private static final AtomicInteger limboLoop = new AtomicInteger(0);
     private static boolean checked;
@@ -48,12 +56,13 @@ public class HypixelHelper {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     protected void onWorldLoad(WorldEvent.Load event) {
         checked = false;
+        locraw = null;
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     protected void onChatMessageReceived(ClientChatReceivedEvent event) {
         if (event.type == 0 || event.type == 1) {
             String stripped = StringUtils.stripControlCodes(event.message.getUnformattedText());
@@ -66,7 +75,9 @@ public class HypixelHelper {
                     limboLoop.set(limboLoop.get() + 1);
                     return;
                 }
-                locraw = stripped;
+                JsonObject<String, Object> strippedAsJson = JsonParser.parseObj(stripped);
+                locraw = new HypixelLocraw(strippedAsJson.getAsString("server"), strippedAsJson.getAsString("mode"), strippedAsJson.getAsString("map"), strippedAsJson.getAsString("gametype"), HypixelLocraw.GameType.getFromLocraw(strippedAsJson.getAsString("gametype")));
+                if (TGMLibCommand.notifyLocraws) Notifications.push("Hypixel Locraw fetched!", locraw.toString());
                 allowLocrawCancel = false;
                 limboLoop.set(0);
                 event.setCanceled(true);
@@ -74,7 +85,78 @@ public class HypixelHelper {
         }
     }
 
+    @Getter
+    @JsonSerialize("locraw")
+    public static class HypixelLocraw {
+        @JsonSerializeName("server")
+        private final String serverId;
+        @JsonSerializeName("mode")
+        private final String gameMode;
+        @JsonSerializeName("map")
+        private final String mapName;
+        @JsonSerializeName("gametype")
+        private final String rawGameType;
+        @JsonSerializeExcluded
+        private final GameType gameType;
+
+        public JsonObject<String, Object> toJson() {
+            return JsonSerializer.create(this);
+        }
+
+        public String toString() {
+            return toJson().toJson();
+        }
+
+        public HypixelLocraw(String serverId, String gameMode, String mapName, String rawGameType, GameType gameType) {
+            this.serverId = serverId;
+            this.gameMode = gameMode;
+            this.mapName = mapName;
+            this.rawGameType = rawGameType;
+            this.gameType = gameType;
+        }
+
+        public enum GameType {
+            UNKNOWN(""),
+            BEDWARS("BEDWARS"),
+            SKYWARS("SKYWARS"),
+            PROTOTYPE("PROTOTYPE"),
+            SKYBLOCK("SKYBLOCK"),
+            MAIN("MAIN"),
+            MURDER_MYSTERY("MURDER_MYSTERY"),
+            HOUSING("HOUSING"),
+            ARCADE_GAMES("ARCADE"),
+            BUILD_BATTLE("BUILD_BATTLE"),
+            DUELS("DUELS"),
+            PIT("PIT"),
+            UHC_CHAMPIONS("UHC"),
+            SPEED_UHC("SPEED_UHC"),
+            TNT_GAMES("TNTGAMES"),
+            CLASSIC_GAMES("LEGACY"),
+            COPS_AND_CRIMS("MCGO"),
+            BLITZ_SG("SURVIVAL_GAMES"),
+            MEGA_WALLS("WALLS3"),
+            SMASH_HEROES("SUPER_SMASH"),
+            WARLORDS("BATTLEGROUND");
+
+            @Getter
+            private final String serverName;
+            GameType(String serverName) {
+                this.serverName = serverName;
+            }
+
+            public static GameType getFromLocraw(String gameType) {
+                for (GameType value : values()) if (value.serverName.equals(gameType)) return value;
+                return UNKNOWN;
+            }
+        }
+    }
+
     public static class HypixelAPI {
+
+        public static boolean isValidKey(String apiKey) {
+            JsonObject<String, ObjectHelper> json = JsonApiHelper.getJsonObject("https://api.hypixel.net/key?key=" + apiKey);
+            return json.containsKey("success") && json.getAsBoolean("success");
+        }
 
         public static String getPlayer(String apiKey, String uuid) {
             return ApiHelper.getJsonOnline(String.format("https://api.hypixel.net/player?uuid=%s&key=%s", uuid, apiKey));

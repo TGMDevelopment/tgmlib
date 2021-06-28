@@ -18,9 +18,12 @@
 
 package xyz.matthewtgm.lib.cosmetics.impl.cloaks;
 
+import xyz.matthewtgm.lib.Constants;
 import xyz.matthewtgm.lib.cosmetics.BaseAnimatedCloakCosmetic;
 import xyz.matthewtgm.lib.other.GifResourceLocation;
-import xyz.matthewtgm.lib.util.ResourceCaching;
+import xyz.matthewtgm.lib.util.ResourceHelper;
+
+import java.io.ByteArrayInputStream;
 
 public class FlareHeartCloakCosmetic extends BaseAnimatedCloakCosmetic {
 
@@ -29,7 +32,7 @@ public class FlareHeartCloakCosmetic extends BaseAnimatedCloakCosmetic {
     }
 
     public GifResourceLocation gif() {
-        return new GifResourceLocation(ResourceCaching.getResourceFileFromCache("TGMLib", "cosmetics/cloaks", "flare_heart_cloak.gif"));
+        return new GifResourceLocation(new ByteArrayInputStream(ResourceHelper.toInputStream(Constants.generateCosmeticLocation("cloaks", "flare_heart_cloak.gif")).toString().getBytes()));
     }
 
     public int fps() {

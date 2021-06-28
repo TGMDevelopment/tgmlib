@@ -19,8 +19,8 @@
 package xyz.matthewtgm.lib.cosmetics.impl.cloaks;
 
 import net.minecraft.util.ResourceLocation;
+import xyz.matthewtgm.lib.Constants;
 import xyz.matthewtgm.lib.cosmetics.BaseCloakCosmetic;
-import xyz.matthewtgm.lib.util.ResourceCaching;
 
 public class DeveloperCloakCosmetic extends BaseCloakCosmetic {
 
@@ -29,7 +29,7 @@ public class DeveloperCloakCosmetic extends BaseCloakCosmetic {
     }
 
     public ResourceLocation texture() {
-        return ResourceCaching.getFromCache("TGMLib", "developer_cloak.png");
+        return Constants.generateCosmeticLocation("cloaks", "developer_cloak.png");
     }
 
     public void tick() {}

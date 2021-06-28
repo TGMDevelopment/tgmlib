@@ -16,34 +16,15 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.lib.util;
+package xyz.matthewtgm.lib;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
+import xyz.matthewtgm.lib.util.ResourceHelper;
 
-import javax.imageio.ImageIO;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
+public class Constants {
 
-public class ResourceHelper {
-
-    public static ResourceLocation get(String domain, String path) {
-        return new ResourceLocation(domain, path);
-    }
-
-    public static ResourceLocation get(String path) {
-        return new ResourceLocation(path);
-    }
-
-    public static InputStream toInputStream(ResourceLocation rl) {
-        try {
-            return Minecraft.getMinecraft().getResourceManager().getResource(rl).getInputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public static ResourceLocation generateCosmeticLocation(String type, String path) {
+        return ResourceHelper.get(TGMLib.ID, String.format("cosmetics/%s/%s", type, path));
     }
 
 }

@@ -19,8 +19,8 @@
 package xyz.matthewtgm.lib.cosmetics.impl.cloaks.exclusive;
 
 import net.minecraft.util.ResourceLocation;
+import xyz.matthewtgm.lib.Constants;
 import xyz.matthewtgm.lib.cosmetics.BaseCloakCosmetic;
-import xyz.matthewtgm.lib.util.ResourceCaching;
 
 public class WyvestCloakCosmetic extends BaseCloakCosmetic {
 
@@ -29,7 +29,7 @@ public class WyvestCloakCosmetic extends BaseCloakCosmetic {
     }
 
     public ResourceLocation texture() {
-        return ResourceCaching.getFromCache("TGMLib", "wyvest_cloak.png");
+        return Constants.generateCosmeticLocation("cloaks", "exclusive/wyvest_cloak.png");
     }
 
     public void tick() {}

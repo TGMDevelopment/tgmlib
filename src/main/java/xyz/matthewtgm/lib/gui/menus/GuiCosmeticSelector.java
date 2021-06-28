@@ -56,6 +56,7 @@ public class GuiCosmeticSelector extends GuiScreen {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY)) {
                     TGMLib.getInstance().getCosmeticManager().getCosmeticMap().clear();
+                    CosmeticManager.getMadeRequestsFor().clear();
                     TGMLib.getInstance().getWebSocket().send(new CosmeticsRetrievePacket(mc.getSession().getProfile().getId().toString()));
                 }
                 return false;

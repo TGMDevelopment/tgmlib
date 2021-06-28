@@ -37,8 +37,13 @@ public class CommandManager {
 
     @Getter private static final Map<Class, CommandBase> commandMap = new HashMap<>();
 
-    public static void register(ICommand command) {
+    public static void register(ICommand command, boolean prioritize) {
+        if (prioritize && ClientCommandHandler.instance.getCommands().containsKey(command.getCommandName())) unregister(command.getCommandName());
         ClientCommandHandler.instance.registerCommand(command);
+    }
+
+    public static void register(ICommand command) {
+        register(command, false);
     }
 
     public static void unregister(ICommand command) {
@@ -49,7 +54,7 @@ public class CommandManager {
         ClientCommandHandler.instance.getCommands().remove(name);
     }
 
-    public static void register(Class clazz) {
+    public static void register(Class clazz, boolean prioritize) {
         if (clazz.isAnnotationPresent(Command.class)) {
             ExceptionHelper.tryCatch(() -> {
                 Object instance = clazz.newInstance();
@@ -126,12 +131,16 @@ public class CommandManager {
                         if (hasSender && hasArgs)
                             method.invoke(instance, sender, args);
                     }
-                });
+                }, prioritize);
                 commandMap.put(clazz, theCommand);
             });
         } else {
             throw new IllegalStateException(clazz.getSimpleName() + " is not a command class!");
         }
+    }
+
+    public static void register(Class clazz) {
+        register(clazz, false);
     }
 
     public static void unregister(Class clazz) {

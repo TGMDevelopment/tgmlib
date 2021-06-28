@@ -18,17 +18,13 @@
 
 package xyz.matthewtgm.lib.startup;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.ResourceLocation;
-import xyz.matthewtgm.lib.TGMLib;
 import xyz.matthewtgm.lib.commands.bettercommands.Command;
 import xyz.matthewtgm.lib.config.ConfigMenu;
 import xyz.matthewtgm.lib.config.ConfigOption;
 import xyz.matthewtgm.lib.config.ConfigOptionType;
 import xyz.matthewtgm.lib.gui.menus.GuiCosmeticSelector;
-import xyz.matthewtgm.lib.other.GifResourceLocation;
 import xyz.matthewtgm.lib.other.ScreenPosition;
 import xyz.matthewtgm.lib.util.*;
 import xyz.matthewtgm.lib.util.global.GlobalMinecraft;
@@ -36,12 +32,13 @@ import xyz.matthewtgm.tgmconfig.TGMConfig;
 
 import java.io.File;
 
-@Command(name = "tgmlib", tabCompleteOptions = {"cosmetics", "notitest1", "notitest2", "positiontest", "messagequeuetest", "threedimtexttest", "configframeworktest"})
+@Command(name = "tgmlib", tabCompleteOptions = {"cosmetics", "notifylocraws", "notitest1", "notitest2", "positiontest", "messagequeuetest", "threedimtexttest", "configframeworktest"})
 public class TGMLibCommand {
 
     private final TestConfigMenu testConfigMenu = new TestConfigMenu();
     static boolean drawThreeDimText = false;
     public static boolean logPackets = false;
+    public static boolean notifyLocraws = false;
     public final TGMConfig config = new TGMConfig("tgmlib", new File(GlobalMinecraft.getGameDirectory(), "config"));
 
     @Command.Process
@@ -58,6 +55,11 @@ public class TGMLibCommand {
     @Command.Argument(name = "logpackets")
     private void logPackets() {
         logPackets = !logPackets;
+    }
+
+    @Command.Argument(name = "notifylocraws")
+    private void logLocraws() {
+        notifyLocraws = !notifyLocraws;
     }
 
     @Command.Argument(name = "notitest1")

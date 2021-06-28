@@ -22,12 +22,10 @@ import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import xyz.matthewtgm.lib.TGMLib;
 import xyz.matthewtgm.lib.config.ConfigMenu;
 import xyz.matthewtgm.lib.util.EnhancedFontRenderer;
-import xyz.matthewtgm.lib.util.ResourceCaching;
+import xyz.matthewtgm.lib.util.ResourceHelper;
 
 public class ConfigMenuToggleElement extends ConfigMenuElement {
 
@@ -43,8 +41,8 @@ public class ConfigMenuToggleElement extends ConfigMenuElement {
         EnhancedFontRenderer.drawText(getOptionHolder().option.name(), xPos, yPos + (getHeight() - 8) / 2, -1, true);
         GlStateManager.color(1f, 1f, 1f);
 
-        if (bool) Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceCaching.getFromCache("TGMLib", "switch_on.png"));
-        else Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceCaching.getFromCache("TGMLib", "switch_off.png"));
+        if (bool) Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceHelper.get(TGMLib.ID, "config/switch_on.png"));
+        else Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceHelper.get(TGMLib.ID, "config/switch_off.png"));
         int switchWidth = 32;
         Gui.drawScaledCustomSizeModalRect(xPos + getWidth() - switchWidth * 6 + 15, yPos, 0, 0, 64, 32, switchWidth, getHeight(), 64, 32);
     }

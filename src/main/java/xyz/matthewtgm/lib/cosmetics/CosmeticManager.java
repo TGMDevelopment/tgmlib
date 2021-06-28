@@ -49,6 +49,7 @@ public class CosmeticManager {
     private final List<BaseCosmetic> cosmetics = new ArrayList<>();
     @Getter
     private final Map<String, PlayerCosmeticsHolder> cosmeticMap = new HashMap<>();
+    @Getter
     private static final List<String> madeRequestsFor = new ArrayList<>();
     private final Logger logger = LogManager.getLogger(TGMLib.NAME + " (" + getClass().getSimpleName() + ")");
 
@@ -62,9 +63,9 @@ public class CosmeticManager {
 
     private void initCosmetics() {
         logger.info("Initializing cosmetics...");
-        cosmetics.add(new DarkCheeseIglooCloakCosmetic());
+        //cosmetics.add(new DarkCheeseIglooCloakCosmetic());
         cosmetics.add(new DeveloperCloakCosmetic());
-        cosmetics.add(new FlareHeartCloakCosmetic());
+        //cosmetics.add(new FlareHeartCloakCosmetic());
         cosmetics.add(new JohnnyJthCloakCosmetic());
         cosmetics.add(new MinecoinCloakCosmetic());
         cosmetics.add(new PartnerCloakCosmetic());
