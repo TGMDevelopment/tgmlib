@@ -57,8 +57,8 @@ configurations {
 
 /* Define dependencies, also where dependencies are automatically handled. */
 dependencies {
-    shade('xyz.matthewtgm:JsonTGM:2.2.1')
-    shade('xyz.matthewtgm:TGMConfig:2.0')
+    shade('xyz.matthewtgm:JsonTGM:2.2.2')
+    shade('xyz.matthewtgm:TGMConfig:2.1')
     shade('org.java-websocket:Java-WebSocket:1.5.1')
     implementation('org.projectlombok:lombok:1.18.16')
     annotationProcessor('org.projectlombok:lombok:1.18.16')
