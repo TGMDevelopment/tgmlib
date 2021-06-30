@@ -20,13 +20,12 @@ package xyz.matthewtgm.lib.cosmetics;
 
 import lombok.Getter;
 import lombok.Setter;
-import xyz.matthewtgm.json.objects.JsonObject;
+import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.lib.TGMLib;
 import xyz.matthewtgm.lib.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class PlayerCosmeticsHolder {
 
@@ -51,12 +50,12 @@ public class PlayerCosmeticsHolder {
         TGMLib.getInstance().getWebSocket().send(new CosmeticsRetrievePacket(uuid));
     }
 
-    public JsonObject<String, Object> toJson() {
-        return new JsonObject<>().add("uuid", uuid).add("owned", ownedCosmetics).add("enabled", enabledCosmetics);
+    public JsonObject toJson() {
+        return new JsonObject().add("uuid", uuid).add("owned", ownedCosmetics).add("enabled", enabledCosmetics);
     }
 
     public String toString() {
-        return toJson().toJson();
+        return toJson().getAsString();
     }
 
 }

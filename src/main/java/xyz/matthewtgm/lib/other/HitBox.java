@@ -20,7 +20,7 @@ package xyz.matthewtgm.lib.other;
 
 import lombok.Getter;
 import lombok.Setter;
-import xyz.matthewtgm.json.objects.JsonObject;
+import xyz.matthewtgm.json.entities.JsonObject;
 
 public class HitBox {
 
@@ -34,8 +34,8 @@ public class HitBox {
         this.height = height;
     }
 
-    public HitBox(JsonObject<String, Number> json) {
-        this(json.getAsFloat("x"), json.getAsFloat("y"), json.getAsFloat("width"), json.getAsFloat("height"));
+    public HitBox(JsonObject json) {
+        this(json.get("x").getAsFloat(), json.get("y").getAsFloat(), json.get("width").getAsFloat(), json.get("height").getAsFloat());
     }
 
     public HitBox clone() {

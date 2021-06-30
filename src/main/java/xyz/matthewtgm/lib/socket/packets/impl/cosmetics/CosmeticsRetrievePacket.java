@@ -18,8 +18,9 @@
 
 package xyz.matthewtgm.lib.socket.packets.impl.cosmetics;
 
-import net.minecraft.client.Minecraft;
-import xyz.matthewtgm.json.objects.JsonObject;
+import com.google.gson.JsonArray;
+import xyz.matthewtgm.json.entities.JsonElement;
+import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.lib.TGMLib;
 import xyz.matthewtgm.lib.cosmetics.BaseCosmetic;
 import xyz.matthewtgm.lib.cosmetics.CosmeticManager;
@@ -29,7 +30,6 @@ import xyz.matthewtgm.lib.socket.packets.BasePacket;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class CosmeticsRetrievePacket extends BasePacket {
 
@@ -48,16 +48,17 @@ public class CosmeticsRetrievePacket extends BasePacket {
         data.add("uuid", uuid);
     }
 
-    public void read(TGMLibSocket socket, JsonObject<String, Object> json) {
+    public void read(TGMLibSocket socket, JsonObject json) {
         CosmeticManager cosmeticManager = TGMLib.getInstance().getCosmeticManager();
-        JsonObject<String, Object> jsonData = json.getAsJsonObject("data");
+        JsonObject jsonData = json.get("data").getAsJsonObject();
         List<BaseCosmetic> ownedCosmetics = new ArrayList<>();
         List<BaseCosmetic> enabledCosmetics = new ArrayList<>();
-        for (Object o : jsonData.getAsJsonArray("cosmetics")) ownedCosmetics.add(cosmeticManager.getCosmeticFromId(o.toString()));
-        for (Object o : jsonData.getAsJsonArray("enabled_cosmetics")) enabledCosmetics.add(cosmeticManager.getCosmeticFromId(o.toString()));
+        JsonArray array = new JsonArray();
+        for (JsonElement element : jsonData.get("cosmetics").getAsJsonArray()) ownedCosmetics.add(cosmeticManager.getCosmeticFromId(element.getAsString()));
+        for (JsonElement element : jsonData.get("enabled_cosmetics").getAsJsonArray()) enabledCosmetics.add(cosmeticManager.getCosmeticFromId(element.getAsString()));
         ownedCosmetics.removeIf(cosmetic -> cosmetic == null);
         enabledCosmetics.removeIf(cosmetic -> cosmetic == null);
-        cosmeticManager.getCosmeticMap().put(jsonData.getAsString("uuid"), new PlayerCosmeticsHolder(jsonData.getAsString("uuid"), ownedCosmetics, enabledCosmetics));
+        cosmeticManager.getCosmeticMap().put(jsonData.get("uuid").getAsString(), new PlayerCosmeticsHolder(jsonData.get("uuid").getAsString(), ownedCosmetics, enabledCosmetics));
     }
 
     public void handle(TGMLibSocket socket) {}

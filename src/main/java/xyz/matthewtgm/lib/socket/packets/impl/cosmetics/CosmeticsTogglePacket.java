@@ -18,16 +18,13 @@
 
 package xyz.matthewtgm.lib.socket.packets.impl.cosmetics;
 
-import xyz.matthewtgm.json.objects.JsonObject;
+import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.lib.TGMLib;
 import xyz.matthewtgm.lib.cosmetics.BaseCosmetic;
 import xyz.matthewtgm.lib.cosmetics.CosmeticManager;
 import xyz.matthewtgm.lib.cosmetics.PlayerCosmeticsHolder;
 import xyz.matthewtgm.lib.socket.TGMLibSocket;
 import xyz.matthewtgm.lib.socket.packets.BasePacket;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CosmeticsTogglePacket extends BasePacket {
 
@@ -49,12 +46,12 @@ public class CosmeticsTogglePacket extends BasePacket {
         data.add("cosmetic", cosmeticId);
     }
 
-    public void read(TGMLibSocket socket, JsonObject<String, Object> json) {
-        JsonObject<String, Object> jsonData = json.getAsJsonObject("data");
+    public void read(TGMLibSocket socket, JsonObject json) {
+        JsonObject jsonData = json.get("data").getAsJsonObject();
         CosmeticManager cosmeticManager = TGMLib.getInstance().getCosmeticManager();
-        BaseCosmetic cosmetic = cosmeticManager.getCosmeticFromId(jsonData.getAsString("cosmetic"));
-        PlayerCosmeticsHolder holder = cosmeticManager.getCosmeticMap().get(jsonData.getAsString("uuid"));
-        if (jsonData.getAsBoolean("toggled")) holder.getEnabledCosmetics().add(cosmetic);
+        BaseCosmetic cosmetic = cosmeticManager.getCosmeticFromId(jsonData.get("cosmetic").getAsString());
+        PlayerCosmeticsHolder holder = cosmeticManager.getCosmeticMap().get(jsonData.get("uuid").getAsString());
+        if (jsonData.get("toggled").getAsBoolean()) holder.getEnabledCosmetics().add(cosmetic);
         else holder.getEnabledCosmetics().remove(cosmetic);
     }
 

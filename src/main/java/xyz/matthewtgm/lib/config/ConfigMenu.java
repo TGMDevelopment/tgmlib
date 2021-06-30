@@ -20,7 +20,7 @@ package xyz.matthewtgm.lib.config;
 
 import lombok.Getter;
 import net.minecraft.client.gui.GuiScreen;
-import xyz.matthewtgm.json.objects.JsonObject;
+import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.lib.util.ExceptionHelper;
 import xyz.matthewtgm.lib.util.GuiHelper;
 import xyz.matthewtgm.tgmconfig.ConfigEntry;
@@ -82,7 +82,7 @@ public abstract class ConfigMenu {
             this.option = option;
         }
         public String toString() {
-            return new JsonObject().add("field", field).add("option", new JsonObject().add("name", option.name()).add("description", option.description()).add("category", option.category()).add("type", option.type())).toJson();
+            return new JsonObject().add("field", field).add("option", new JsonObject().add("name", option.name()).add("description", option.description()).add("category", option.category()).add("type", option.type())).getAsString();
         }
     }
 

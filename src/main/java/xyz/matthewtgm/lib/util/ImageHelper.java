@@ -21,7 +21,7 @@ package xyz.matthewtgm.lib.util;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import xyz.matthewtgm.json.objects.JsonArray;
+import xyz.matthewtgm.json.entities.JsonArray;
 import xyz.matthewtgm.json.util.JsonHelper;
 
 import javax.imageio.*;
@@ -186,9 +186,9 @@ public class ImageHelper {
             e.printStackTrace();
             ret = new BufferedImage[256];
         }
-        JsonArray<String> returns = new JsonArray<>();
+        JsonArray returns = new JsonArray();
         for (BufferedImage image : ret) returns.add(image.toString());
-        System.out.println(JsonHelper.makePretty(returns));
+        System.out.println(JsonHelper.makePretty(returns, 2));
         return ret;
     }
 

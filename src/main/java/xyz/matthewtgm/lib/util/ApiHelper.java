@@ -18,8 +18,8 @@
 
 package xyz.matthewtgm.lib.util;
 
-import xyz.matthewtgm.json.base.Json;
-import xyz.matthewtgm.json.parsing.JsonParser;
+import xyz.matthewtgm.json.entities.JsonElement;
+import xyz.matthewtgm.json.parser.JsonParser;
 import xyz.matthewtgm.lib.TGMLib;
 import org.apache.commons.io.IOUtils;
 
@@ -82,16 +82,16 @@ public class ApiHelper {
         return json.get();
     }
 
-    public static Json getParsedJsonOnline(URL url, Class<? extends Json> typeOfJson) {
-        return JsonParser.parse(getJsonOnline(url), typeOfJson);
+    public static JsonElement getParsedJsonOnline(URL url) {
+        return JsonParser.parse(getJsonOnline(url));
     }
 
-    public static Json getParsedJsonOnline(String url, Class<? extends Json> typeOfJson) {
-        return JsonParser.parse(getJsonOnline(url), typeOfJson);
+    public static JsonElement getParsedJsonOnline(String url) {
+        return JsonParser.parse(getJsonOnline(url));
     }
 
-    public static Json getParsedJsonOnline(URI uri, Class<? extends Json> typeOfJson) {
-        return JsonParser.parse(getJsonOnline(uri), typeOfJson);
+    public static JsonElement getParsedJsonOnline(URI uri) {
+        return JsonParser.parse(getJsonOnline(uri));
     }
 
 }

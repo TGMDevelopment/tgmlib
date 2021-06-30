@@ -20,7 +20,6 @@ package xyz.matthewtgm.lib.cosmetics;
 
 import lombok.Getter;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import xyz.matthewtgm.json.objects.JsonObject;
 
 public abstract class BaseCosmetic {
 
@@ -28,8 +27,6 @@ public abstract class BaseCosmetic {
     private final String name, id;
     @Getter
     private final CosmeticType type;
-    @Getter
-    private JsonObject<String, Object> data;
 
     public BaseCosmetic(String name, String id, CosmeticType type) {
         this.name = name;

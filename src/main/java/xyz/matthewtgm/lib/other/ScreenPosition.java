@@ -18,9 +18,8 @@
 
 package xyz.matthewtgm.lib.other;
 
-import xyz.matthewtgm.json.objects.JsonObject;
-import xyz.matthewtgm.json.parsing.JsonParser;
-import xyz.matthewtgm.lib.util.ScreenHelper;
+import xyz.matthewtgm.json.entities.JsonObject;
+import xyz.matthewtgm.json.parser.JsonParser;
 import xyz.matthewtgm.lib.util.global.GlobalMinecraft;
 
 public class ScreenPosition {
@@ -31,12 +30,12 @@ public class ScreenPosition {
         setPosition(x, y);
     }
 
-    public ScreenPosition(JsonObject<String, Number> jsonObject) {
-        this((int) (float) jsonObject.get("x"), (int) (float) jsonObject.get("y"));
+    public ScreenPosition(JsonObject jsonObject) {
+        this(jsonObject.get("x").getAsInt(), jsonObject.get("y").getAsInt());
     }
 
     public ScreenPosition(String jsonString) {
-        this(JsonParser.parseObj(jsonString));
+        this((JsonObject) JsonParser.parse(jsonString));
     }
 
     public ScreenPosition clone() {

@@ -18,7 +18,7 @@
 
 package xyz.matthewtgm.lib.other;
 
-import xyz.matthewtgm.json.objects.JsonObject;
+import xyz.matthewtgm.json.entities.JsonObject;
 
 import java.awt.*;
 
@@ -101,7 +101,7 @@ public class ColourRGB {
     }
 
     public String toJson() {
-        return new JsonObject<>().add("r", r).add("g", g).add("b", b).add("a", a).toJson();
+        return new JsonObject().add("r", r).add("g", g).add("b", b).add("a", a).getAsString();
     }
 
     @Override

@@ -26,13 +26,13 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import xyz.matthewtgm.json.annotations.JsonSerialize;
-import xyz.matthewtgm.json.annotations.JsonSerializeExcluded;
-import xyz.matthewtgm.json.annotations.JsonSerializeName;
-import xyz.matthewtgm.json.objects.JsonObject;
-import xyz.matthewtgm.json.parsing.JsonParser;
+import xyz.matthewtgm.json.entities.JsonObject;
+import xyz.matthewtgm.json.parser.JsonParser;
+import xyz.matthewtgm.json.serialization.JsonSerializer;
+import xyz.matthewtgm.json.serialization.annotations.JsonSerialize;
+import xyz.matthewtgm.json.serialization.annotations.JsonSerializeExcluded;
+import xyz.matthewtgm.json.serialization.annotations.JsonSerializeName;
 import xyz.matthewtgm.json.util.JsonApiHelper;
-import xyz.matthewtgm.json.util.JsonSerializer;
 import xyz.matthewtgm.lib.startup.TGMLibCommand;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -75,8 +75,8 @@ public class HypixelHelper {
                     limboLoop.set(limboLoop.get() + 1);
                     return;
                 }
-                JsonObject<String, Object> strippedAsJson = JsonParser.parseObj(stripped);
-                locraw = new HypixelLocraw(strippedAsJson.getAsString("server"), strippedAsJson.getAsString("mode"), strippedAsJson.getAsString("map"), strippedAsJson.getAsString("gametype"), HypixelLocraw.GameType.getFromLocraw(strippedAsJson.getAsString("gametype")));
+                JsonObject strippedAsJson = (JsonObject) JsonParser.parse(stripped);
+                locraw = new HypixelLocraw(strippedAsJson.get("server").getAsString(), strippedAsJson.get("mode").getAsString(), strippedAsJson.get("map").getAsString(), strippedAsJson.get("gametype").getAsString(), HypixelLocraw.GameType.getFromLocraw(strippedAsJson.get("gametype").getAsString()));
                 if (TGMLibCommand.notifyLocraws) Notifications.push("Hypixel Locraw fetched!", locraw.toString());
                 allowLocrawCancel = false;
                 limboLoop.set(0);
@@ -86,7 +86,6 @@ public class HypixelHelper {
     }
 
     @Getter
-    @JsonSerialize("locraw")
     public static class HypixelLocraw {
         @JsonSerializeName("server")
         private final String serverId;
@@ -99,12 +98,12 @@ public class HypixelHelper {
         @JsonSerializeExcluded
         private final GameType gameType;
 
-        public JsonObject<String, Object> toJson() {
+        public JsonObject toJson() {
             return JsonSerializer.create(this);
         }
 
         public String toString() {
-            return toJson().toJson();
+            return toJson().getAsString();
         }
 
         public HypixelLocraw(String serverId, String gameMode, String mapName, String rawGameType, GameType gameType) {
@@ -154,8 +153,8 @@ public class HypixelHelper {
     public static class HypixelAPI {
 
         public static boolean isValidKey(String apiKey) {
-            JsonObject<String, ObjectHelper> json = JsonApiHelper.getJsonObject("https://api.hypixel.net/key?key=" + apiKey);
-            return json.containsKey("success") && json.getAsBoolean("success");
+            JsonObject json = JsonApiHelper.getJsonObject("https://api.hypixel.net/key?key=" + apiKey);
+            return json.hasKey("success") && json.get("success").getAsBoolean();
         }
 
         public static String getPlayer(String apiKey, String uuid) {

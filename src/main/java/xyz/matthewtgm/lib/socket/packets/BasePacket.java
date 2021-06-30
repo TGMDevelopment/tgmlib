@@ -18,17 +18,17 @@
 
 package xyz.matthewtgm.lib.socket.packets;
 
-import xyz.matthewtgm.json.objects.JsonObject;
+import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.lib.socket.TGMLibSocket;
 
 public abstract class BasePacket {
 
     public final String name;
     public final String type;
-    public final JsonObject<String, Object> data;
+    public final JsonObject data;
     public final float id;
 
-    public BasePacket(String name, String type, JsonObject<String, Object> data, float id) {
+    public BasePacket(String name, String type, JsonObject data, float id) {
         this.name = name;
         this.type = type;
         this.data = data;
@@ -36,21 +36,21 @@ public abstract class BasePacket {
     }
 
     public BasePacket(String name, String type, float id) {
-        this(name, type, new JsonObject<>(), id);
+        this(name, type, new JsonObject(), id);
     }
 
     public abstract void write(TGMLibSocket socket);
-    public abstract void read(TGMLibSocket socket, JsonObject<String, Object> json);
+    public abstract void read(TGMLibSocket socket, JsonObject json);
     public abstract void handle(TGMLibSocket socket);
 
     public void error(String name, String reason) {
-        data.add("ERROR", new JsonObject<>()
+        data.add("ERROR", new JsonObject()
                 .add("name", name)
                 .add("reason", reason));
     }
 
-    public JsonObject<String, Object> toJson() {
-        JsonObject<String, Object> value = new JsonObject<>();
+    public JsonObject toJson() {
+        JsonObject value = new JsonObject();
         value.add("name", name);
         value.add("type", type);
         value.add("data", data);

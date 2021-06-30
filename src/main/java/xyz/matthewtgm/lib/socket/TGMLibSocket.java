@@ -27,8 +27,8 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.java_websocket.handshake.ServerHandshake;
-import xyz.matthewtgm.json.objects.JsonObject;
-import xyz.matthewtgm.json.parsing.JsonParser;
+import xyz.matthewtgm.json.entities.JsonObject;
+import xyz.matthewtgm.json.parser.JsonParser;
 import xyz.matthewtgm.json.util.JsonHelper;
 import xyz.matthewtgm.lib.TGMLib;
 import xyz.matthewtgm.lib.socket.packets.BasePacket;
@@ -88,15 +88,15 @@ public class TGMLibSocket extends WebSocketClient {
 
     public void send(BasePacket packet) {
         packet.write(this);
-        super.send(packet.toJson().toJson());
+        super.send(packet.toJson().getAsString());
     }
 
     private void handleMessage(String message) {
         if (!JsonHelper.isValidJson(message)) return;
-        JsonObject<String, Object> packet = JsonParser.parseObj(message);
-        if (TGMLibCommand.logPackets) logger.warn(JsonHelper.makePretty(packet));
-        Class<? extends BasePacket> packetClazz = packets.inverse().get(packet.getAsFloat("id"));
-        BasePacket thePacket = null;
+        JsonObject packet = (JsonObject) JsonParser.parse(message);
+        if (TGMLibCommand.logPackets) logger.warn(JsonHelper.makePretty(packet, 4));
+        Class<? extends BasePacket> packetClazz = packets.inverse().get(packet.get("id").getAsFloat());
+        BasePacket thePacket;
         try {
             thePacket = packetClazz == null ? null : packetClazz.newInstance();
             if (thePacket == null) return;
