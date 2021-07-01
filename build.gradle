@@ -19,7 +19,6 @@
 plugins {
     id "net.minecraftforge.gradle.forge" version "6f5327738d"
     id "com.github.johnrengelman.shadow" version "6.1.0"
-    id "org.spongepowered.mixin" version "d75e32e"
     id "java"
 }
 
@@ -32,7 +31,9 @@ sourceCompatibility = targetCompatibility = 1.8
 minecraft {
     version = forge_ver
     runDir = "run"
-    replace("@VER@", mod_ver)
+    replace('@NAME@', mod_name)
+    replace('@ID@', mod_id)
+    replace('@VER@', mod_ver)
     mappings = "stable_22"
 }
 
@@ -57,24 +58,11 @@ configurations {
 
 /* Define dependencies, also where dependencies are automatically handled. */
 dependencies {
-    shade('xyz.matthewtgm:JsonTGM:2.2.3')
+    shade('xyz.matthewtgm:JsonTGM:2.2.5')
     shade('xyz.matthewtgm:TGMConfig:2.2')
     shade('org.java-websocket:Java-WebSocket:1.5.1')
     implementation('org.projectlombok:lombok:1.18.16')
     annotationProcessor('org.projectlombok:lombok:1.18.16')
-    shade('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
-        exclude module: 'launchwrapper'
-        exclude module: 'guava'
-        exclude module: 'gson'
-        exclude module: 'commons-io'
-    }
-    annotationProcessor('org.spongepowered:mixin:0.7.11-SNAPSHOT')
-}
-
-/* Disable mixin refMap warnings. */
-mixin {
-    disableRefMapWarning = true
-    add sourceSets.main, 'mixins.tgmlib.refmap.json'
 }
 
 /* Set the duplicatesStrategy and define configs. */
@@ -83,11 +71,11 @@ jar {
     enabled = false
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest.attributes(
-            'TweakClass': 'xyz.matthewtgm.libs.mixins.TGMLibTweaker',
-            'MixinConfigs': 'mixins.tgmlib.json',
+            'FMLCorePlugin': 'xyz.matthewtgm.tgmlib.core.mod.TGMLibLoadingPlugin',
             'TweakOrder': 0,
             'FMLCorePluginContainsFMLMod': true,
-            'ForceLoadAsMod': true
+            'ForceLoadAsMod': true,
+            'ModSide': 'CLIENT'
     )
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
 }
@@ -96,6 +84,8 @@ jar {
 shadowJar {
     configurations = [project.configurations.shade]
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    //relocate('com.google.common', 'tgmlib.com.google.common')
 
     archiveBaseName.set(archivesBaseName)
     archiveVersion.set('')
