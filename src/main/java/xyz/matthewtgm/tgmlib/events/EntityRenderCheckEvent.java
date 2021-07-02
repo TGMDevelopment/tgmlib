@@ -16,18 +16,16 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.tweaker;
+package xyz.matthewtgm.tgmlib.events;
 
-import org.objectweb.asm.tree.*;
+import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.common.eventhandler.Cancelable;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
-public interface TGMLibTransformer {
-
-    String[] getClassNames();
-
-    void transform(ClassNode classNode, final String name);
-
-    default String hooksPackage() {
-        return "xyz/matthewtgm/tgmlib/tweaker/hooks/";
+@Cancelable
+public class EntityRenderCheckEvent<E extends Entity> extends Event {
+    public final E entity;
+    public EntityRenderCheckEvent(E entity) {
+        this.entity = entity;
     }
-
 }

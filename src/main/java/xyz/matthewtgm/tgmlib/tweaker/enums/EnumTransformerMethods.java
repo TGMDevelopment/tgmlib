@@ -29,6 +29,9 @@ public enum EnumTransformerMethods {
     dropOneItem("dropOneItem", "func_71040_bB", "a", "(Z)Lnet/minecraft/entity/item/EntityItem;", "(Z)Luz;"),
     addToSendQueue("addToSendQueue", "func_147297_a", "a", "(Lnet/minecraft/network/Packet;)V"),
     channelRead0("channelRead0", "channelRead0", "a", "(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V"),
+    shouldRender("shouldRender", "func_177071_a", "a", "(Lnet/minecraft/entity/Entity;Lnet/minecraft/client/renderer/culling/ICamera;DDD)Z", "(Lpk;Lbia;DDD)Z"),
+    printChatMessage("printChatMessage", "func_146227_a", "a", "(Lnet/minecraft/util/IChatComponent;)V", "(Leu;)V"),
+    clearChatMessages("clearChatMessages", "func_146231_a", "a", "()V"),
 
     init("<init>", "<init>", "<init>", "()V");
 

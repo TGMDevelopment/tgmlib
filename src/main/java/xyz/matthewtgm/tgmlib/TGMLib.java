@@ -27,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.tgmlib.commands.CommandManager;
 import xyz.matthewtgm.tgmlib.core.TGMLibManager;
+import xyz.matthewtgm.tgmlib.gui.menus.GuiMod;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBindManager;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
 import xyz.matthewtgm.tgmlib.util.*;
@@ -67,9 +68,9 @@ public class TGMLib {
         manager.start();
         GuiEditor.addEdit(GuiOptions.class, new GuiEditor.GuiEditRunnable() {
             public void init(GuiScreen screen, List<GuiButton> buttonList) {
-                buttonList.add(new GuiButton(234523, screen.width / 2 - 50, screen.height - 20, 100, 20, "TGMLib") {
+                buttonList.add(new GuiButton(234523, screen.width / 2 - 50, screen.height - 24, 100, 20, "TGMLib") {
                     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-                        //if (super.mousePressed(mc, mouseX, mouseY)) mc.displayGuiScreen();
+                        if (super.mousePressed(mc, mouseX, mouseY)) mc.displayGuiScreen(new GuiMod(screen));
                         return false;
                     }
                 });

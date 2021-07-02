@@ -35,6 +35,9 @@ import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.announcer.AnnouncementPacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsTogglePacket;
+import xyz.matthewtgm.tgmlib.socket.packets.impl.profiles.OnlineStatusUpdatePacket;
+import xyz.matthewtgm.tgmlib.socket.packets.impl.profiles.PrivateMessagePacket;
+import xyz.matthewtgm.tgmlib.socket.packets.impl.profiles.RetrieveProfilePacket;
 import xyz.matthewtgm.tgmlib.util.ChatHelper;
 
 import java.net.URI;
@@ -87,8 +90,14 @@ public class TGMLibSocket extends WebSocketClient {
     }
 
     public void send(BasePacket packet) {
-        packet.write(this);
-        super.send(packet.toJson().getAsString());
+        try {
+            if (!isOpen()) reconnectBlocking();
+            if (!isOpen()) return;
+            packet.write(this);
+            super.send(packet.toJson().getAsString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleMessage(String message) {
@@ -115,9 +124,17 @@ public class TGMLibSocket extends WebSocketClient {
     }
 
     static {
+        /* Cosmetics. */
         packets.put(CosmeticsRetrievePacket.class, 0f);
         packets.put(CosmeticsTogglePacket.class, 1f);
+
+        /* Announcer. */
         packets.put(AnnouncementPacket.class, 2f);
+
+        /* Profiles. */
+        packets.put(RetrieveProfilePacket.class, 3f);
+        packets.put(PrivateMessagePacket.class, 4f);
+        packets.put(OnlineStatusUpdatePacket.class, 5f);
     }
 
     public interface OpenRunnable {

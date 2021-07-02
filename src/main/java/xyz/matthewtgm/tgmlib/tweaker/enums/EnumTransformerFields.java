@@ -1,0 +1,60 @@
+/*
+ * Copyright (C) MatthewTGM
+ * This file is part of TGMLib <https://github.com/TGMDevelopment/TGMLib>.
+ *
+ * TGMLib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TGMLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package xyz.matthewtgm.tgmlib.tweaker.enums;
+
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.FieldInsnNode;
+import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
+
+public enum EnumTransformerFields {
+
+    drawnChatLines("drawnChatLines", "field_146253_i", "i", "Ljava/util/List;"),
+    chatLines("chatLines", "field_146252_h", "h", "Ljava/util/List;"),
+    sentMessages("sentMessages", "field_146248_g", "g", "Ljava/util/List;");
+
+    private String name;
+    private String type;
+
+    EnumTransformerFields(String deobfName, String seargeName, String notchName18, String type) {
+        this.type = type;
+
+        if (TGMLibClassTransformer.isDeobfuscated()) {
+            name = deobfName;
+        } else {
+            if (TGMLibClassTransformer.isUsingNotchMappings()) {
+                name = notchName18;
+            } else {
+                name = seargeName;
+            }
+        }
+    }
+
+    public FieldInsnNode getField(EnumTransformerClasses currentClass) {
+        return new FieldInsnNode(Opcodes.GETFIELD, currentClass.getNameRaw(), name, type);
+    }
+
+    public FieldInsnNode putField(EnumTransformerClasses currentClass) {
+        return new FieldInsnNode(Opcodes.PUTFIELD, currentClass.getNameRaw(), name, type);
+    }
+
+    public boolean matches(FieldInsnNode fieldInsnNode) {
+        return this.name.equals(fieldInsnNode.name) && this.type.equals(fieldInsnNode.desc);
+    }
+
+}

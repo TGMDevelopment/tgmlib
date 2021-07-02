@@ -165,6 +165,10 @@ public class RenderHelper {
         GlStateManager.disableBlend();
     }
 
+    public static void drawRectEnhanced(int x, int y, int width, int height, int color) {
+        Gui.drawRect(x, y, width + x, height + y, color);
+    }
+
     /**
      * Draws a hollowed out rectangle.
      *

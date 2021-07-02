@@ -16,18 +16,20 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.tweaker;
+package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
-import org.objectweb.asm.tree.*;
+import net.minecraft.entity.Entity;
+import net.minecraftforge.common.MinecraftForge;
+import xyz.matthewtgm.tgmlib.events.EntityRenderCheckEvent;
 
-public interface TGMLibTransformer {
+public class RenderHook {
 
-    String[] getClassNames();
+    public static boolean callRenderCheckEvent(Entity entity) {
+        return MinecraftForge.EVENT_BUS.post(new EntityRenderCheckEvent<>(entity));
+    }
 
-    void transform(ClassNode classNode, final String name);
-
-    default String hooksPackage() {
-        return "xyz/matthewtgm/tgmlib/tweaker/hooks/";
+    public static void callEntityFireRenderEvent(Entity entity) {
+        //MinecraftForge.EVENT_BUS.post();
     }
 
 }

@@ -16,18 +16,33 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.tweaker;
+package xyz.matthewtgm.tgmlib.profiles;
 
-import org.objectweb.asm.tree.*;
+import lombok.Getter;
+import lombok.Setter;
 
-public interface TGMLibTransformer {
+import java.awt.image.BufferedImage;
 
-    String[] getClassNames();
+public class ProfileHolder {
 
-    void transform(ClassNode classNode, final String name);
+    @Getter private final String uuid;
+    @Getter @Setter private boolean friend;
+    @Getter @Setter private BufferedImage icon;
+    @Getter @Setter private ProfileOnlineStatus onlineStatus;
 
-    default String hooksPackage() {
-        return "xyz/matthewtgm/tgmlib/tweaker/hooks/";
+    public ProfileHolder(String uuid, boolean friend, BufferedImage icon, ProfileOnlineStatus onlineStatus) {
+        this.uuid = uuid;
+        this.friend = friend;
+        this.icon = icon;
+        this.onlineStatus = onlineStatus;
+    }
+
+    public ProfileHolder get() {
+        return null;
+    }
+
+    public ProfileHolder refresh() {
+        return get();
     }
 
 }

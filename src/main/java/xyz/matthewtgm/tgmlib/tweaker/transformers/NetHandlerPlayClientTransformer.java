@@ -20,6 +20,7 @@ package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.*;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -27,7 +28,7 @@ import static org.objectweb.asm.Opcodes.*;
 public class NetHandlerPlayClientTransformer implements TGMLibTransformer {
 
     public String[] getClassNames() {
-        return new String[]{"net.minecraft.client.network.NetHandlerPlayClient"};
+        return new String[]{EnumTransformerClasses.NetHandlerPlayClient.getTransformerName()};
     }
 
     public void transform(ClassNode classNode, String name) {
@@ -39,9 +40,9 @@ public class NetHandlerPlayClientTransformer implements TGMLibTransformer {
 
     private InsnList call() {
         InsnList list = new InsnList();
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(new VarInsnNode(ALOAD, 1));
-        list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/NetHandlerPlayClientHook", "callEvent", "(Lnet/minecraft/client/network/NetHandlerPlayClient;Lnet/minecraft/network/Packet;)V", false));
+        list.add(new VarInsnNode(ALOAD, 0)); /* this */
+        list.add(new VarInsnNode(ALOAD, 1)); /* packet */
+        list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/NetHandlerPlayClientHook", "callEvent", "(" + EnumTransformerClasses.NetHandlerPlayClient.getName() + EnumTransformerClasses.Packet.getName() + ")V", false)); /* NetHandlerPlayClientHook.callEvent(this, packet); */
         return list;
     }
 

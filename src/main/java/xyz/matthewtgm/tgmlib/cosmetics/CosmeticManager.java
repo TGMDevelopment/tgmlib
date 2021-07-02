@@ -42,6 +42,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class CosmeticManager {
+
+    @Getter
+    private static boolean loaded;
     @Getter
     private final List<BaseCosmetic> cosmetics = new ArrayList<>();
     @Getter
@@ -56,6 +59,7 @@ public class CosmeticManager {
         for (BaseCosmetic cosmetic : cosmetics) PlayerRendererHelper.addLayer(createLayer(cosmetic));
 
         TGMLib.getManager().getWebSocket().send(new CosmeticsRetrievePacket(Minecraft.getMinecraft().getSession().getProfile().getId().toString()));
+        loaded = true;
     }
 
     private void initialize() {

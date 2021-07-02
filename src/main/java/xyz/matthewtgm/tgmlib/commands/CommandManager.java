@@ -132,7 +132,11 @@ public class CommandManager {
         public void processCommand(ICommandSender sender, String[] args) {
             try {
                 EntityPlayer playerSender = (EntityPlayer) sender;
-                execute(process, playerSender, args, passSenderToProcess, passArgsToProcess);
+                if (command.processIfNoArgs()) {
+                    if (args.length <= 0)
+                        execute(process, playerSender, args, passSenderToProcess, passArgsToProcess);
+                } else
+                    execute(process, playerSender, args, passSenderToProcess, passArgsToProcess);
                 if (!(args.length <= 0)) {
                     for (ArgumentMethod argument : arguments) {
                         String arg = args[argument.argument.index()];

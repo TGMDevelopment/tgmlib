@@ -28,6 +28,7 @@ import java.lang.annotation.Target;
 public @interface Command {
 
     String name();
+    boolean processIfNoArgs() default true;
     String usage() default "";
     String[] aliases() default {};
     String[] tabCompleteOptions() default {};

@@ -26,12 +26,18 @@ public class HitBox {
 
     @Getter @Setter
     private float x, y, width, height;
+    @Getter @Setter
+    private int intX, intY, intWidth, intHeight;
 
     public HitBox(float x, float y, float width, float height) {
         this.x = x;
         this.y = y;
+        this.intX = (int) x;
+        this.intY = (int) y;
         this.width = width;
         this.height = height;
+        this.intWidth = (int) width;
+        this.intHeight = (int) height;
     }
 
     public HitBox(JsonObject json) {

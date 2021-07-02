@@ -16,18 +16,19 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.tweaker;
+package xyz.matthewtgm.tgmlib.events;
 
-import org.objectweb.asm.tree.*;
+import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.util.IChatComponent;
+import net.minecraftforge.fml.common.eventhandler.Cancelable;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
-public interface TGMLibTransformer {
-
-    String[] getClassNames();
-
-    void transform(ClassNode classNode, final String name);
-
-    default String hooksPackage() {
-        return "xyz/matthewtgm/tgmlib/tweaker/hooks/";
+@Cancelable
+public class PrintChatMessageEvent extends Event {
+    public final GuiNewChat chat;
+    public IChatComponent component;
+    public PrintChatMessageEvent(GuiNewChat chat, IChatComponent component) {
+        this.chat = chat;
+        this.component = component;
     }
-
 }

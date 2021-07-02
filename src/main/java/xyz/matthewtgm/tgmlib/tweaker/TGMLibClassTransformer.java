@@ -51,8 +51,10 @@ public class TGMLibClassTransformer implements IClassTransformer {
         created = true;
         registerTransformer(new EntityLivingBaseTransformer());
         registerTransformer(new EntityPlayerSPTransformer());
+        registerTransformer(new GuiNewChatTransformer());
         registerTransformer(new NetHandlerPlayClientTransformer());
         registerTransformer(new NetworkManagerTransformer());
+        registerTransformer(new RenderTransformer());
     }
 
     private void registerTransformer(TGMLibTransformer transformer) {

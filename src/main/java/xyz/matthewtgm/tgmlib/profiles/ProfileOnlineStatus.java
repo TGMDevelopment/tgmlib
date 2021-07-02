@@ -16,18 +16,12 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.tweaker;
+package xyz.matthewtgm.tgmlib.profiles;
 
-import org.objectweb.asm.tree.*;
+public enum ProfileOnlineStatus {
 
-public interface TGMLibTransformer {
-
-    String[] getClassNames();
-
-    void transform(ClassNode classNode, final String name);
-
-    default String hooksPackage() {
-        return "xyz/matthewtgm/tgmlib/tweaker/hooks/";
-    }
+    DND,
+    ONLINE,
+    OFFLINE
 
 }

@@ -25,24 +25,28 @@ import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class EntityLivingBaseTransformer implements TGMLibTransformer {
+public class RenderTransformer implements TGMLibTransformer {
 
     public String[] getClassNames() {
-        return new String[]{EnumTransformerClasses.EntityLivingBase.getTransformerName()};
+        return new String[]{EnumTransformerClasses.Render.getTransformerName()};
     }
 
     public void transform(ClassNode classNode, String name) {
-        for (MethodNode methodNode : classNode.methods) {
-            if (EnumTransformerMethods.addPotionEffect.matches(methodNode))
-                methodNode.instructions.insertBefore(methodNode.instructions.getFirst(), call());
+        for (MethodNode method : classNode.methods) {
+            if (EnumTransformerMethods.shouldRender.matches(method))
+                method.instructions.insertBefore(method.instructions.getFirst(), callRenderCheck());
         }
     }
 
-    private InsnList call() {
+    private InsnList callRenderCheck() {
         InsnList list = new InsnList();
-        list.add(new VarInsnNode(ALOAD, 0)); /* this */
-        list.add(new VarInsnNode(ALOAD, 1)); /* potionEffect */
-        list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/EntityLivingBaseHook", "callEvent", "(" + EnumTransformerClasses.EntityLivingBase.getName() + EnumTransformerClasses.PotionEffect.getName() + ")V", false));
+        list.add(new VarInsnNode(ALOAD, 1)); /* livingEntity */
+        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "RenderHook", "callRenderCheckEvent", "(Lnet/minecraft/entity/Entity;)Z", false)); /* RenderHook.callRenderCheckEvent(livingEntity) */
+        LabelNode labelNode = new LabelNode(); /* if (RenderHook.callRenderCheckEvent(livingEntity)) */
+        list.add(new JumpInsnNode(IFEQ, labelNode));
+        list.add(new InsnNode(ICONST_0)); /* return false; */
+        list.add(new InsnNode(IRETURN));
+        list.add(labelNode);
         return list;
     }
 

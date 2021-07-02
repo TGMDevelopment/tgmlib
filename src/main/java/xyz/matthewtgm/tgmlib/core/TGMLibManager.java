@@ -22,6 +22,7 @@ import lombok.Getter;
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.util.JsonApiHelper;
 import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
+import xyz.matthewtgm.tgmlib.profiles.ProfileManager;
 import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
 
 import java.io.File;
@@ -35,6 +36,7 @@ public class TGMLibManager {
 
     @Getter private TGMLibSocket webSocket;
     @Getter private CosmeticManager cosmeticManager;
+    @Getter private ProfileManager profileManager;
 
     public void initialize(File mcDir) {
         if (initialized) return;
@@ -48,6 +50,7 @@ public class TGMLibManager {
         try {
             (webSocket = createWebSocket(new TGMLibSocket(websocketUri()))).connectBlocking();
             (cosmeticManager = new CosmeticManager()).start();
+            //(profileManager = new ProfileManager()).start();
         } catch (Exception e) {
             e.printStackTrace();
         }
