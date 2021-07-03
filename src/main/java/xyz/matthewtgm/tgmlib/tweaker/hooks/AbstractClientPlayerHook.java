@@ -26,7 +26,7 @@ public class AbstractClientPlayerHook {
 
     public static boolean returnValue(AbstractClientPlayer player) {
         CosmeticManager cosmeticManager = TGMLib.getManager().getCosmeticManager();
-        return TGMLib.getManager().getConfigHandler().isOverrideCapes() && cosmeticManager.getCosmeticMap().containsKey(player.getUniqueID().toString()) && !cosmeticManager.getCosmeticMap().get(player.getUniqueID().toString()).getEnabledCloakCosmetics().isEmpty();
+        return TGMLib.getManager().getConfigHandler().isOverrideCapes() && TGMLib.getManager().getConfigHandler().isShowCosmetics() && cosmeticManager.getCosmeticMap().containsKey(player.getUniqueID().toString()) && !cosmeticManager.getCosmeticMap().get(player.getUniqueID().toString()).getEnabledCloakCosmetics().isEmpty();
     }
 
 }

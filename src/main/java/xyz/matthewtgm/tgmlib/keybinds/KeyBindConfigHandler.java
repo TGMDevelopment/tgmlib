@@ -18,6 +18,7 @@
 
 package xyz.matthewtgm.tgmlib.keybinds;
 
+import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.tgmconfig.ConfigEntry;
 import xyz.matthewtgm.tgmconfig.TGMConfig;
 
@@ -31,13 +32,14 @@ public class KeyBindConfigHandler {
 
     public void update() {
         for (KeyBind keyBind : KeyBindManager.getKeyBinds()) {
-            if (!config.containsKey(keyBind.id())) config.addAndSave(new ConfigEntry<>(keyBind.id(), keyBind.getKey()));
-            keyBind.updateKey((int) config.getAsDouble(keyBind.id()));
+            if (!config.containsKey(keyBind.category())) config.addAndSave(new ConfigEntry<>(keyBind.category(), new JsonObject().add(keyBind.name(), keyBind.getKey())));
+            keyBind.updateKey((int) config.getAsJsonObject(keyBind.category()).get(keyBind.name()).getAsDouble());
         }
     }
 
     public void update(KeyBind keyBind) {
-        config.addAndSave(new ConfigEntry<>(keyBind.id(), keyBind.getKey()));
+        if (!config.containsKey(keyBind.category())) config.addAndSave(new ConfigEntry<>(keyBind.category(), new JsonObject().add(keyBind.name(), keyBind.getKey())));
+        config.addAndSave(new ConfigEntry<>(keyBind.category(), config.getAsJsonObject(keyBind.category()).add(keyBind.name(), keyBind.getKey())));
     }
 
 }
