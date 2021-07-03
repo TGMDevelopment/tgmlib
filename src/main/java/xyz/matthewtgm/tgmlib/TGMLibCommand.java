@@ -22,6 +22,7 @@ import net.minecraft.util.EnumChatFormatting;
 import org.apache.commons.lang3.StringUtils;
 import xyz.matthewtgm.tgmlib.commands.advanced.Command;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiCosmeticSelector;
+import xyz.matthewtgm.tgmlib.gui.menus.GuiKeyBinds;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiMod;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.announcer.AnnouncementPacket;
 import xyz.matthewtgm.tgmlib.util.ChatHelper;
@@ -41,6 +42,16 @@ public class TGMLibCommand {
     @Command.Process
     private void process() {
         GuiHelper.open(new GuiMod(null));
+    }
+
+    @Command.Argument(name = "cosmetics")
+    private void cosmetics() {
+        GuiHelper.open(new GuiCosmeticSelector(null));
+    }
+
+    @Command.Argument(name = "keybinds", aliases = "keybindings")
+    private void keybinds() {
+        GuiHelper.open(new GuiKeyBinds(null));
     }
 
     @Command.Argument(name = "announce")

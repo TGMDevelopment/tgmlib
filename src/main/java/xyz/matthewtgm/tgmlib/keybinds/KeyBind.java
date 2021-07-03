@@ -34,10 +34,6 @@ public abstract class KeyBind {
     public abstract void held();
     public abstract void released();
 
-    public String id() {
-        return name() + "___" + category();
-    }
-
     public void updateKey(int key) {
         this.key = key;
     }
