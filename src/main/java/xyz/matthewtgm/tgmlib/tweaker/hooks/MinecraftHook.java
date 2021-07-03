@@ -16,29 +16,14 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.cosmetics;
+package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
-import lombok.Getter;
+import xyz.matthewtgm.tgmlib.TGMLib;
 
-public enum CosmeticType {
-    CLOAK("Cloaks", 0),
-    WINGS("Wings", 1),
-    HAT("Hats", 2),
-    TAIL("Tails", 3),
-    EARS("Ears", 4);
+public class MinecraftHook {
 
-    @Getter
-    private final String name;
-    @Getter
-    private final int id;
-    CosmeticType(String name, int id) {
-        this.name = name;
-        this.id = id;
-    }
-
-    public static CosmeticType fromId(int id) {
-        for (CosmeticType type : values()) if (type.getId() == id) return type;
-        return null;
+    public static void updateTgmLibTimer() {
+        TGMLib.getManager().getTgmLibMinecraftTimer().updateTimer();
     }
 
 }

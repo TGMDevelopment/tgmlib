@@ -37,9 +37,10 @@ public class GlHelper {
      * @author MatthewTGM
      */
     public static void startScissorBox(int x, int y, int width, int height) {
+        ScaledResolution resolution = ScreenHelper.getResolution();
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor(x, y, width, height);
+        GL11.glScissor(((x * Minecraft.getMinecraft().displayWidth) / resolution.getScaledWidth()), (((resolution.getScaledHeight() - (y + height)) * Minecraft.getMinecraft().displayHeight) / resolution.getScaledHeight()), (width * Minecraft.getMinecraft().displayWidth / resolution.getScaledWidth()), (height * Minecraft.getMinecraft().displayHeight / resolution.getScaledHeight()));
     }
 
     /**
@@ -50,9 +51,7 @@ public class GlHelper {
      * @author MatthewTGM
      */
     public static void startScissorBox(float x, float y, float width, float height) {
-        GL11.glPushMatrix();
-        GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor((int) x, (int) y, (int) width, (int) height);
+        startScissorBox((int) x, (int) y, (int) width, (int) height);
     }
 
     /**

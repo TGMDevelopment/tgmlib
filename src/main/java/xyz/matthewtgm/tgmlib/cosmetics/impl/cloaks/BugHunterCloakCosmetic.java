@@ -16,29 +16,22 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.cosmetics;
+package xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks;
 
-import lombok.Getter;
+import net.minecraft.util.ResourceLocation;
+import xyz.matthewtgm.tgmlib.cosmetics.BaseCloakCosmetic;
+import xyz.matthewtgm.tgmlib.util.ResourceHelper;
 
-public enum CosmeticType {
-    CLOAK("Cloaks", 0),
-    WINGS("Wings", 1),
-    HAT("Hats", 2),
-    TAIL("Tails", 3),
-    EARS("Ears", 4);
+public class BugHunterCloakCosmetic extends BaseCloakCosmetic {
 
-    @Getter
-    private final String name;
-    @Getter
-    private final int id;
-    CosmeticType(String name, int id) {
-        this.name = name;
-        this.id = id;
+    public BugHunterCloakCosmetic() {
+        super("Bug Hunter Cloak", "BUG_HUNTER_CLOAK");
     }
 
-    public static CosmeticType fromId(int id) {
-        for (CosmeticType type : values()) if (type.getId() == id) return type;
-        return null;
+    public ResourceLocation texture() {
+        return ResourceHelper.get("tgmlib", "cosmetics/cloaks/bug_hunter_cloak.png");
     }
+
+    public void tick() {}
 
 }

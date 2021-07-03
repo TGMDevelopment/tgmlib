@@ -23,6 +23,8 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
 @SuppressWarnings("all")
 public enum EnumTransformerClasses {
 
+    Minecraft("net/minecraft/client/Minecraft", "ave"),
+    Timer("net/minecraft/util/Timer", "avl"),
     NetHandlerPlayClient("net/minecraft/client/network/NetHandlerPlayClient", "bcy"),
     NetworkManager("net/minecraft/network/NetworkManager", "ek"),
     Packet("net/minecraft/network/Packet", "ff"),

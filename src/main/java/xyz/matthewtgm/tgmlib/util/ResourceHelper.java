@@ -18,11 +18,11 @@
 
 package xyz.matthewtgm.tgmlib.util;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
-
 import java.io.IOException;
 import java.io.InputStream;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 
 public class ResourceHelper {
 

@@ -19,6 +19,7 @@
 package xyz.matthewtgm.tgmlib.core;
 
 import lombok.Getter;
+import net.minecraft.util.Timer;
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.util.JsonApiHelper;
 import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
@@ -34,6 +35,7 @@ public class TGMLibManager {
     @Getter private static boolean initialized;
     @Getter private static File mcDir, tgmLibDir;
 
+    @Getter private Timer tgmLibMinecraftTimer;
     @Getter private TGMLibSocket webSocket;
     @Getter private CosmeticManager cosmeticManager;
     @Getter private ProfileManager profileManager;
@@ -48,6 +50,7 @@ public class TGMLibManager {
 
     public void start() {
         try {
+            tgmLibMinecraftTimer = new Timer(20);
             (webSocket = createWebSocket(new TGMLibSocket(websocketUri()))).connectBlocking();
             (cosmeticManager = new CosmeticManager()).start();
             //(profileManager = new ProfileManager()).start();

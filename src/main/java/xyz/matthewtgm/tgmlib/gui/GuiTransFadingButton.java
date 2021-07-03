@@ -21,6 +21,7 @@ package xyz.matthewtgm.tgmlib.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.Timer;
+import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.util.EasingHelper;
 import xyz.matthewtgm.tgmlib.util.EnhancedFontRenderer;
 import xyz.matthewtgm.tgmlib.util.MathHelper;
@@ -34,21 +35,26 @@ import java.lang.reflect.Field;
  */
 public class GuiTransFadingButton extends GuiTransButton {
 
-    int fade = 0;
-    int size = 0;
-    int frame = 0;
+    protected Timer timer;
+
+    protected int fade = 0;
+    protected int size = 0;
+    protected int frame = 0;
 
     public GuiTransFadingButton(int buttonId, int x, int y, String buttonText) {
         super(buttonId, x, y, buttonText);
+        this.timer = TGMLib.getManager().getTgmLibMinecraftTimer();
     }
     public GuiTransFadingButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText) {
         super(buttonId, x, y, widthIn, heightIn, buttonText);
+        this.timer = TGMLib.getManager().getTgmLibMinecraftTimer();
     }
 
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+        GlStateManager.pushMatrix();
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         boolean hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
-        float partialTicks = partialTicks();
+        float partialTicks = timer.renderPartialTicks;
 
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
@@ -72,18 +78,7 @@ public class GuiTransFadingButton extends GuiTransButton {
         RenderHelper.drawRectEnhanced(xPosition - size, yPosition - size, width + size * 2, height + size * 2, new Color(fade, fade, fade, 150).getRGB());
 
         EnhancedFontRenderer.drawCenteredText(displayString, xPosition + width / 2, yPosition + (height - 8) / 2, new Color(255, 255, 255).getRGB());
-    }
-
-    protected float partialTicks() {
-        try {
-            Field timer = Minecraft.class.getDeclaredField("timer");
-            timer.setAccessible(true);
-
-            return ((Timer) timer.get(Minecraft.getMinecraft())).renderPartialTicks;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 1f;
-        }
+        GlStateManager.popMatrix();
     }
 
 }

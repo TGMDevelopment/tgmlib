@@ -36,18 +36,16 @@ public class GuiMod extends GuiScreen {
     private final GuiScreen parent;
     private final GuiMod $this = this;
 
-    private int textPosition;
-
     public GuiMod(GuiScreen parent) {
         this.parent = parent;
     }
 
     public void initGui() {
-        textPosition = height / 2;
         HitBox backgroundHitBox = createBackgroundHitBox();
         buttonList.add(new GuiTransFadingImageButton(0, backgroundHitBox.getIntX() + 2, backgroundHitBox.getIntY() + 2, 30, 30, ResourceHelper.get("tgmlib", "gui/icons/exit_icon.png")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-                if (super.mousePressed(mc, mouseX, mouseY)) mc.displayGuiScreen(parent);
+                if (super.mousePressed(mc, mouseX, mouseY))
+                mc.displayGuiScreen(parent);
                 return false;
             }
         });
@@ -55,7 +53,8 @@ public class GuiMod extends GuiScreen {
         if (CosmeticManager.isLoaded()) {
             buttonList.add(new GuiTransFadingImageButton(1, width / 2 - 25, height / 2 - 40, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/cosmetics_icon.png")) {
                 public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-                    if (super.mousePressed(mc, mouseX, mouseY)) mc.displayGuiScreen(new GuiCosmeticSelector($this));
+                    if (super.mousePressed(mc, mouseX, mouseY))
+                        mc.displayGuiScreen(new GuiCosmeticSelector($this));
                     return false;
                 }
             });
@@ -80,9 +79,7 @@ public class GuiMod extends GuiScreen {
         // TODO: 2021/07/02
 
         /* Text. */
-        if (textPosition > 30)
-            textPosition *= partialTicks;
-        EnhancedFontRenderer.drawCenteredStyledScaledText("TGMLib", 3, width / 2, textPosition, new Color(255, 175, 0).getRGB());
+        EnhancedFontRenderer.drawCenteredStyledScaledText("TGMLib", 3, width / 2, 30, new Color(255, 175, 0).getRGB());
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
