@@ -19,9 +19,15 @@
 package xyz.matthewtgm.tgmlib.core;
 
 import lombok.Getter;
+import net.minecraft.util.Timer;
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.util.JsonApiHelper;
+import xyz.matthewtgm.tgmconfig.TGMConfig;
 import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
+import xyz.matthewtgm.tgmlib.files.ConfigHandler;
+import xyz.matthewtgm.tgmlib.files.FileHandler;
+import xyz.matthewtgm.tgmlib.keybinds.KeyBindConfigHandler;
+import xyz.matthewtgm.tgmlib.profiles.ProfileManager;
 import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
 
 import java.io.File;
@@ -33,8 +39,15 @@ public class TGMLibManager {
     @Getter private static boolean initialized;
     @Getter private static File mcDir, tgmLibDir;
 
+    @Getter private Timer tgmLibMinecraftTimer;
+    @Getter private FileHandler fileHandler;
+    @Getter private TGMConfig config;
+    @Getter private TGMConfig keyBindConfig;
+    @Getter private ConfigHandler configHandler;
+    @Getter private KeyBindConfigHandler keyBindConfigHandler;
     @Getter private TGMLibSocket webSocket;
     @Getter private CosmeticManager cosmeticManager;
+    @Getter private ProfileManager profileManager;
 
     public void initialize(File mcDir) {
         if (initialized) return;
@@ -46,8 +59,15 @@ public class TGMLibManager {
 
     public void start() {
         try {
+            tgmLibMinecraftTimer = new Timer(20);
+            (fileHandler = new FileHandler()).start();
+            (config = new TGMConfig("config", fileHandler.getTgmLibDir())).save();
+            (keyBindConfig = new TGMConfig("keybinds", fileHandler.getTgmLibDir())).save();
+            (configHandler = new ConfigHandler(config)).start();
+            (keyBindConfigHandler = new KeyBindConfigHandler(keyBindConfig)).update();
             (webSocket = createWebSocket(new TGMLibSocket(websocketUri()))).connectBlocking();
             (cosmeticManager = new CosmeticManager()).start();
+            //(profileManager = new ProfileManager()).start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,7 +81,7 @@ public class TGMLibManager {
     }
 
     private TGMLibSocket createWebSocket(TGMLibSocket original) {
-        original.setConnectionLostTimeout(Integer.MAX_VALUE);
+        original.setConnectionLostTimeout(Integer.MAX_VALUE / 2);
         original.setTcpNoDelay(true);
         return original;
     }

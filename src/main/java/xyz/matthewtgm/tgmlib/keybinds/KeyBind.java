@@ -18,11 +18,28 @@
 
 package xyz.matthewtgm.tgmlib.keybinds;
 
-public interface KeyBind {
-    String name();
-    String category();
-    int key();
-    void pressed();
-    void held();
-    void released();
+import lombok.Getter;
+
+public abstract class KeyBind {
+
+    @Getter private int key;
+
+    public KeyBind(int key) {
+        this.key = key;
+    }
+
+    public abstract String name();
+    public abstract String category();
+    public abstract void pressed();
+    public abstract void held();
+    public abstract void released();
+
+    public String id() {
+        return name() + "___" + category();
+    }
+
+    public void updateKey(int key) {
+        this.key = key;
+    }
+
 }

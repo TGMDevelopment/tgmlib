@@ -20,6 +20,7 @@ package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.*;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -27,7 +28,7 @@ import static org.objectweb.asm.Opcodes.*;
 public class EntityPlayerSPTransformer implements TGMLibTransformer {
 
     public String[] getClassNames() {
-        return new String[]{"net.minecraft.client.entity.EntityPlayerSP"};
+        return new String[]{EnumTransformerClasses.EntityPlayerSP.getTransformerName()};
     }
 
     public void transform(ClassNode classNode, String name) {
@@ -39,11 +40,11 @@ public class EntityPlayerSPTransformer implements TGMLibTransformer {
 
     private InsnList call() {
         InsnList list = new InsnList();
-        list.add(new VarInsnNode(ILOAD, 1));
-        list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/EntityPlayerSPHook", "callEvent", "(Z)Z", false));
-        LabelNode labelNode = new LabelNode();
+        list.add(new VarInsnNode(ILOAD, 1)); /* dropAll */
+        list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/EntityPlayerSPHook", "callEvent", "(Z)Z", false)); /* EntityPlayerSPHook.callEvent(dropAll) */
+        LabelNode labelNode = new LabelNode(); /* if (EntityPlayerSPHook.callEvent(dropAll)) */
         list.add(new JumpInsnNode(IFEQ, labelNode));
-        list.add(new InsnNode(ACONST_NULL));
+        list.add(new InsnNode(ACONST_NULL)); /* return null; */
         list.add(new InsnNode(ARETURN));
         list.add(labelNode);
         return list;

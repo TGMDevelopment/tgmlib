@@ -46,4 +46,11 @@ public class ArrayHelper {
         return convert(array).stream().filter(predicate);
     }
 
+    public static double averageInts(List<Integer> list) {
+        int total = 0;
+        for(Integer integer : list)
+            total += integer;
+        return (double) total / list.size();
+    }
+
 }

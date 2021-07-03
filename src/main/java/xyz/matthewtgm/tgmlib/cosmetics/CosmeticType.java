@@ -21,15 +21,18 @@ package xyz.matthewtgm.tgmlib.cosmetics;
 import lombok.Getter;
 
 public enum CosmeticType {
-    CLOAK(0),
-    WINGS(1),
-    HAT(2),
-    TAIL(3),
-    EARS(4);
+    CLOAK("Cloaks", 0),
+    WINGS("Wings", 1),
+    HAT("Hats", 2),
+    TAIL("Tails", 3),
+    EARS("Ears", 4);
 
     @Getter
+    private final String name;
+    @Getter
     private final int id;
-    CosmeticType(int id) {
+    CosmeticType(String name, int id) {
+        this.name = name;
         this.id = id;
     }
 

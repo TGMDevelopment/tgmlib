@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
+import xyz.matthewtgm.tgmlib.TGMLib;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,46 +31,19 @@ import java.util.List;
 public class KeyBindManager {
 
     @Getter private static final List<KeyBind> keyBinds = new ArrayList<>();
-    private static int pressed;
 
     public static void register(KeyBind keyBind) {
         keyBinds.add(keyBind);
+        TGMLib.getManager().getKeyBindConfigHandler().update();
     }
 
     public static void unregister(String name) {
         keyBinds.stream().filter(keyBind -> keyBind.name().equalsIgnoreCase(name)).findFirst().ifPresent(keyBinds::remove);
+        TGMLib.getManager().getKeyBindConfigHandler().update();
     }
 
     public static void unregister(KeyBind keyBind) {
         unregister(keyBind.name());
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
-    public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (!keyBinds.isEmpty()) {
-            int key = Keyboard.getEventKey();
-            boolean down = Keyboard.getEventKeyState();
-            pressed++;
-            for (KeyBind keyBind : keyBinds) {
-                if (key == keyBind.key()) {
-                    if (isKeyPressed(keyBind)) keyBind.pressed();
-                    if (pressed > 5 && down) keyBind.held();
-
-                    if (!down) {
-                        pressed = 0;
-                        keyBind.released();
-                    }
-                }
-            }
-        }
-    }
-
-    private boolean isKeyPressed(KeyBind keyBind) {
-        if (pressed == 0) return false;
-        else {
-            --pressed;
-            return true;
-        }
     }
 
 }

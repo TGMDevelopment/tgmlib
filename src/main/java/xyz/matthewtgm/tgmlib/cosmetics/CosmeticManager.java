@@ -29,6 +29,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.*;
+import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.exclusive.MatthewTgmCloakCosmetic;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.exclusive.WyvestCloakCosmetic;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.partners.DarkCheeseIglooCloakCosmetic;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.wings.ChromaDragonWingsCosmetic;
@@ -42,6 +43,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class CosmeticManager {
+
+    @Getter
+    private static boolean loaded;
     @Getter
     private final List<BaseCosmetic> cosmetics = new ArrayList<>();
     @Getter
@@ -56,16 +60,21 @@ public class CosmeticManager {
         for (BaseCosmetic cosmetic : cosmetics) PlayerRendererHelper.addLayer(createLayer(cosmetic));
 
         TGMLib.getManager().getWebSocket().send(new CosmeticsRetrievePacket(Minecraft.getMinecraft().getSession().getProfile().getId().toString()));
+        loaded = true;
     }
 
     private void initialize() {
         logger.info("Initializing cosmetics...");
+        cosmetics.add(new BoosterCloakCosmetic());
+        cosmetics.add(new BugHunterCloakCosmetic());
         cosmetics.add(new DarkCheeseIglooCloakCosmetic());
         cosmetics.add(new DeveloperCloakCosmetic());
         cosmetics.add(new KeycapCloakCosmetic());
+        cosmetics.add(new MatthewTgmCloakCosmetic());
         cosmetics.add(new MinecoinCloakCosmetic());
         cosmetics.add(new ModderCloakCosmetic());
         cosmetics.add(new PartnerCloakCosmetic());
+        cosmetics.add(new UwUCloakCosmetic());
         cosmetics.add(new WyvestCloakCosmetic());
 
         cosmetics.add(new DragonWingsCosmetic());
@@ -84,6 +93,7 @@ public class CosmeticManager {
         TGMLibSocket socket = TGMLib.getManager().getWebSocket();
         return new LayerRenderer<AbstractClientPlayer>() {
             public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
+                if (!TGMLib.getManager().getConfigHandler().isShowCosmetics()) return;
                 if (!socket.isOpen() && socket.isClosed() || !socket.isOpen() && socket.isClosing()) socket.reconnect();
                 if (!cosmeticMap.containsKey(player.getUniqueID().toString()) && !madeRequestsFor.contains(player.getUniqueID().toString())) {
                     socket.send(new CosmeticsRetrievePacket(player.getUniqueID().toString()));

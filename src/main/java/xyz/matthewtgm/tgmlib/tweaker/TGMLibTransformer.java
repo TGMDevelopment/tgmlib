@@ -26,4 +26,8 @@ public interface TGMLibTransformer {
 
     void transform(ClassNode classNode, final String name);
 
+    default String hooksPackage() {
+        return "xyz/matthewtgm/tgmlib/tweaker/hooks/";
+    }
+
 }

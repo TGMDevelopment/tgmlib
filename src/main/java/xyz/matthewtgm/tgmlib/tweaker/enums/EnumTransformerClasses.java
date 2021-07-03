@@ -23,8 +23,18 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
 @SuppressWarnings("all")
 public enum EnumTransformerClasses {
 
+    Minecraft("net/minecraft/client/Minecraft", "ave"),
+    Timer("net/minecraft/util/Timer", "avl"),
+    NetHandlerPlayClient("net/minecraft/client/network/NetHandlerPlayClient", "bcy"),
+    NetworkManager("net/minecraft/network/NetworkManager", "ek"),
+    Packet("net/minecraft/network/Packet", "ff"),
     PotionEffect("net/minecraft/potion/PotionEffect", "pf"),
-    EntityLivingBase("net/minecraft/entity/EntityLivingBase", "pr");
+    EntityLivingBase("net/minecraft/entity/EntityLivingBase", "pr"),
+    EntityPlayerSP("net/minecraft/client/entity/EntityPlayerSP", "bew"),
+    AbstractClientPlayer("net/minecraft/client/entity/AbstractClientPlayer", "bet"),
+    Render("net/minecraft/client/renderer/entity/Render", "biv"),
+    GuiNewChat("net/minecraft/client/gui/GuiNewChat", "avt"),
+    IChatComponent("net/minecraft/util/IChatComponent", "eu");
 
     private String name;
     private String seargeClass;

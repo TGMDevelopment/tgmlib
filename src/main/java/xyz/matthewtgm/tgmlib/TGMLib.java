@@ -25,8 +25,11 @@ import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiScreen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.input.Keyboard;
 import xyz.matthewtgm.tgmlib.commands.CommandManager;
 import xyz.matthewtgm.tgmlib.core.TGMLibManager;
+import xyz.matthewtgm.tgmlib.gui.menus.GuiMod;
+import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBindManager;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
 import xyz.matthewtgm.tgmlib.util.*;
@@ -39,7 +42,7 @@ public class TGMLib {
     @Getter private static final TGMLib instance = new TGMLib();
     public static final String NAME = "@NAME@", ID = "@ID@", VER = "@VER@", TRANSFORMER = TGMLibClassTransformer.class.getName();
     @Getter private static final TGMLibManager manager = new TGMLibManager();
-    @Getter private static boolean initialized = false, dev = false;
+    @Getter private static boolean initialized = false;
     @Getter private final Logger logger = LogManager.getLogger(NAME);
 
     public void initialize(File mcDir) {
@@ -58,7 +61,6 @@ public class TGMLib {
                 new GuiHelper(),
                 new GuiEditor(),
                 new HypixelHelper(),
-                new KeyBindManager(),
                 new MessageQueue(),
                 new Notifications(),
                 new ScreenHelper(),
@@ -67,9 +69,9 @@ public class TGMLib {
         manager.start();
         GuiEditor.addEdit(GuiOptions.class, new GuiEditor.GuiEditRunnable() {
             public void init(GuiScreen screen, List<GuiButton> buttonList) {
-                buttonList.add(new GuiButton(234523, screen.width / 2 - 50, screen.height - 20, 100, 20, "TGMLib") {
+                buttonList.add(new GuiButton(234523, screen.width / 2 - 50, screen.height - 24, 100, 20, "TGMLib") {
                     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-                        //if (super.mousePressed(mc, mouseX, mouseY)) mc.displayGuiScreen();
+                        if (super.mousePressed(mc, mouseX, mouseY)) mc.displayGuiScreen(new GuiMod(screen));
                         return false;
                     }
                 });
@@ -78,6 +80,19 @@ public class TGMLib {
             public void draw(GuiScreen screen, int mouseX, int mouseY, float partialTicks) {}
         });
         CommandManager.register(TGMLibCommand.class);
+        KeyBindManager.register(new KeyBind(Keyboard.KEY_H) {
+            public String name() {
+                return "TGMLib";
+            }
+            public String category() {
+                return "TGMLib";
+            }
+            public void pressed() {
+                GuiHelper.open(new GuiMod(null));
+            }
+            public void held() {}
+            public void released() {}
+        });
         logger.info("TGMLib started.");
     }
 

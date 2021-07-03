@@ -28,7 +28,7 @@ import static org.objectweb.asm.Opcodes.*;
 public class EntityLivingBaseTransformer implements TGMLibTransformer {
 
     public String[] getClassNames() {
-        return new String[]{"net.minecraft.entity.EntityLivingBase"};
+        return new String[]{EnumTransformerClasses.EntityLivingBase.getTransformerName()};
     }
 
     public void transform(ClassNode classNode, String name) {
@@ -40,8 +40,8 @@ public class EntityLivingBaseTransformer implements TGMLibTransformer {
 
     private InsnList call() {
         InsnList list = new InsnList();
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(new VarInsnNode(ALOAD, 1));
+        list.add(new VarInsnNode(ALOAD, 0)); /* this */
+        list.add(new VarInsnNode(ALOAD, 1)); /* potionEffect */
         list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/EntityLivingBaseHook", "callEvent", "(" + EnumTransformerClasses.EntityLivingBase.getName() + EnumTransformerClasses.PotionEffect.getName() + ")V", false));
         return list;
     }

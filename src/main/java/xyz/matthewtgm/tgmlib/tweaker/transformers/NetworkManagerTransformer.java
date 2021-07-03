@@ -20,6 +20,7 @@ package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.*;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -27,7 +28,7 @@ import static org.objectweb.asm.Opcodes.*;
 public class NetworkManagerTransformer implements TGMLibTransformer {
 
     public String[] getClassNames() {
-        return new String[]{"net.minecraft.network.NetworkManager"};
+        return new String[]{EnumTransformerClasses.NetworkManager.getTransformerName()};
     }
 
     public void transform(ClassNode classNode, String name) {
@@ -39,9 +40,9 @@ public class NetworkManagerTransformer implements TGMLibTransformer {
 
     private InsnList call() {
         InsnList list = new InsnList();
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(new VarInsnNode(ALOAD, 1));
-        list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/NetworkManagerHook", "callEvent", "(Lnet/minecraft/network/NetworkManager;Lnet/minecraft/network/Packet;)V", false));
+        list.add(new VarInsnNode(ALOAD, 0)); /* this */
+        list.add(new VarInsnNode(ALOAD, 1)); /* packet */
+        list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/NetworkManagerHook", "callEvent", "(" + EnumTransformerClasses.NetworkManager.getName() + EnumTransformerClasses.Packet.getName() + ")V", false)); /* NetworkManagerHook.callEvent(this, packet); */
         return list;
     }
 
