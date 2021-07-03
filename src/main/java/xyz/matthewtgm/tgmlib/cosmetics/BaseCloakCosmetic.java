@@ -28,6 +28,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import xyz.matthewtgm.tgmlib.TGMLib;
 
 public abstract class BaseCloakCosmetic extends BaseCosmetic {
 
@@ -41,7 +42,7 @@ public abstract class BaseCloakCosmetic extends BaseCosmetic {
 
     public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
         ResourceLocation texture = texture();
-        if (texture != null && player.hasPlayerInfo() && !player.isInvisible() && player.isWearing(EnumPlayerModelParts.CAPE) && player.getLocationCape() == null) {
+        if (texture != null && player.hasPlayerInfo() && !player.isInvisible() && player.isWearing(EnumPlayerModelParts.CAPE) && show(player)) {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(1, 0);
@@ -76,6 +77,14 @@ public abstract class BaseCloakCosmetic extends BaseCosmetic {
             GlStateManager.disableBlend();
             GlStateManager.popMatrix();
         }
+    }
+
+    private boolean show(AbstractClientPlayer player) {
+        boolean override = TGMLib.getManager().getConfigHandler().isOverrideCapes();
+
+        if (override) return true;
+        if (player.getLocationCape() == null) return true;
+        return false;
     }
 
     private static class CapeModel extends ModelBase {

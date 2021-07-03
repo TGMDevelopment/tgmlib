@@ -23,13 +23,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.input.Keyboard;
 import xyz.matthewtgm.tgmlib.commands.CommandManager;
 import xyz.matthewtgm.tgmlib.core.TGMLibManager;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiMod;
+import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBindManager;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
 import xyz.matthewtgm.tgmlib.util.*;
@@ -42,7 +42,7 @@ public class TGMLib {
     @Getter private static final TGMLib instance = new TGMLib();
     public static final String NAME = "@NAME@", ID = "@ID@", VER = "@VER@", TRANSFORMER = TGMLibClassTransformer.class.getName();
     @Getter private static final TGMLibManager manager = new TGMLibManager();
-    @Getter private static boolean initialized = false, dev = false;
+    @Getter private static boolean initialized = false;
     @Getter private final Logger logger = LogManager.getLogger(NAME);
 
     public void initialize(File mcDir) {
@@ -61,7 +61,6 @@ public class TGMLib {
                 new GuiHelper(),
                 new GuiEditor(),
                 new HypixelHelper(),
-                new KeyBindManager(),
                 new MessageQueue(),
                 new Notifications(),
                 new ScreenHelper(),
@@ -81,6 +80,19 @@ public class TGMLib {
             public void draw(GuiScreen screen, int mouseX, int mouseY, float partialTicks) {}
         });
         CommandManager.register(TGMLibCommand.class);
+        KeyBindManager.register(new KeyBind(Keyboard.KEY_H) {
+            public String name() {
+                return "TGMLib";
+            }
+            public String category() {
+                return "TGMLib";
+            }
+            public void pressed() {
+                GuiHelper.open(new GuiMod(null));
+            }
+            public void held() {}
+            public void released() {}
+        });
         logger.info("TGMLib started.");
     }
 

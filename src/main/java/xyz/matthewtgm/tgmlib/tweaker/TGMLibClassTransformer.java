@@ -49,6 +49,7 @@ public class TGMLibClassTransformer implements IClassTransformer {
         transformerMap = ArrayListMultimap.create();
         if (created) return;
         created = true;
+        registerTransformer(new AbstractClientPlayerTransformer());
         registerTransformer(new EntityLivingBaseTransformer());
         registerTransformer(new EntityPlayerSPTransformer());
         registerTransformer(new GuiNewChatTransformer());

@@ -16,30 +16,17 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.keybinds;
+package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
-import lombok.Getter;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import xyz.matthewtgm.tgmlib.TGMLib;
+import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
 
-public abstract class KeyBind {
+public class AbstractClientPlayerHook {
 
-    @Getter private int key;
-
-    public KeyBind(int key) {
-        this.key = key;
-    }
-
-    public abstract String name();
-    public abstract String category();
-    public abstract void pressed();
-    public abstract void held();
-    public abstract void released();
-
-    public String id() {
-        return name() + "___" + category();
-    }
-
-    public void updateKey(int key) {
-        this.key = key;
+    public static boolean returnValue(AbstractClientPlayer player) {
+        CosmeticManager cosmeticManager = TGMLib.getManager().getCosmeticManager();
+        return TGMLib.getManager().getConfigHandler().isOverrideCapes() && cosmeticManager.getCosmeticMap().containsKey(player.getUniqueID().toString()) && !cosmeticManager.getCosmeticMap().get(player.getUniqueID().toString()).getEnabledCloakCosmetics().isEmpty();
     }
 
 }

@@ -93,6 +93,7 @@ public class CosmeticManager {
         TGMLibSocket socket = TGMLib.getManager().getWebSocket();
         return new LayerRenderer<AbstractClientPlayer>() {
             public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
+                if (!TGMLib.getManager().getConfigHandler().isShowCosmetics()) return;
                 if (!socket.isOpen() && socket.isClosed() || !socket.isOpen() && socket.isClosing()) socket.reconnect();
                 if (!cosmeticMap.containsKey(player.getUniqueID().toString()) && !madeRequestsFor.contains(player.getUniqueID().toString())) {
                     socket.send(new CosmeticsRetrievePacket(player.getUniqueID().toString()));

@@ -16,30 +16,23 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.keybinds;
+package xyz.matthewtgm.tgmlib.files;
 
 import lombok.Getter;
+import net.minecraft.client.Minecraft;
 
-public abstract class KeyBind {
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-    @Getter private int key;
+public class FileHandler {
 
-    public KeyBind(int key) {
-        this.key = key;
-    }
+    @Getter private final File mcDir = Minecraft.getMinecraft().mcDataDir, configDir = new File(mcDir, "config"), tgmDevelopmentDir = new File(configDir, "TGMDevelopment"), tgmLibDir = new File(tgmDevelopmentDir, "TGMLib");
+    @Getter private final List<File> directories = new ArrayList<>(Arrays.asList(mcDir, configDir, tgmDevelopmentDir, tgmLibDir));
 
-    public abstract String name();
-    public abstract String category();
-    public abstract void pressed();
-    public abstract void held();
-    public abstract void released();
-
-    public String id() {
-        return name() + "___" + category();
-    }
-
-    public void updateKey(int key) {
-        this.key = key;
+    public void start() {
+        for (File directory : directories) if (!directory.exists() && !directory.mkdirs()) throw new IllegalStateException("Unable to create directories.");
     }
 
 }

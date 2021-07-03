@@ -18,28 +18,26 @@
 
 package xyz.matthewtgm.tgmlib.keybinds;
 
-import lombok.Getter;
+import xyz.matthewtgm.tgmconfig.ConfigEntry;
+import xyz.matthewtgm.tgmconfig.TGMConfig;
 
-public abstract class KeyBind {
+public class KeyBindConfigHandler {
 
-    @Getter private int key;
+    private final TGMConfig config;
 
-    public KeyBind(int key) {
-        this.key = key;
+    public KeyBindConfigHandler(TGMConfig config) {
+        this.config = config;
     }
 
-    public abstract String name();
-    public abstract String category();
-    public abstract void pressed();
-    public abstract void held();
-    public abstract void released();
-
-    public String id() {
-        return name() + "___" + category();
+    public void update() {
+        for (KeyBind keyBind : KeyBindManager.getKeyBinds()) {
+            if (!config.containsKey(keyBind.id())) config.addAndSave(new ConfigEntry<>(keyBind.id(), keyBind.getKey()));
+            keyBind.updateKey((int) config.getAsDouble(keyBind.id()));
+        }
     }
 
-    public void updateKey(int key) {
-        this.key = key;
+    public void update(KeyBind keyBind) {
+        config.addAndSave(new ConfigEntry<>(keyBind.id(), keyBind.getKey()));
     }
 
 }

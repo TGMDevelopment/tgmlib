@@ -31,6 +31,7 @@ public enum EnumTransformerClasses {
     PotionEffect("net/minecraft/potion/PotionEffect", "pf"),
     EntityLivingBase("net/minecraft/entity/EntityLivingBase", "pr"),
     EntityPlayerSP("net/minecraft/client/entity/EntityPlayerSP", "bew"),
+    AbstractClientPlayer("net/minecraft/client/entity/AbstractClientPlayer", "bet"),
     Render("net/minecraft/client/renderer/entity/Render", "biv"),
     GuiNewChat("net/minecraft/client/gui/GuiNewChat", "avt"),
     IChatComponent("net/minecraft/util/IChatComponent", "eu");

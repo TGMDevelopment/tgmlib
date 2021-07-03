@@ -49,9 +49,16 @@ public class GuiMod extends GuiScreen {
                 return false;
             }
         });
+        buttonList.add(new GuiTransFadingImageButton(1, width / 2 - 25, height / 2 - 40, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/keybinds_icon.png")) {
+            public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
+                if (super.mousePressed(mc, mouseX, mouseY))
+                    mc.displayGuiScreen(new GuiKeyBinds($this));
+                return false;
+            }
+        });
 
         if (CosmeticManager.isLoaded()) {
-            buttonList.add(new GuiTransFadingImageButton(1, width / 2 - 25, height / 2 - 40, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/cosmetics_icon.png")) {
+            buttonList.add(new GuiTransFadingImageButton(2, width / 2 - 80, height / 2 - 40, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/cosmetics_icon.png")) {
                 public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                     if (super.mousePressed(mc, mouseX, mouseY))
                         mc.displayGuiScreen(new GuiCosmeticSelector($this));

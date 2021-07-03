@@ -25,7 +25,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+import xyz.matthewtgm.tgmconfig.ConfigEntry;
 import xyz.matthewtgm.tgmlib.TGMLib;
+import xyz.matthewtgm.tgmlib.core.TGMLibManager;
 import xyz.matthewtgm.tgmlib.cosmetics.BaseCosmetic;
 import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
 import xyz.matthewtgm.tgmlib.cosmetics.CosmeticType;
@@ -52,6 +54,8 @@ public class GuiCosmeticSelector extends GuiScreen {
     private int lastButtonId;
 
     private boolean refreshing;
+    private int refreshTime;
+
     private CosmeticType currentType = CosmeticType.CLOAK;
 
     private final List<BaseCosmetic> cachedOwnedCosmetics = new ArrayList<>();
@@ -81,22 +85,38 @@ public class GuiCosmeticSelector extends GuiScreen {
                     TGMLib.getManager().getCosmeticManager().getCosmeticMap().clear();
                     CosmeticManager.getMadeRequestsFor().clear();
                     TGMLib.getManager().getWebSocket().send(new CosmeticsRetrievePacket(mc.getSession().getProfile().getId().toString()));
-                    refreshing = true;
-                    Multithreading.schedule(() -> {
-                        try {
-                            initGui();
-                            refreshing = false;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }, 3, TimeUnit.SECONDS);
+                    refresh(2);
+                }
+                return false;
+            }
+        });
+        buttonList.add(new GuiTransFadingButton(2, backgroundHitBox.getIntWidth() - 134, backgroundHitBox.getIntY() + 2, 100, 30, "Show Cosmetics: " + (TGMLib.getManager().getConfigHandler().isShowCosmetics() ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF")) {
+            public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
+                if (super.mousePressed(mc, mouseX, mouseY)) {
+                    TGMLibManager manager = TGMLib.getManager();
+                    manager.getConfig().add(new ConfigEntry<>("show_cosmetics", !manager.getConfigHandler().isShowCosmetics()));
+                    manager.getConfig().save();
+                    manager.getConfigHandler().update();
+                    refresh(2);
+                }
+                return false;
+            }
+        });
+        buttonList.add(new GuiTransFadingButton(3, backgroundHitBox.getIntX() + 34, backgroundHitBox.getIntY() + 2, 100, 30, "Override Capes: " + (TGMLib.getManager().getConfigHandler().isOverrideCapes() ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF")) {
+            public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
+                if (super.mousePressed(mc, mouseX, mouseY)) {
+                    TGMLibManager manager = TGMLib.getManager();
+                    manager.getConfig().add(new ConfigEntry<>("override_capes", !manager.getConfigHandler().isOverrideCapes()));
+                    manager.getConfig().save();
+                    manager.getConfigHandler().update();
+                    refresh(2);
                 }
                 return false;
             }
         });
 
         HitBox backgroundOutlineHitBox = createBackgroundOutlineHitBox(backgroundHitBox);
-        AtomicInteger buttonId = new AtomicInteger(2);
+        AtomicInteger buttonId = new AtomicInteger(4);
         AtomicInteger typeY = new AtomicInteger(backgroundOutlineHitBox.getIntY() + 40);
         for (CosmeticType type : CosmeticType.values()) {
             buttonList.add(new GuiTransFadingButton(buttonId.getAndAdd(1), backgroundOutlineHitBox.getIntX() + 4, typeY.getAndAdd(22), 120, 20, type.getName()) {
@@ -138,7 +158,7 @@ public class GuiCosmeticSelector extends GuiScreen {
             RenderHelper.drawRect(0, 0, width, height, new Color(87, 87, 87, 220).getRGB());
             EnhancedFontRenderer.drawCenteredStyledScaledText("Refreshing...", 4, width / 2, height / 2, -1);
             EnhancedFontRenderer.drawCenteredStyledScaledText("If this takes longer than", 4, width / 2, height / 2 + 35, -1);
-            EnhancedFontRenderer.drawCenteredStyledScaledText("3 seconds, please restart.", 4, width / 2, height / 2 + 70, -1);
+            EnhancedFontRenderer.drawCenteredStyledScaledText(refreshTime + " seconds, please restart.", 4, width / 2, height / 2 + 70, -1);
         }
     }
 
@@ -184,11 +204,7 @@ public class GuiCosmeticSelector extends GuiScreen {
                         if (super.mousePressed(mc, mouseX, mouseY)) {
                             for (BaseCosmetic enabled : cachedEnabledCosmetics) if (!enabled.getId().equalsIgnoreCase(owned.getId()) && enabled.getType().equals(currentType)) TGMLib.getManager().getWebSocket().send(new CosmeticsTogglePacket(mc.getSession().getProfile().getId().toString(), enabled.getId()));
                             TGMLib.getManager().getWebSocket().send(new CosmeticsTogglePacket(mc.getSession().getProfile().getId().toString(), owned.getId()));
-                            refreshing = true;
-                            Multithreading.schedule(() -> {
-                                initGui();
-                                refreshing = false;
-                            }, 3, TimeUnit.SECONDS);
+                            refresh(5);
                         }
                         return false;
                     }
@@ -215,6 +231,19 @@ public class GuiCosmeticSelector extends GuiScreen {
             scrollCache.remove(0);
         scrollAmount = (int) (scrollAmount + ArrayHelper.averageInts(scrollCache) / 10);
         value.set(value.get() - scrollAmount);
+    }
+
+    private void refresh(int refreshTime) {
+        refreshing = true;
+        this.refreshTime = refreshTime;
+        Multithreading.schedule(() -> {
+            try {
+                initGui();
+                refreshing = false;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, refreshTime, TimeUnit.SECONDS);
     }
 
 }

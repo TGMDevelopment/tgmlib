@@ -18,10 +18,7 @@
 
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.*;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
@@ -50,7 +47,16 @@ public class MinecraftTransformer implements TGMLibTransformer {
                     }
                 }
             }
+            if (EnumTransformerMethods.dispatchKeypresses.matches(method))
+                method.instructions.insertBefore(method.instructions.getFirst(), tgmLibKeyPresses());
         }
+    }
+
+    private InsnList tgmLibKeyPresses() {
+        InsnList list = new InsnList();
+        list.add(new VarInsnNode(ALOAD, 0));
+        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "MinecraftHook", "dispatchTgmLibKeyPresses", "(" + EnumTransformerClasses.Minecraft.getName() + ")V", false));
+        return list;
     }
 
 }

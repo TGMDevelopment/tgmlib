@@ -16,30 +16,32 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.keybinds;
+package xyz.matthewtgm.tgmlib.files;
 
 import lombok.Getter;
+import xyz.matthewtgm.tgmconfig.ConfigEntry;
+import xyz.matthewtgm.tgmconfig.TGMConfig;
 
-public abstract class KeyBind {
+public class ConfigHandler {
 
-    @Getter private int key;
+    private final TGMConfig config;
 
-    public KeyBind(int key) {
-        this.key = key;
+    @Getter private boolean showCosmetics = true;
+    @Getter private boolean overrideCapes = true;
+
+    public ConfigHandler(TGMConfig config) {
+        this.config = config;
     }
 
-    public abstract String name();
-    public abstract String category();
-    public abstract void pressed();
-    public abstract void held();
-    public abstract void released();
-
-    public String id() {
-        return name() + "___" + category();
+    public void start() {
+        if (!config.containsKey("show_cosmetics")) config.addAndSave(new ConfigEntry<>("show_cosmetics", true));
+        if (!config.containsKey("override_capes")) config.addAndSave(new ConfigEntry<>("override_capes", true));
+        update();
     }
 
-    public void updateKey(int key) {
-        this.key = key;
+    public void update() {
+        showCosmetics = config.getAsBoolean("show_cosmetics");
+        overrideCapes = config.getAsBoolean("override_capes");
     }
 
 }

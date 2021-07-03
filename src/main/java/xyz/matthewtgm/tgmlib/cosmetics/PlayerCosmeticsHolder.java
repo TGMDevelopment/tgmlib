@@ -33,6 +33,8 @@ public class PlayerCosmeticsHolder {
     private List<BaseCosmetic> ownedCosmetics = new ArrayList<>();
     @Getter @Setter
     private List<BaseCosmetic> enabledCosmetics = new ArrayList<>();
+    @Getter
+    private List<BaseCosmetic> enabledCloakCosmetics = new ArrayList<>();
 
     public PlayerCosmeticsHolder(String uuid) {
         this.uuid = uuid;
@@ -42,6 +44,7 @@ public class PlayerCosmeticsHolder {
         this.uuid = uuid;
         this.ownedCosmetics.addAll(ownedCosmetics);
         this.enabledCosmetics.addAll(enabledCosmetics);
+        for (BaseCosmetic enabledCosmetic : enabledCosmetics) if (enabledCosmetic.getType().equals(CosmeticType.CLOAK)) enabledCloakCosmetics.add(enabledCosmetic);
     }
 
     //public void get() {

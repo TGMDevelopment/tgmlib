@@ -18,12 +18,37 @@
 
 package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
+import net.minecraft.client.Minecraft;
+import org.lwjgl.input.Keyboard;
 import xyz.matthewtgm.tgmlib.TGMLib;
+import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
+import xyz.matthewtgm.tgmlib.keybinds.KeyBindManager;
+
+import java.util.List;
 
 public class MinecraftHook {
 
     public static void updateTgmLibTimer() {
         TGMLib.getManager().getTgmLibMinecraftTimer().updateTimer();
+    }
+
+    public static void dispatchTgmLibKeyPresses(Minecraft mc) {
+        List<KeyBind> keyBinds = KeyBindManager.getKeyBinds();
+        boolean wereRepeatEventEnabled = Keyboard.areRepeatEventsEnabled();
+        Keyboard.enableRepeatEvents(true);
+        int key = Keyboard.getEventKey();
+        boolean down = Keyboard.getEventKeyState();
+        boolean repeated = Keyboard.isRepeatEvent();
+        if (mc.currentScreen == null && !keyBinds.isEmpty()) {
+            for (KeyBind keyBind : keyBinds) {
+                if (key == keyBind.getKey()) {
+                    if (down && !repeated) keyBind.pressed();
+                    if (down && repeated) keyBind.held();
+                    if (!down) keyBind.released();
+                }
+            }
+        }
+        Keyboard.enableRepeatEvents(wereRepeatEventEnabled);
     }
 
 }
