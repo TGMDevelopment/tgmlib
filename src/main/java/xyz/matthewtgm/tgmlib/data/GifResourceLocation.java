@@ -25,6 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import xyz.matthewtgm.tgmlib.util.ResourceHelper;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -32,6 +33,7 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +51,7 @@ public class GifResourceLocation {
     @Getter
     private int height;
 
-    public GifResourceLocation(Object gif, int fpt) {
+    public GifResourceLocation(InputStream gif, int fpt) {
         this.gif = gif;
         this.fps = fpt;
         ResourceLocation[] newTextures;
@@ -97,7 +99,15 @@ public class GifResourceLocation {
         textures = newTextures;
     }
 
-    public GifResourceLocation(Object gif) {
+    public GifResourceLocation(InputStream gif) {
+        this(gif, 1);
+    }
+
+    public GifResourceLocation(ResourceLocation gif, int fpt) {
+        this(ResourceHelper.toInputStream(gif), fpt);
+    }
+
+    public GifResourceLocation(ResourceLocation gif) {
         this(gif, 1);
     }
 

@@ -16,26 +16,22 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.partners;
+package xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks;
 
-import xyz.matthewtgm.tgmlib.cosmetics.BaseAnimatedCloakCosmetic;
-import xyz.matthewtgm.tgmlib.data.GifResourceLocation;
+import net.minecraft.util.ResourceLocation;
+import xyz.matthewtgm.tgmlib.cosmetics.BaseCloakCosmetic;
 import xyz.matthewtgm.tgmlib.util.ResourceHelper;
 
-import java.io.ByteArrayInputStream;
+public class WinterCloak extends BaseCloakCosmetic {
 
-public class DarkCheeseIglooCloakCosmetic extends BaseAnimatedCloakCosmetic {
-
-    public DarkCheeseIglooCloakCosmetic() {
-        super("DarkCheese's Igloo Cloak", "DARK_CHEESE_IGLOO_CLOAK");
+    public WinterCloak() {
+        super("Winter Cloak", "WINTER_CLOAK");
     }
 
-    public GifResourceLocation gif() {
-        return new GifResourceLocation(ResourceHelper.get("tgmlib", "cosmetics/cloaks/partners/darkcheese_igloo_cloak.gif"));
+    public ResourceLocation texture() {
+        return ResourceHelper.get("tgmlib", "cosmetics/cloaks/winter_cloak.png");
     }
 
-    public int fps() {
-        return 3;
-    }
+    public void tick() {}
 
 }

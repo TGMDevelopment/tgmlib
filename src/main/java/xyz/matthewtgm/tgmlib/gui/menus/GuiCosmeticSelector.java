@@ -41,7 +41,7 @@ import xyz.matthewtgm.tgmlib.util.*;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -135,6 +135,8 @@ public class GuiCosmeticSelector extends GuiScreen {
         PlayerCosmeticsHolder ownCosmeticsHolder = cosmeticManager.getCosmeticMap().get(mc.getSession().getProfile().getId().toString());
         if (cachedOwnedCosmetics.isEmpty()) cachedOwnedCosmetics.addAll(ownCosmeticsHolder.getOwnedCosmetics());
         if (cachedEnabledCosmetics.isEmpty()) cachedEnabledCosmetics.addAll(ownCosmeticsHolder.getEnabledCosmetics());
+        cachedOwnedCosmetics.sort(Comparator.comparing(BaseCosmetic::getName));
+        cachedEnabledCosmetics.sort(Comparator.comparing(BaseCosmetic::getName));
     }
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {

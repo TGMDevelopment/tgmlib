@@ -68,6 +68,7 @@ public class CosmeticManager {
         cosmetics.add(new BoosterCloakCosmetic());
         cosmetics.add(new BugHunterCloakCosmetic());
         cosmetics.add(new DarkCheeseIglooCloakCosmetic());
+        cosmetics.add(new EnchanterCloakCosmetic());
         cosmetics.add(new DeveloperCloakCosmetic());
         cosmetics.add(new KeycapCloakCosmetic());
         cosmetics.add(new MatthewTgmCloakCosmetic());
@@ -75,6 +76,7 @@ public class CosmeticManager {
         cosmetics.add(new ModderCloakCosmetic());
         cosmetics.add(new PartnerCloakCosmetic());
         cosmetics.add(new UwUCloakCosmetic());
+        cosmetics.add(new WinterCloak());
         cosmetics.add(new WyvestCloakCosmetic());
 
         cosmetics.add(new DragonWingsCosmetic());

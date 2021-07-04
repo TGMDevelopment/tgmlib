@@ -40,12 +40,13 @@ public abstract class BaseWingsCosmetic extends BaseCosmetic {
     public abstract ColourRGB colour();
 
     public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
-        if(!player.isInvisible()) {
+        if (!player.isInvisible()) {
             GL11.glPushMatrix();
-            GL11.glScaled(-1, -1, 1);
-            GL11.glTranslated(0.0D, -1.45, 0.0D);
+            GL11.glScaled(-0.75f, -0.75f, 0.75f);
+            GL11.glTranslated(0.0D, -1.45D, 0.0D);
             GL11.glTranslated(0.0D, 1.3D, 0.2D);
-            if (player.isSneaking()) GlStateManager.translate(0.0F, -0.142F, -0.0178F);
+            if (player.isSneaking())
+                GlStateManager.translate(0f, -0.275f, 0.075f);
             GL11.glRotated(180, 1, 0, 0);
             GL11.glRotated(180, 0, 1, 0);
 
@@ -53,24 +54,26 @@ public abstract class BaseWingsCosmetic extends BaseCosmetic {
             GL11.glColor3f((float) colour.getR() / 255, (float) colour.getG() / 255, (float) colour.getB() / 255);
             Minecraft.getMinecraft().getTextureManager().bindTexture(texture());
             for (int j = 0; j < 2; j++) {
-                GL11.glEnable(2884);
-                float f11 = (float) (System.currentTimeMillis() % 1000L) / 1000.0F * 3.1415927F * 2.0F;
-                model.wing.rotateAngleX = (float) Math.toRadians(-80.0D) - (float) Math.cos(f11) * 0.2F;
-                model.wing.rotateAngleY = (float) Math.toRadians(20.0D) + (float) Math.sin(f11) * 0.4F;
+                GL11.glEnable(GL11.GL_CULL_FACE);
+                float f11 = (float) (System.currentTimeMillis() % 1000L) / 1000f * 3.1415927f * 2f;
+                if (player.isSwingInProgress || !player.onGround) f11 *= 2f;
+                model.wing.rotateAngleX = (float) Math.toRadians(-80.0D) - (float) Math.cos(f11) * 0.2f;
+                model.wing.rotateAngleY = (float) Math.toRadians(20.0D) + (float) Math.sin(f11) * 0.4f;
                 model.wing.rotateAngleZ = (float) Math.toRadians(20.0D);
-                model.wingTip.rotateAngleZ = -((float) (Math.sin((f11 + 2.0F)) + 0.5D)) * 0.75F;
-                model.wing.render(0.0625F);
-                GL11.glScalef(-1.0F, 1.0F, 1.0F);
-                if (j == 0) GL11.glCullFace(1028);
+                model.wingTip.rotateAngleZ = -((float) (Math.sin((f11 + 2.0f)) + 0.5D)) * 0.75f;
+                model.wing.render(0.0625f);
+                GL11.glScalef(-1f, 1f, 1f);
+                if (j == 0)
+                    GL11.glCullFace(1028);
             }
             GL11.glCullFace(1029);
-            GL11.glDisable(2884);
-            GL11.glColor3f(255.0F, 255.0F, 255.0F);
+            GL11.glDisable(GL11.GL_CULL_FACE);
+            GL11.glColor3f(255f, 255f, 255f);
             GL11.glPopMatrix();
         }
     }
 
-    private static class WingModel extends ModelBase {
+    private class WingModel extends ModelBase {
 
         private final ModelRenderer wing;
         private final ModelRenderer wingTip;
@@ -92,7 +95,6 @@ public abstract class BaseWingsCosmetic extends BaseCosmetic {
             wingTip.addBox("skin", -10.0F, 0.0F, 0.5F, 10, 0, 10);
             wing.addChild(wingTip);
         }
-
     }
 
 }
