@@ -20,7 +20,6 @@ package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
-import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBindManager;
 
@@ -28,13 +27,9 @@ import java.util.List;
 
 public class MinecraftHook {
 
-    public static void updateTgmLibTimer() {
-        TGMLib.getManager().getTgmLibMinecraftTimer().updateTimer();
-    }
-
     public static void dispatchTgmLibKeyPresses(Minecraft mc) {
         List<KeyBind> keyBinds = KeyBindManager.getKeyBinds();
-        boolean wereRepeatEventEnabled = Keyboard.areRepeatEventsEnabled();
+        boolean wereRepeatEventsEnabled = Keyboard.areRepeatEventsEnabled();
         Keyboard.enableRepeatEvents(true);
         int key = Keyboard.getEventKey();
         boolean down = Keyboard.getEventKeyState();
@@ -48,7 +43,7 @@ public class MinecraftHook {
                 }
             }
         }
-        Keyboard.enableRepeatEvents(wereRepeatEventEnabled);
+        Keyboard.enableRepeatEvents(wereRepeatEventsEnabled);
     }
 
 }

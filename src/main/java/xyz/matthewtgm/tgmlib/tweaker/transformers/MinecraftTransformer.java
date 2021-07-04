@@ -35,18 +35,6 @@ public class MinecraftTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.runGameLoop.matches(method)) {
-                Iterator<AbstractInsnNode> iterator = method.instructions.iterator();
-                while (iterator.hasNext()) {
-                    AbstractInsnNode next = iterator.next();
-                    if (next instanceof MethodInsnNode && next.getOpcode() == INVOKEVIRTUAL) {
-                        MethodInsnNode methodInsnNode = (MethodInsnNode) next;
-                        if (methodInsnNode.owner.equals(EnumTransformerClasses.Timer.getNameRaw()) && EnumTransformerMethods.updateTimer.matches(methodInsnNode)) {
-                            method.instructions.insert(methodInsnNode, new MethodInsnNode(INVOKESTATIC, hooksPackage() + "MinecraftHook", "updateTgmLibTimer", "()V", false));
-                        }
-                    }
-                }
-            }
             if (EnumTransformerMethods.dispatchKeypresses.matches(method))
                 method.instructions.insertBefore(method.instructions.getFirst(), tgmLibKeyPresses());
         }

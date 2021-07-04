@@ -39,7 +39,6 @@ public class TGMLibManager {
     @Getter private static boolean initialized;
     @Getter private static File mcDir, tgmLibDir;
 
-    @Getter private Timer tgmLibMinecraftTimer;
     @Getter private FileHandler fileHandler;
     @Getter private TGMConfig config;
     @Getter private TGMConfig keyBindConfig;
@@ -59,7 +58,6 @@ public class TGMLibManager {
 
     public void start() {
         try {
-            tgmLibMinecraftTimer = new Timer(20);
             (fileHandler = new FileHandler()).start();
             (config = new TGMConfig("config", fileHandler.getTgmLibDir())).save();
             (keyBindConfig = new TGMConfig("keybinds", fileHandler.getTgmLibDir())).save();

@@ -25,7 +25,6 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
 
 public enum EnumTransformerMethods {
 
-    runGameLoop("runGameLoop", "func_71411_J", "av", "()V"),
     dispatchKeypresses("dispatchKeypresses", "func_152348_aa", "Z", "()V"),
     updateTimer("updateTimer", "func_74275_a", "a", "()V"),
     addPotionEffect("addPotionEffect", "func_70690_d", "c", "(Lnet/minecraft/potion/PotionEffect;)V", "(" + EnumTransformerClasses.PotionEffect.getName() +")V"),

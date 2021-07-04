@@ -17,7 +17,7 @@
  */
 
 plugins {
-    id "net.minecraftforge.gradle.forge" version "6f5327738d"
+    id "net.minecraftforge.gradle.forge" version "86b2392"
     id "com.github.johnrengelman.shadow" version "6.1.0"
     id "java"
 }
@@ -75,6 +75,7 @@ jar {
             'TweakOrder': 0,
             'FMLCorePluginContainsFMLMod': true,
             'ForceLoadAsMod': true,
+            'FMLAT': 'tgmlib_at.cfg',
             'ModSide': 'CLIENT'
     )
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
@@ -123,6 +124,7 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+    rename('(.+_at.cfg)', 'META-INF/$1')
 }
 
 /* Move the resources to the working directory for runs. */

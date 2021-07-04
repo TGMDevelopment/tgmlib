@@ -47,7 +47,7 @@ public class GuiTransFadingImageButton extends GuiTransFadingButton {
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         boolean hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
-        float partialTicks = timer.renderPartialTicks;
+        float partialTicks = mc.timer.renderPartialTicks;
 
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);

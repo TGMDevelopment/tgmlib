@@ -35,26 +35,22 @@ import java.lang.reflect.Field;
  */
 public class GuiTransFadingButton extends GuiTransButton {
 
-    protected Timer timer;
-
     protected int fade = 0;
     protected int size = 0;
     protected int frame = 0;
 
     public GuiTransFadingButton(int buttonId, int x, int y, String buttonText) {
         super(buttonId, x, y, buttonText);
-        this.timer = TGMLib.getManager().getTgmLibMinecraftTimer();
     }
     public GuiTransFadingButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText) {
         super(buttonId, x, y, widthIn, heightIn, buttonText);
-        this.timer = TGMLib.getManager().getTgmLibMinecraftTimer();
     }
 
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         GlStateManager.pushMatrix();
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         boolean hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
-        float partialTicks = timer.renderPartialTicks;
+        float partialTicks = mc.timer.renderPartialTicks;
 
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
