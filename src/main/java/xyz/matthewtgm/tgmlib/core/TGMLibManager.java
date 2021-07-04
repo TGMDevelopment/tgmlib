@@ -36,6 +36,7 @@ import java.util.Base64;
 
 public class TGMLibManager {
 
+    private static final boolean webSocketTest = true;
     @Getter private static boolean initialized;
     @Getter private static File mcDir, tgmLibDir;
 
@@ -72,6 +73,7 @@ public class TGMLibManager {
     }
 
     private URI websocketUri() {
+        if (webSocketTest) return URI.create("ws://localhost:");
         JsonObject object = JsonApiHelper.getJsonObject("https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/websocket.json", true);
         String uri = object.get("uri").getAsString();
         for (int i = 0; i < object.get("loop").getAsInt(); i++) uri = new String(Base64.getDecoder().decode(uri));

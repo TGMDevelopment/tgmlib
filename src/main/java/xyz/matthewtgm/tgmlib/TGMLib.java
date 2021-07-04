@@ -42,11 +42,12 @@ public class TGMLib {
     @Getter private static final TGMLib instance = new TGMLib();
     public static final String NAME = "@NAME@", ID = "@ID@", VER = "@VER@", TRANSFORMER = TGMLibClassTransformer.class.getName();
     @Getter private static final TGMLibManager manager = new TGMLibManager();
-    @Getter private static boolean initialized = false;
+    @Getter private static boolean initialized = false, dev;
     @Getter private final Logger logger = LogManager.getLogger(NAME);
 
     public void initialize(File mcDir) {
         if (initialized) return;
+        dev = dev();
         manager.initialize(mcDir);
 
         initialized = true;
@@ -94,6 +95,14 @@ public class TGMLib {
             public void released() {}
         });
         logger.info("TGMLib started.");
+    }
+
+    private static boolean dev() {
+        String dev = "@DEV@";
+        System.out.println(dev);
+        boolean isDev = true;
+        if (dev.equalsIgnoreCase("true") || dev.equalsIgnoreCase("false")) isDev = Boolean.parseBoolean(dev);
+        return isDev;
     }
 
 }

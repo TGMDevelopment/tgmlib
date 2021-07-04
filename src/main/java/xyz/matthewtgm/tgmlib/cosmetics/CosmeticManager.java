@@ -29,6 +29,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.*;
+import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.contentcreators.YouTubCloakCosmetic;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.exclusive.MatthewTgmCloakCosmetic;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.exclusive.WyvestCloakCosmetic;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.partners.DarkCheeseIglooCloakCosmetic;
@@ -65,6 +66,7 @@ public class CosmeticManager {
 
     private void initialize() {
         logger.info("Initializing cosmetics...");
+        cosmetics.add(new BeehiveCloakCosmetic());
         cosmetics.add(new BoosterCloakCosmetic());
         cosmetics.add(new BugHunterCloakCosmetic());
         cosmetics.add(new DarkCheeseIglooCloakCosmetic());
@@ -75,9 +77,12 @@ public class CosmeticManager {
         cosmetics.add(new MinecoinCloakCosmetic());
         cosmetics.add(new ModderCloakCosmetic());
         cosmetics.add(new PartnerCloakCosmetic());
+        cosmetics.add(new SunsetSkyCloakCosmetic());
         cosmetics.add(new UwUCloakCosmetic());
+        cosmetics.add(new VaporwaveCloakCosmetic());
         cosmetics.add(new WinterCloak());
         cosmetics.add(new WyvestCloakCosmetic());
+        cosmetics.add(new YouTubCloakCosmetic());
 
         cosmetics.add(new DragonWingsCosmetic());
         cosmetics.add(new ChromaDragonWingsCosmetic());
