@@ -24,27 +24,26 @@ import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 
-import java.util.Iterator;
-
 import static org.objectweb.asm.Opcodes.*;
 
-public class MinecraftTransformer implements TGMLibTransformer {
+public class TimerTransformer implements TGMLibTransformer {
 
     public String[] getClassNames() {
-        return new String[]{EnumTransformerClasses.Minecraft.getTransformerName()};
+        return new String[]{EnumTransformerClasses.Timer.getTransformerName()};
     }
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.dispatchKeypresses.matches(method))
-                method.instructions.insertBefore(method.instructions.getFirst(), tgmLibKeyPresses());
+            if (EnumTransformerMethods.updateTimer.matches(method))
+                method.instructions.insertBefore(method.instructions.getLast(), updatePartialTicks());
         }
     }
 
-    private InsnList tgmLibKeyPresses() {
+    private InsnList updatePartialTicks() {
         InsnList list = new InsnList();
         list.add(new VarInsnNode(ALOAD, 0));
-        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "MinecraftHook", "dispatchTgmLibKeyPresses", "(" + EnumTransformerClasses.Minecraft.getName() + ")V", false));
+        list.add(EnumTransformerFields.renderPartialTicks.getField(EnumTransformerClasses.Timer));
+        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "TimerHook", "updatePartialTicks", "(F;)V", false));
         return list;
     }
 

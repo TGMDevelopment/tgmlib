@@ -35,6 +35,8 @@ import java.lang.reflect.Field;
  */
 public class GuiTransFadingButton extends GuiTransButton {
 
+    public static float partialTicks;
+
     protected int fade = 0;
     protected int size = 0;
     protected int frame = 0;
@@ -50,7 +52,6 @@ public class GuiTransFadingButton extends GuiTransButton {
         GlStateManager.pushMatrix();
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         boolean hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
-        float partialTicks = mc.timer.renderPartialTicks;
 
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);

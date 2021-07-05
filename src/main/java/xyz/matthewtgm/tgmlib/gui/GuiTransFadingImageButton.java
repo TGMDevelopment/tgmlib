@@ -32,6 +32,8 @@ import java.awt.*;
 
 public class GuiTransFadingImageButton extends GuiTransFadingButton {
 
+    public static float partialTicks;
+
     @Getter @Setter private ResourceLocation rlImage;
 
     public GuiTransFadingImageButton(int buttonId, int x, int y, ResourceLocation rlImage) {
@@ -47,7 +49,6 @@ public class GuiTransFadingImageButton extends GuiTransFadingButton {
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         boolean hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
-        float partialTicks = mc.timer.renderPartialTicks;
 
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);

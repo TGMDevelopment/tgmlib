@@ -57,6 +57,7 @@ public class TGMLibClassTransformer implements IClassTransformer {
         registerTransformer(new NetHandlerPlayClientTransformer());
         registerTransformer(new NetworkManagerTransformer());
         registerTransformer(new RenderTransformer());
+        registerTransformer(new TimerTransformer());
     }
 
     private void registerTransformer(TGMLibTransformer transformer) {

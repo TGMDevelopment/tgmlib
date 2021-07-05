@@ -76,7 +76,6 @@ jar {
             'TweakOrder': 0,
             'FMLCorePluginContainsFMLMod': true,
             'ForceLoadAsMod': true,
-            'FMLAT': 'tgmlib_at.cfg',
             'ModSide': 'CLIENT'
     )
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'

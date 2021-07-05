@@ -24,6 +24,8 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
 
 public enum EnumTransformerFields {
 
+    timer("timer", "field_71428_T", "Y", "Lnet/minecraft/util/Timer"),
+    renderPartialTicks("renderPartialTicks", "field_74281_c", "c", "F"),
     drawnChatLines("drawnChatLines", "field_146253_i", "i", "Ljava/util/List;"),
     chatLines("chatLines", "field_146252_h", "h", "Ljava/util/List;"),
     sentMessages("sentMessages", "field_146248_g", "g", "Ljava/util/List;");
