@@ -36,7 +36,7 @@ import java.util.Base64;
 
 public class TGMLibManager {
 
-    private static final boolean webSocketTest = true;
+    private static final boolean webSocketTest = false;
     @Getter private static boolean initialized;
     @Getter private static File mcDir, tgmLibDir;
 
