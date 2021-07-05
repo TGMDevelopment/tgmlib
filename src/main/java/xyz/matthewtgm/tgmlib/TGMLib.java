@@ -77,7 +77,6 @@ public class TGMLib {
                     }
                 });
             }
-
             public void draw(GuiScreen screen, int mouseX, int mouseY, float partialTicks) {}
         });
         CommandManager.register(TGMLibCommand.class);

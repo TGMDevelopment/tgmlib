@@ -22,6 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -160,6 +161,14 @@ public class ChatHelper {
 
     public static ChatComponentTranslation buildTranslated(String input) {
         return new ChatComponentTranslation(input);
+    }
+
+    public static IChatComponent editChatComponent(IChatComponent component, ChatComponentEditRunnable runnable) {
+        return runnable.edit(component.createCopy());
+    }
+
+    public interface ChatComponentEditRunnable {
+        IChatComponent edit(IChatComponent component);
     }
 
 }
