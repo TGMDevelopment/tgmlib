@@ -22,30 +22,26 @@ import lombok.Getter;
 import xyz.matthewtgm.tgmconfig.ConfigEntry;
 import xyz.matthewtgm.tgmconfig.TGMConfig;
 
-public class ConfigHandler {
+public class DataHandler {
 
-    private final TGMConfig config;
+    private final TGMConfig data;
 
-    @Getter private boolean lightMode = false;
+    @Getter private boolean receivedPrompt;
+    @Getter private boolean mayLogData;
 
-    @Getter private boolean showCosmetics = true;
-    @Getter private boolean overrideCapes = true;
-
-    public ConfigHandler(TGMConfig config) {
-        this.config = config;
+    public DataHandler(TGMConfig data) {
+        this.data = data;
     }
 
     public void start() {
-        if (!config.containsKey("light_mode")) config.addAndSave(new ConfigEntry<>("light_mode", false));
-        if (!config.containsKey("show_cosmetics")) config.addAndSave(new ConfigEntry<>("show_cosmetics", true));
-        if (!config.containsKey("override_capes")) config.addAndSave(new ConfigEntry<>("override_capes", true));
+        if (!data.containsKey("prompt_received")) data.addAndSave(new ConfigEntry<>("prompt_received", false));
+        if (!data.containsKey("log_data")) data.addAndSave(new ConfigEntry<>("log_data", false));
         update();
     }
 
     public void update() {
-        lightMode = config.getAsBoolean("light_mode");
-        showCosmetics = config.getAsBoolean("show_cosmetics");
-        overrideCapes = config.getAsBoolean("override_capes");
+        receivedPrompt = data.getAsBoolean("prompt_received");
+        mayLogData = data.getAsBoolean("log_data");
     }
 
 }

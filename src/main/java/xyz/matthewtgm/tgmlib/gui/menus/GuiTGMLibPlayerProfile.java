@@ -16,18 +16,30 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.events;
+package xyz.matthewtgm.tgmlib.gui.menus;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraft.client.gui.GuiScreen;
+import xyz.matthewtgm.tgmlib.gui.GuiTGMLibBase;
 
-@Cancelable
-public class DropItemEvent extends Event {
-     public final ItemStack item;
-     public final boolean dropAll;
-    public DropItemEvent(ItemStack item, boolean dropAll) {
-        this.item = item;
-        this.dropAll = dropAll;
+import java.awt.image.BufferedImage;
+
+public class GuiTGMLibPlayerProfile extends GuiTGMLibBase {
+
+    private final String username;
+    private final BufferedImage icon;
+
+    public GuiTGMLibPlayerProfile(GuiScreen parent, String username, BufferedImage icon) {
+        super(username + "'s profile", -1, parent);
+        this.username = username;
+        this.icon = icon;
     }
+
+    public void initialize() {
+
+    }
+
+    public void draw(int mouseX, int mouseY, float partialTicks) {
+
+    }
+
 }

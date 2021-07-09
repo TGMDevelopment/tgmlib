@@ -26,23 +26,20 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import xyz.matthewtgm.tgmlib.TGMLib;
-import xyz.matthewtgm.tgmlib.data.HitBox;
+import xyz.matthewtgm.tgmlib.gui.GuiTGMLibBase;
 import xyz.matthewtgm.tgmlib.gui.GuiTransFadingButton;
-import xyz.matthewtgm.tgmlib.gui.GuiTransFadingImageButton;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBindManager;
 import xyz.matthewtgm.tgmlib.util.*;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class GuiKeyBinds extends GuiScreen {
+public class GuiTGMLibKeyBinds extends GuiTGMLibBase {
 
-    private final GuiScreen parent;
-    private final GuiKeyBinds $this = this;
+    private final GuiTGMLibKeyBinds $this = this;
 
     private List<GuiButton> keyBindButtonList = new ArrayList<>();
 
@@ -52,40 +49,19 @@ public class GuiKeyBinds extends GuiScreen {
     private final List<Integer> scrollCache = new ArrayList<>();
     private int scrollAmount;
 
-    public GuiKeyBinds(GuiScreen parent) {
-        this.parent = parent;
+    public GuiTGMLibKeyBinds(GuiScreen parent) {
+        super("KeyBinds", parent);
     }
 
-    public void initGui() {
-        HitBox backgroundHitBox = createBackgroundHitBox();
-        buttonList.add(new GuiTransFadingImageButton(0, backgroundHitBox.getIntX() + 2, backgroundHitBox.getIntY() + 2, 30, 30, ResourceHelper.get("tgmlib", "gui/icons/exit_icon.png")) {
-            public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-                if (super.mousePressed(mc, mouseX, mouseY))
-                    mc.displayGuiScreen(parent);
-                return false;
-            }
-        });
-    }
+    public void initialize() {}
 
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        GuiHelper.drawBackground(this, 120);
-
-        /* Background. */
-        HitBox backgroundHitBox = createBackgroundHitBox();
-        RenderHelper.drawRect(backgroundHitBox.getIntX(), backgroundHitBox.getIntY(), backgroundHitBox.getIntWidth(), backgroundHitBox.getIntHeight(), new Color(87, 87, 87, 189).getRGB());
-        HitBox backgroundOutlineHitBox = createBackgroundOutlineHitBox(backgroundHitBox);
-        RenderHelper.drawHollowRect(backgroundOutlineHitBox.getIntX(), backgroundOutlineHitBox.getIntY(), backgroundOutlineHitBox.getIntWidth(), backgroundOutlineHitBox.getIntHeight(), new Color(120, 120, 120, 234).getRGB());
-        RenderHelper.drawHollowRect(backgroundHitBox.getIntX(), backgroundHitBox.getIntY(), backgroundHitBox.getIntWidth() - backgroundHitBox.getIntX(), backgroundHitBox.getIntY() + 14, new Color(120, 120, 120, 234).getRGB());
-
-        EnhancedFontRenderer.drawCenteredStyledScaledText("KeyBinds", 2, width / 2, backgroundOutlineHitBox.getY() + 10, -1);
-        keyBindButtons(mouseX, mouseY, backgroundHitBox);
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void draw(int mouseX, int mouseY, float partialTicks) {
+        keyBindButtons(mouseX, mouseY);
     }
 
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         if (mouseButton == 0) {
-            for (int i = 0; i < keyBindButtonList.size(); ++i) {
-                GuiButton guibutton = keyBindButtonList.get(i);
+            for (GuiButton guibutton : keyBindButtonList) {
                 if (guibutton.mousePressed(mc, mouseX, mouseY)) {
                     guibutton.playPressSound(mc.getSoundHandler());
                 }
@@ -108,15 +84,7 @@ public class GuiKeyBinds extends GuiScreen {
         super.keyTyped(typedChar, keyCode);
     }
 
-    private HitBox createBackgroundHitBox() {
-        return new HitBox(20, 20, width - 30,height - 30);
-    }
-
-    private HitBox createBackgroundOutlineHitBox(HitBox backgroundHitBox) {
-        return new HitBox(backgroundHitBox.getX(), backgroundHitBox.getY(), backgroundHitBox.getWidth() - backgroundHitBox.getX(), backgroundHitBox.getHeight() - backgroundHitBox.getY());
-    }
-
-    private void keyBindButtons(int mouseX, int mouseY, HitBox backgroundHitBox) {
+    private void keyBindButtons(int mouseX, int mouseY) {
         List<GuiButton> keyBindButtonList = new ArrayList<>();
         AtomicInteger buttonId = new AtomicInteger(1);
         AtomicInteger keyBindY = new AtomicInteger(backgroundHitBox.getIntY() + 40);

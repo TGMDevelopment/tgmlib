@@ -21,8 +21,8 @@ package xyz.matthewtgm.tgmlib.tweaker.transformers;
 import org.objectweb.asm.tree.*;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
-import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
+import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import java.util.Iterator;
 
@@ -31,14 +31,46 @@ import static org.objectweb.asm.Opcodes.*;
 public class MinecraftTransformer implements TGMLibTransformer {
 
     public String[] getClassNames() {
-        return new String[]{EnumTransformerClasses.Minecraft.getTransformerName()};
+        return new String[] {EnumTransformerClasses.Minecraft.getTransformerName()};
     }
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.dispatchKeypresses.matches(method))
+            if (EnumTransformerMethods.dispatchKeypresses.matches(method)) {
                 method.instructions.insertBefore(method.instructions.getFirst(), tgmLibKeyPresses());
+                method.instructions.insertBefore(method.instructions.getFirst(), keyInputEvent());
+            }
+            /*if (EnumTransformerMethods.runTick.matches(method)) {
+                Iterator<AbstractInsnNode> iterator = method.instructions.iterator();
+                while (iterator.hasNext()) {
+                    AbstractInsnNode next = iterator.next();
+                    if (next instanceof MethodInsnNode) {
+                        MethodInsnNode methodInsnNode = (MethodInsnNode) next;
+                        if (methodInsnNode.owner.equals("net/minecraftforge/fml/common/FMLCommonHandler") && methodInsnNode.name.contains("fireMouseInput")) {
+                            AsmHelper.debug(methodInsnNode.getNext().getNext().getNext());
+                            method.instructions.insertBefore(methodInsnNode.getNext().getNext().getNext(), mouseInputEvent());
+                        }
+                    }
+                }
+            }*/
         }
+    }
+
+    /*private InsnList mouseInputEvent() {
+        InsnList list = new InsnList();
+        list.add(new VarInsnNode(ALOAD, 0));
+        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "MinecraftHook", "callMouseInputEvent", "()V", false));
+        return list;
+    }*/
+
+    private InsnList keyInputEvent() {
+        InsnList list = new InsnList();
+        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "MinecraftHook", "callKeyInputEvent", "()Z", false));
+        LabelNode labelNode = new LabelNode();
+        list.add(new JumpInsnNode(IFEQ, labelNode));
+        list.add(new InsnNode(RETURN));
+        list.add(labelNode);
+        return list;
     }
 
     private InsnList tgmLibKeyPresses() {

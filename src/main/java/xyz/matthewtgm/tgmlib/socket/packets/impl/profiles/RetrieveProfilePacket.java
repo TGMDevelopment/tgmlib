@@ -33,7 +33,7 @@ public class RetrieveProfilePacket extends BasePacket {
     private final String uuid;
 
     public RetrieveProfilePacket(String uuid) {
-        super("RETRIEVE", "PROFILES", 3f);
+        super("RETRIEVE", "PROFILES", 5f);
         this.uuid = uuid;
     }
 

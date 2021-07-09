@@ -21,41 +21,46 @@ package xyz.matthewtgm.tgmlib;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
+import xyz.matthewtgm.json.JsonVersion;
 import xyz.matthewtgm.tgmlib.commands.CommandManager;
 import xyz.matthewtgm.tgmlib.core.TGMLibManager;
-import xyz.matthewtgm.tgmlib.gui.menus.GuiMod;
+import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibLogging;
+import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibMain;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBindManager;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
 import xyz.matthewtgm.tgmlib.util.*;
+import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 
 import java.io.File;
 import java.util.List;
 
 public class TGMLib {
 
-    @Getter private static final TGMLib instance = new TGMLib();
     public static final String NAME = "@NAME@", ID = "@ID@", VER = "@VER@", TRANSFORMER = TGMLibClassTransformer.class.getName();
+    @Getter private static final TGMLib instance = new TGMLib();
     @Getter private static final TGMLibManager manager = new TGMLibManager();
-    @Getter private static boolean initialized = false, dev;
+    @Getter private static boolean initialized = false;
     @Getter private final Logger logger = LogManager.getLogger(NAME);
 
     public void initialize(File mcDir) {
         if (initialized) return;
-        dev = dev();
         manager.initialize(mcDir);
-
         initialized = true;
         start();
     }
 
     private void start() {
         logger.info("Starting TGMLib...");
+        if (!JsonVersion.CURRENT.isAtLeast(2, 3)) throw new IllegalStateException("JsonTGM is outdated! (minimum version is 2.3.0)");
         ForgeHelper.registerEventListeners(
                 this,
                 new CommandQueue(),
@@ -65,14 +70,16 @@ public class TGMLib {
                 new MessageQueue(),
                 new Notifications(),
                 new ScreenHelper(),
-                new TitleHandler()
+                new TitleHandler(),
+                new TGMLibBetterEventsListener()
         );
         manager.start();
         GuiEditor.addEdit(GuiOptions.class, new GuiEditor.GuiEditRunnable() {
             public void init(GuiScreen screen, List<GuiButton> buttonList) {
                 buttonList.add(new GuiButton(234523, screen.width / 2 - 50, screen.height - 24, 100, 20, "TGMLib") {
                     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-                        if (super.mousePressed(mc, mouseX, mouseY)) mc.displayGuiScreen(new GuiMod(screen));
+                        if (super.mousePressed(mc, mouseX, mouseY))
+                            mc.displayGuiScreen(new GuiTGMLibMain(screen));
                         return false;
                     }
                 });
@@ -88,7 +95,7 @@ public class TGMLib {
                 return "TGMLib";
             }
             public void pressed() {
-                GuiHelper.open(new GuiMod(null));
+                GuiHelper.open(new GuiTGMLibMain(null));
             }
             public void held() {}
             public void released() {}
@@ -96,12 +103,10 @@ public class TGMLib {
         logger.info("TGMLib started.");
     }
 
-    private static boolean dev() {
-        String dev = "@DEV@";
-        System.out.println(dev);
-        boolean isDev = true;
-        if (dev.equalsIgnoreCase("true") || dev.equalsIgnoreCase("false")) isDev = Boolean.parseBoolean(dev);
-        return isDev;
+    @SubscribeEvent
+    public void onGuiOpen(GuiScreenEvent.InitGuiEvent event) {
+        if (event.gui instanceof GuiMainMenu && !manager.getDataHandler().isReceivedPrompt())
+            GlobalMinecraft.displayGuiScreen(new GuiTGMLibLogging(event.gui));
     }
 
 }

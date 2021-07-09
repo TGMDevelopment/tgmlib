@@ -16,18 +16,24 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.events;
+package xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import xyz.matthewtgm.tgmlib.cosmetics.BaseAnimatedCloakCosmetic;
+import xyz.matthewtgm.tgmlib.data.GifResourceLocation;
+import xyz.matthewtgm.tgmlib.util.ResourceHelper;
 
-@Cancelable
-public class DropItemEvent extends Event {
-     public final ItemStack item;
-     public final boolean dropAll;
-    public DropItemEvent(ItemStack item, boolean dropAll) {
-        this.item = item;
-        this.dropAll = dropAll;
+public class AutumnGloomCloakCosmetic extends BaseAnimatedCloakCosmetic {
+
+    public AutumnGloomCloakCosmetic() {
+        super("Autumn Gloom Cloak", "AUTUMN_GLOOM_CLOAK");
     }
+
+    public GifResourceLocation gif() {
+        return new GifResourceLocation(ResourceHelper.get("tgmlib", "cosmetics/cloaks/autumn_gloom_cloak.gif"));
+    }
+
+    public int fps() {
+        return 1;
+    }
+
 }

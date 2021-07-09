@@ -18,6 +18,7 @@
 
 package xyz.matthewtgm.tgmlib.cosmetics;
 
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
@@ -30,54 +31,50 @@ import xyz.matthewtgm.tgmlib.data.ColourRGB;
 public abstract class BaseWingsCosmetic extends BaseCosmetic {
 
     private final WingModel model = new WingModel();
+    private final Minecraft mc = Minecraft.getMinecraft();
 
     public BaseWingsCosmetic(String name, String id) {
         super(name, id, CosmeticType.WINGS);
     }
 
     public abstract ResourceLocation texture();
-
     public abstract ColourRGB colour();
 
     public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
         if (!player.isInvisible()) {
             GL11.glPushMatrix();
-            GL11.glScaled(-0.75f, -0.75f, 0.75f);
-            GL11.glTranslated(0.0D, -1.45D, 0.0D);
-            GL11.glTranslated(0.0D, 1.3D, 0.2D);
+            GL11.glScalef(-0.75f, -0.75f, -0.75f);
+            GL11.glTranslatef(0f, -0.175f, -0.2f);
             if (player.isSneaking())
-                GlStateManager.translate(0f, -0.275f, 0.075f);
-            GL11.glRotated(180, 1, 0, 0);
-            GL11.glRotated(180, 0, 1, 0);
+                GlStateManager.translate(0f, -0.3f, -0.075f);
+            GL11.glRotatef(180f, 1f, 0f, 0f);
 
             ColourRGB colour = colour();
             GL11.glColor3f((float) colour.getR() / 255, (float) colour.getG() / 255, (float) colour.getB() / 255);
-            Minecraft.getMinecraft().getTextureManager().bindTexture(texture());
+            mc.getTextureManager().bindTexture(texture());
+            GL11.glEnable(GL11.GL_CULL_FACE);
+            GL11.glCullFace(1028);
             for (int j = 0; j < 2; j++) {
-                GL11.glEnable(GL11.GL_CULL_FACE);
-                float f11 = (float) (System.currentTimeMillis() % 1000L) / 1000f * 3.1415927f * 2f;
-                if (player.isSwingInProgress || !player.onGround) f11 *= 2f;
-                model.wing.rotateAngleX = (float) Math.toRadians(-80.0D) - (float) Math.cos(f11) * 0.2f;
-                model.wing.rotateAngleY = (float) Math.toRadians(20.0D) + (float) Math.sin(f11) * 0.4f;
-                model.wing.rotateAngleZ = (float) Math.toRadians(20.0D);
-                model.wingTip.rotateAngleZ = -((float) (Math.sin((f11 + 2.0f)) + 0.5D)) * 0.75f;
-                model.wing.render(0.0625f);
+                float rotate = ((System.currentTimeMillis() % 1000L) / 1000f) * (float) Math.PI * 2f;
+                model.wing.rotateAngleX = 0.125F - (float) Math.cos(rotate) * 0.2f;
+                model.wing.rotateAngleY = 0.25f;
+                model.wing.rotateAngleZ = (float) (Math.sin(rotate) + 0.125D) * 0.8f;
+                model.wingTip.rotateAngleZ = -((float) (Math.sin(rotate + 2f) + 0.5D)) * 0.75f;
+                model.wing.render(scale);
                 GL11.glScalef(-1f, 1f, 1f);
+
                 if (j == 0)
-                    GL11.glCullFace(1028);
+                    GL11.glCullFace(1029);
             }
-            GL11.glCullFace(1029);
             GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glColor3f(255f, 255f, 255f);
             GL11.glPopMatrix();
         }
     }
 
-    private class WingModel extends ModelBase {
-
+    private static class WingModel extends ModelBase {
         private final ModelRenderer wing;
         private final ModelRenderer wingTip;
-
         public WingModel() {
             setTextureOffset("wing.bone", 0, 0);
             setTextureOffset("wing.skin", -10, 8);

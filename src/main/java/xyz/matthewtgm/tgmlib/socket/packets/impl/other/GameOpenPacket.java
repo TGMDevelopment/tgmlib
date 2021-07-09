@@ -16,41 +16,35 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.socket.packets.impl.profiles;
+package xyz.matthewtgm.tgmlib.socket.packets.impl.other;
 
+import xyz.matthewtgm.json.entities.JsonArray;
 import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.tgmlib.TGMLib;
-import xyz.matthewtgm.tgmlib.profiles.ProfileManager;
 import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
 import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
 
-public class PrivateMessagePacket extends BasePacket {
+public class GameOpenPacket extends BasePacket {
 
     private final String uuid;
-    private final String message;
+    private final JsonArray modList;
 
-    public PrivateMessagePacket(String uuid, String message) {
-        super("SEND_PM", "PROFILES", 6f);
+    public GameOpenPacket(String uuid, JsonArray modList) {
+        super("OPEN", "GAME", 8f);
         this.uuid = uuid;
-        this.message = message;
+        this.modList = modList;
     }
 
-    public PrivateMessagePacket() {
+    public GameOpenPacket() {
         this(null, null);
     }
 
     public void write(TGMLibSocket socket) {
         data.add("uuid", uuid);
-        data.add("message", message);
+        data.add("mod_list", modList);
     }
 
     public void read(TGMLibSocket socket, JsonObject json) {
-        JsonObject jsonData = json.get("data").getAsJsonObject();
 
-        if (!jsonData.hasKey("uuid") || !jsonData.hasKey("message")) return;
-
-        ProfileManager profileManager = TGMLib.getManager().getProfileManager();
-        profileManager.receiveMessage(jsonData.get("uuid").getAsString(), jsonData.get("message").getAsString());
     }
 
     public void handle(TGMLibSocket socket) {}

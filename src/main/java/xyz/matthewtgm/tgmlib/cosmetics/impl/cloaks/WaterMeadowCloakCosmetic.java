@@ -16,18 +16,22 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.events;
+package xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraft.util.ResourceLocation;
+import xyz.matthewtgm.tgmlib.cosmetics.BaseCloakCosmetic;
+import xyz.matthewtgm.tgmlib.util.ResourceHelper;
 
-@Cancelable
-public class DropItemEvent extends Event {
-     public final ItemStack item;
-     public final boolean dropAll;
-    public DropItemEvent(ItemStack item, boolean dropAll) {
-        this.item = item;
-        this.dropAll = dropAll;
+public class WaterMeadowCloakCosmetic extends BaseCloakCosmetic {
+
+    public WaterMeadowCloakCosmetic() {
+        super("Watery Meadow Cloak", "WATER_MEADOW_CLOAK");
     }
+
+    public ResourceLocation texture() {
+        return ResourceHelper.get("tgmlib", "cosmetics/cloaks/water_meadow_cloak.png");
+    }
+
+    public void tick() {}
+
 }

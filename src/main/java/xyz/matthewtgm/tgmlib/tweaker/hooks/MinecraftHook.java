@@ -19,13 +19,38 @@
 package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import xyz.matthewtgm.tgmlib.events.BetterInputEvent;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBindManager;
+import xyz.matthewtgm.tgmlib.util.MouseHelper;
 
 import java.util.List;
 
 public class MinecraftHook {
+
+    public static void callMouseInputEvent(Minecraft mc) {
+        MinecraftForge.EVENT_BUS.post(new BetterInputEvent.MouseInputEvent(
+                mc.currentScreen,
+                Mouse.getEventButton(),
+                Mouse.getEventX(),
+                Mouse.getEventY(),
+                MouseHelper.getMouseX(),
+                MouseHelper.getMouseY()
+        ));
+    }
+
+    public static boolean callKeyInputEvent() {
+        return MinecraftForge.EVENT_BUS.post(new BetterInputEvent.KeyboardInputEvent(
+                Keyboard.getEventKey(),
+                Keyboard.getEventCharacter(),
+                Keyboard.getKeyCount(),
+                Keyboard.isRepeatEvent(),
+                Keyboard.areRepeatEventsEnabled()
+        ));
+    }
 
     public static void dispatchTgmLibKeyPresses(Minecraft mc) {
         List<KeyBind> keyBinds = KeyBindManager.getKeyBinds();

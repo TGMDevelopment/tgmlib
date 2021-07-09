@@ -50,7 +50,7 @@ public class GuiTransFadingButton extends GuiTransButton {
 
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         GlStateManager.pushMatrix();
-        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+        GlStateManager.color(1f, 1f, 1f, 1f);
         boolean hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
 
         GlStateManager.enableBlend();

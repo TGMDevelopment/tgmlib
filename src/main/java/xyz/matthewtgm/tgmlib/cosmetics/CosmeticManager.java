@@ -66,6 +66,7 @@ public class CosmeticManager {
 
     private void initialize() {
         logger.info("Initializing cosmetics...");
+        cosmetics.add(new AutumnGloomCloakCosmetic());
         cosmetics.add(new BeehiveCloakCosmetic());
         cosmetics.add(new BoosterCloakCosmetic());
         cosmetics.add(new BugHunterCloakCosmetic());
@@ -80,6 +81,7 @@ public class CosmeticManager {
         cosmetics.add(new SunsetSkyCloakCosmetic());
         cosmetics.add(new UwUCloakCosmetic());
         cosmetics.add(new VaporwaveCloakCosmetic());
+        cosmetics.add(new WaterMeadowCloakCosmetic());
         cosmetics.add(new WinterCloak());
         cosmetics.add(new WyvestCloakCosmetic());
         cosmetics.add(new YouTubCloakCosmetic());

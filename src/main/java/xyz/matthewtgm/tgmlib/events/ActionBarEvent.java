@@ -18,16 +18,14 @@
 
 package xyz.matthewtgm.tgmlib.events;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 @Cancelable
-public class DropItemEvent extends Event {
-     public final ItemStack item;
-     public final boolean dropAll;
-    public DropItemEvent(ItemStack item, boolean dropAll) {
-        this.item = item;
-        this.dropAll = dropAll;
+public class ActionBarEvent extends Event {
+    public IChatComponent component;
+    public ActionBarEvent(IChatComponent component) {
+        this.component = component;
     }
 }

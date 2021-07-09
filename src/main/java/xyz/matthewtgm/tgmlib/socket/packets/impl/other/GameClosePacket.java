@@ -16,18 +16,33 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.events;
+package xyz.matthewtgm.tgmlib.socket.packets.impl.other;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import xyz.matthewtgm.json.entities.JsonObject;
+import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
+import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
 
-@Cancelable
-public class DropItemEvent extends Event {
-     public final ItemStack item;
-     public final boolean dropAll;
-    public DropItemEvent(ItemStack item, boolean dropAll) {
-        this.item = item;
-        this.dropAll = dropAll;
+public class GameClosePacket extends BasePacket {
+
+    private final String uuid;
+
+    public GameClosePacket(String uuid) {
+        super("CLOSE", "GAME", 9f);
+        this.uuid = uuid;
     }
+
+    public GameClosePacket() {
+        this(null);
+    }
+
+    public void write(TGMLibSocket socket) {
+        data.add("uuid", uuid);
+    }
+
+    public void read(TGMLibSocket socket, JsonObject json) {
+
+    }
+
+    public void handle(TGMLibSocket socket) {}
+
 }

@@ -21,12 +21,20 @@ package xyz.matthewtgm.tgmlib.tweaker.hooks;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
+import xyz.matthewtgm.tgmlib.cosmetics.PlayerCosmeticsHolder;
+import xyz.matthewtgm.tgmlib.files.ConfigHandler;
 
 public class AbstractClientPlayerHook {
 
     public static boolean returnValue(AbstractClientPlayer player) {
         CosmeticManager cosmeticManager = TGMLib.getManager().getCosmeticManager();
-        return TGMLib.getManager().getConfigHandler().isOverrideCapes() && TGMLib.getManager().getConfigHandler().isShowCosmetics() && cosmeticManager.getCosmeticMap().containsKey(player.getUniqueID().toString()) && !cosmeticManager.getCosmeticMap().get(player.getUniqueID().toString()).getEnabledCloakCosmetics().isEmpty();
+        ConfigHandler configHandler = TGMLib.getManager().getConfigHandler();
+        if (configHandler.isOverrideCapes() && configHandler.isShowCosmetics()) {
+            if (!cosmeticManager.getCosmeticMap().containsKey(player.getUniqueID().toString())) return false;
+            PlayerCosmeticsHolder cosmeticsHolder = cosmeticManager.getCosmeticMap().get(player.getUniqueID().toString());
+            return !cosmeticsHolder.getEnabledCosmetics().isEmpty();
+        }
+        return false;
     }
 
 }
