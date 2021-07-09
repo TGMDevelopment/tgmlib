@@ -24,6 +24,7 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
 public enum EnumTransformerClasses {
 
     Minecraft("net/minecraft/client/Minecraft", "ave"),
+    FontRenderer("net/minecraft/client/gui/FontRenderer", "avn"),
     Timer("net/minecraft/util/Timer", "avl"),
     NetHandlerPlayClient("net/minecraft/client/network/NetHandlerPlayClient", "bcy"),
     NetworkManager("net/minecraft/network/NetworkManager", "ek"),

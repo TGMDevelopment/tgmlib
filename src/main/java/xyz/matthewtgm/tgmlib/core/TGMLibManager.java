@@ -101,7 +101,7 @@ public class TGMLibManager {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 if (dataHandler.isMayLogData())
                     webSocket.send(new GameClosePacket(GlobalMinecraft.getSession().getProfile().getId().toString()));
-                webSocket.close(-1, "Game shutdown");
+                webSocket.close(5, "Game shutdown");
             }, "TGMLib Shutdown"));
         } catch (Exception e) {
             e.printStackTrace();

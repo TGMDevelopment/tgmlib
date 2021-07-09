@@ -27,6 +27,7 @@ public enum EnumTransformerMethods {
 
     runTick("runTick", "func_71407_l", "s", "()V"),
     dispatchKeypresses("dispatchKeypresses", "func_152348_aa", "Z", "()V"),
+    renderString("renderString", "func_180455_b", "b", "(Ljava/lang/String;FFIZ)I"),
     updateTimer("updateTimer", "func_74275_a", "a", "()V"),
     addPotionEffect("addPotionEffect", "func_70690_d", "c", "(Lnet/minecraft/potion/PotionEffect;)V", "(" + EnumTransformerClasses.PotionEffect.getName() +")V"),
     dropOneItem("dropOneItem", "func_71040_bB", "a", "(Z)Lnet/minecraft/entity/item/EntityItem;", "(Z)Luz;"),
