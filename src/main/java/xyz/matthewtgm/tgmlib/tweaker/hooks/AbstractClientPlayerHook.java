@@ -30,7 +30,8 @@ public class AbstractClientPlayerHook {
         CosmeticManager cosmeticManager = TGMLib.getManager().getCosmeticManager();
         ConfigHandler configHandler = TGMLib.getManager().getConfigHandler();
         if (configHandler.isOverrideCapes() && configHandler.isShowCosmetics()) {
-            if (!cosmeticManager.getCosmeticMap().containsKey(player.getUniqueID().toString())) return false;
+            if (!cosmeticManager.getCosmeticMap().containsKey(player.getUniqueID().toString()))
+                return false;
             PlayerCosmeticsHolder cosmeticsHolder = cosmeticManager.getCosmeticMap().get(player.getUniqueID().toString());
             return !cosmeticsHolder.getEnabledCosmetics().isEmpty();
         }

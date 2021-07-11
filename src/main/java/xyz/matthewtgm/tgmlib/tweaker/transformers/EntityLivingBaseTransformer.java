@@ -22,6 +22,7 @@ import org.objectweb.asm.tree.*;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
+import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -34,16 +35,12 @@ public class EntityLivingBaseTransformer implements TGMLibTransformer {
     public void transform(ClassNode classNode, String name) {
         for (MethodNode methodNode : classNode.methods) {
             if (EnumTransformerMethods.addPotionEffect.matches(methodNode))
-                methodNode.instructions.insertBefore(methodNode.instructions.getFirst(), call());
+                methodNode.instructions.insertBefore(methodNode.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+                    list.add(new VarInsnNode(ALOAD, 0)); /* this */
+                    list.add(new VarInsnNode(ALOAD, 1)); /* potionEffect */
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/EntityLivingBaseHook", "callEvent", "(" + EnumTransformerClasses.EntityLivingBase.getName() + EnumTransformerClasses.PotionEffect.getName() + ")V", false));
+                }));
         }
-    }
-
-    private InsnList call() {
-        InsnList list = new InsnList();
-        list.add(new VarInsnNode(ALOAD, 0)); /* this */
-        list.add(new VarInsnNode(ALOAD, 1)); /* potionEffect */
-        list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/EntityLivingBaseHook", "callEvent", "(" + EnumTransformerClasses.EntityLivingBase.getName() + EnumTransformerClasses.PotionEffect.getName() + ")V", false));
-        return list;
     }
 
 }

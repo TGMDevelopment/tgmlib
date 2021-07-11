@@ -28,6 +28,8 @@ import xyz.matthewtgm.tgmlib.data.HitBox;
 import xyz.matthewtgm.tgmlib.util.*;
 
 import java.awt.*;
+import java.util.ConcurrentModificationException;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 public abstract class GuiTGMLibBase extends GuiScreen {
@@ -71,7 +73,13 @@ public abstract class GuiTGMLibBase extends GuiScreen {
     public void postComponents(int mouseX, int mouseY, float partialTicks) {}
 
     public void initGui() {
+        if (!(buttonList instanceof CopyOnWriteArrayList))
+            buttonList = new CopyOnWriteArrayList<>();
+        if (!(labelList instanceof CopyOnWriteArrayList))
+            labelList = new CopyOnWriteArrayList<>();
+
         buttonList.clear();
+
         backgroundHitBox = createBackgroundHitBox();
         backgroundOutlineHitBox = createBackgroundOutlineHitBox(backgroundHitBox);
         buttonList.add(new GuiTransFadingImageButton(0, backgroundHitBox.getIntX() + 2, backgroundHitBox.getIntY() + 2, 30, 30, ResourceHelper.get("tgmlib", "gui/icons/exit_icon.png")) {
@@ -112,13 +120,20 @@ public abstract class GuiTGMLibBase extends GuiScreen {
     }
 
     private void drawComponents(int mouseX, int mouseY) {
-        for (GuiButton button : buttonList)
-            if (button != null)
-                button.drawButton(mc, mouseX, mouseY);
+        try {
+            for (GuiButton button : buttonList)
+                if (button != null)
+                    button.drawButton(mc, mouseX, mouseY);
 
-        for (GuiLabel label : labelList)
-            if (label != null)
-                label.drawLabel(mc, mouseX, mouseY);
+            for (GuiLabel label : labelList)
+                if (label != null)
+                    label.drawLabel(mc, mouseX, mouseY);
+        } catch (Exception e) {
+            if (e instanceof ConcurrentModificationException)
+                return;
+
+            e.printStackTrace();
+        }
     }
 
     private HitBox createBackgroundHitBox() {
@@ -133,18 +148,24 @@ public abstract class GuiTGMLibBase extends GuiScreen {
         return true;
     }
 
-    public void refresh(int refreshTime) {
-        if (!allowRefreshing()) throw new IllegalStateException("Refreshing hasn't been explicitly allowed!");
+    public void refresh(int refreshTime, Runnable listener) {
+        if (!allowRefreshing())
+            throw new IllegalStateException("Refreshing hasn't been explicitly allowed!");
         refreshing = true;
         this.refreshTime = refreshTime;
         Multithreading.schedule(() -> {
             try {
+                listener.run();
                 initGui();
                 refreshing = false;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }, refreshTime, TimeUnit.SECONDS);
+    }
+
+    public void refresh(int refreshTime) {
+        refresh(refreshTime, () -> {});
     }
 
     private int backgroundColour() {

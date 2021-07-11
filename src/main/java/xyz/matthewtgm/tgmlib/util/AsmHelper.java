@@ -77,4 +77,14 @@ public class AsmHelper {
         System.out.println(print);
     }
 
+    public static InsnList createQuickInsnList(InsnListRunnable runnable) {
+        InsnList list = new InsnList();
+        runnable.create(list);
+        return list;
+    }
+
+    public interface InsnListRunnable {
+        void create(InsnList list);
+    }
+
 }

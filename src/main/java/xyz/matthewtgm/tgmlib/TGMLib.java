@@ -62,7 +62,7 @@ public class TGMLib {
     private void start() {
         logger.info("Starting TGMLib...");
         if (!JsonVersion.CURRENT.isAtLeast(2, 3))
-            throw new IllegalStateException("JsonTGM is outdated! (minimum version is 2.3.0)");
+            throw new IllegalStateException("JsonTGM is outdated! (minimum version is 2.4.0)");
         ForgeHelper.registerEventListeners(
                 this,
                 new CommandQueue(),

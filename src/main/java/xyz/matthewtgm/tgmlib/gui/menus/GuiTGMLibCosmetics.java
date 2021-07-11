@@ -22,9 +22,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+import xyz.matthewtgm.json.entities.JsonObject;
+import xyz.matthewtgm.json.util.JsonHelper;
 import xyz.matthewtgm.tgmconfig.ConfigEntry;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.core.TGMLibManager;
@@ -38,6 +41,7 @@ import xyz.matthewtgm.tgmlib.gui.GuiTransFadingImageButton;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsTogglePacket;
 import xyz.matthewtgm.tgmlib.util.*;
+import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 
 import java.awt.*;
 import java.io.IOException;
@@ -63,13 +67,26 @@ public class GuiTGMLibCosmetics extends GuiTGMLibBase {
     }
 
     public void initialize() {
+        cosmeticButtonList.clear();
+
         buttonList.add(new GuiTransFadingImageButton(1, backgroundHitBox.getIntWidth() - 32, backgroundHitBox.getIntY() + 2, 30, 30, ResourceHelper.get("tgmlib", "gui/icons/refresh_icon.png")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY)) {
                     TGMLib.getManager().getCosmeticManager().getCosmeticMap().clear();
+                    List<String> cachedRequests = new ArrayList<>(CosmeticManager.getMadeRequestsFor());
                     CosmeticManager.getMadeRequestsFor().clear();
-                    TGMLib.getManager().getWebSocket().send(new CosmeticsRetrievePacket(mc.getSession().getProfile().getId().toString()));
-                    refresh(3);
+                    if (GlobalMinecraft.getWorld() != null) {
+                        for (EntityPlayer playerEntity : GlobalMinecraft.getWorld().playerEntities) {
+                            if (cachedRequests.contains(playerEntity.getUniqueID().toString())) {
+                                TGMLib.getManager().getCosmeticManager().get(playerEntity.getUniqueID().toString());
+                            }
+                        }
+                    }
+                    TGMLib.getManager().getCosmeticManager().get(mc.getSession().getProfile().getId().toString());
+                    refresh(3, () -> {
+                        cachedOwnedCosmetics.clear();
+                        cachedEnabledCosmetics.clear();
+                    });
                 }
                 return false;
             }
@@ -143,6 +160,10 @@ public class GuiTGMLibCosmetics extends GuiTGMLibBase {
         super.keyTyped(typedChar, keyCode);
     }
 
+    public boolean allowRefreshing() {
+        return true;
+    }
+
     private void cosmeticButtons(int mouseX, int mouseY) {
         List<GuiButton> cosmeticButtonList = new ArrayList<>();
         AtomicInteger buttonId = new AtomicInteger(lastButtonId);
@@ -155,7 +176,7 @@ public class GuiTGMLibCosmetics extends GuiTGMLibBase {
                         if (super.mousePressed(mc, mouseX, mouseY)) {
                             for (BaseCosmetic enabled : cachedEnabledCosmetics) if (!enabled.getId().equalsIgnoreCase(owned.getId()) && enabled.getType().equals(currentType)) TGMLib.getManager().getWebSocket().send(new CosmeticsTogglePacket(mc.getSession().getProfile().getId().toString(), enabled.getId()));
                             TGMLib.getManager().getWebSocket().send(new CosmeticsTogglePacket(mc.getSession().getProfile().getId().toString(), owned.getId()));
-                            refresh(5);
+                            refresh(3);
                         }
                         return false;
                     }

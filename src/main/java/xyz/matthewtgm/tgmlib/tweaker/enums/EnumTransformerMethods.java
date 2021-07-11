@@ -31,6 +31,7 @@ public enum EnumTransformerMethods {
     updateTimer("updateTimer", "func_74275_a", "a", "()V"),
     addPotionEffect("addPotionEffect", "func_70690_d", "c", "(Lnet/minecraft/potion/PotionEffect;)V", "(" + EnumTransformerClasses.PotionEffect.getName() +")V"),
     dropOneItem("dropOneItem", "func_71040_bB", "a", "(Z)Lnet/minecraft/entity/item/EntityItem;", "(Z)Luz;"),
+    sendChatMessage("sendChatMessage", "func_71165_d", "e", "(Ljava/lang/String;)V"),
     addToSendQueue("addToSendQueue", "func_147297_a", "a", "(Lnet/minecraft/network/Packet;)V"),
     handleJoinGame("handleJoinGame", "func_147282_a", "a", "(Lnet/minecraft/network/play/server/S01PacketJoinGame;)V", "(Lgt;)V"),
     channelRead0("channelRead0", "channelRead0", "a", "(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V"),

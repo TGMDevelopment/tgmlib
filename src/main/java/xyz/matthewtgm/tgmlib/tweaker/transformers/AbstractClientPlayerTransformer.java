@@ -22,6 +22,7 @@ import org.objectweb.asm.tree.*;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
+import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -33,21 +34,18 @@ public class AbstractClientPlayerTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.getLocationCape.matches(method))
-                method.instructions.insertBefore(method.instructions.getFirst(), modifyReturn());
+            if (EnumTransformerMethods.getLocationCape.matches(method)) {
+                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "AbstractClientPlayerHook", "returnValue", "(" + EnumTransformerClasses.AbstractClientPlayer.getName() + ")Z", false));
+                    LabelNode labelNode = new LabelNode();
+                    list.add(new JumpInsnNode(IFEQ, labelNode));
+                    list.add(new InsnNode(ACONST_NULL));
+                    list.add(new InsnNode(ARETURN));
+                    list.add(labelNode);
+                }));
+            }
         }
-    }
-
-    private InsnList modifyReturn() {
-        InsnList list = new InsnList();
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "AbstractClientPlayerHook", "returnValue", "(" + EnumTransformerClasses.AbstractClientPlayer.getName() + ")Z", false));
-        LabelNode labelNode = new LabelNode();
-        list.add(new JumpInsnNode(IFEQ, labelNode));
-        list.add(new InsnNode(ACONST_NULL));
-        list.add(new InsnNode(ARETURN));
-        list.add(labelNode);
-        return list;
     }
 
 }

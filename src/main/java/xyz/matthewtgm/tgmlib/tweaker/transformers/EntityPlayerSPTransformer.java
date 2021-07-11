@@ -34,21 +34,39 @@ public class EntityPlayerSPTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.dropOneItem.matches(method))
-                method.instructions.insertBefore(method.instructions.getFirst(), call());
-        }
-    }
+            if (EnumTransformerMethods.dropOneItem.matches(method)) {
+                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+                    list.add(new VarInsnNode(ILOAD, 1)); /* dropAll */
+                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "EntityPlayerSPHook", "callEvent", "(Z)Z", false));
+                    LabelNode labelNode = new LabelNode();
+                    list.add(new JumpInsnNode(IFEQ, labelNode));
+                    list.add(new InsnNode(ACONST_NULL));
+                    list.add(new InsnNode(ARETURN));
+                    list.add(labelNode);
+                }));
+            }
+            if (EnumTransformerMethods.sendChatMessage.matches(method)) {
+                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+                    list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/SendChatMessageEvent"));
+                    list.add(new InsnNode(DUP));
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(new VarInsnNode(ALOAD, 1));
+                    list.add(new MethodInsnNode(INVOKESPECIAL, "xyz/matthewtgm/tgmlib/events/SendChatMessageEvent", "<init>", "(" + EnumTransformerClasses.EntityPlayerSP.getName() + "Ljava/lang/String;)V", false));
+                    list.add(new VarInsnNode(ASTORE, 2));
 
-    private InsnList call() {
-        InsnList list = new InsnList();
-        list.add(new VarInsnNode(ILOAD, 1)); /* dropAll */
-        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "EntityPlayerSPHook", "callEvent", "(Z)Z", false));
-        LabelNode labelNode = new LabelNode();
-        list.add(new JumpInsnNode(IFEQ, labelNode));
-        list.add(new InsnNode(ACONST_NULL));
-        list.add(new InsnNode(ARETURN));
-        list.add(labelNode);
-        return list;
+                    list.add(new VarInsnNode(ALOAD, 2));
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/util/ForgeHelper", "postEvent", "(Lnet/minecraftforge/fml/common/eventhandler/Event;)Z", false));
+                    LabelNode labelNode = new LabelNode();
+                    list.add(new JumpInsnNode(IFEQ, labelNode));
+                    list.add(new InsnNode(RETURN));
+                    list.add(labelNode);
+
+                    list.add(new VarInsnNode(ALOAD, 2));
+                    list.add(new FieldInsnNode(GETFIELD, "xyz/matthewtgm/tgmlib/events/SendChatMessageEvent", "message", "Ljava/lang/String;"));
+                    list.add(new VarInsnNode(ASTORE, 1)); /* message = sendChatMessageEvent.message; */
+                }));
+            }
+        }
     }
 
 }

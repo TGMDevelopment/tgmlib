@@ -39,6 +39,7 @@ import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 import java.io.File;
 import java.net.URI;
 import java.util.Base64;
+import java.util.concurrent.TimeUnit;
 
 public class TGMLibManager {
 
@@ -88,7 +89,7 @@ public class TGMLibManager {
             (configHandler = new ConfigHandler(config)).start();
             (keyBindConfigHandler = new KeyBindConfigHandler(keyBindConfig)).update();
             (dataHandler = new DataHandler(data)).start();
-            (webSocket = createWebSocket(new TGMLibSocket(websocketUri()))).connectBlocking();
+            fixSocket();
             (cosmeticManager = new CosmeticManager()).start();
             //(profileManager = new ProfileManager()).start();
 
@@ -122,6 +123,14 @@ public class TGMLibManager {
         original.setConnectionLostTimeout(120);
         original.setTcpNoDelay(true);
         return original;
+    }
+
+    public void fixSocket() {
+        try {
+            (webSocket = createWebSocket(new TGMLibSocket(websocketUri()))).connectBlocking(10, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -37,8 +37,17 @@ public class MinecraftTransformer implements TGMLibTransformer {
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
             if (EnumTransformerMethods.dispatchKeypresses.matches(method)) {
-                method.instructions.insertBefore(method.instructions.getFirst(), tgmLibKeyPresses());
-                method.instructions.insertBefore(method.instructions.getFirst(), keyInputEvent());
+                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "MinecraftHook", "dispatchTgmLibKeyPresses", "(" + EnumTransformerClasses.Minecraft.getName() + ")V", false));
+                }));
+                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "MinecraftHook", "callKeyInputEvent", "()Z", false));
+                    LabelNode labelNode = new LabelNode();
+                    list.add(new JumpInsnNode(IFEQ, labelNode));
+                    list.add(new InsnNode(RETURN));
+                    list.add(labelNode);
+                }));
             }
             /*if (EnumTransformerMethods.runTick.matches(method)) {
                 Iterator<AbstractInsnNode> iterator = method.instructions.iterator();
@@ -62,22 +71,5 @@ public class MinecraftTransformer implements TGMLibTransformer {
         list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "MinecraftHook", "callMouseInputEvent", "()V", false));
         return list;
     }*/
-
-    private InsnList keyInputEvent() {
-        InsnList list = new InsnList();
-        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "MinecraftHook", "callKeyInputEvent", "()Z", false));
-        LabelNode labelNode = new LabelNode();
-        list.add(new JumpInsnNode(IFEQ, labelNode));
-        list.add(new InsnNode(RETURN));
-        list.add(labelNode);
-        return list;
-    }
-
-    private InsnList tgmLibKeyPresses() {
-        InsnList list = new InsnList();
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "MinecraftHook", "dispatchTgmLibKeyPresses", "(" + EnumTransformerClasses.Minecraft.getName() + ")V", false));
-        return list;
-    }
 
 }

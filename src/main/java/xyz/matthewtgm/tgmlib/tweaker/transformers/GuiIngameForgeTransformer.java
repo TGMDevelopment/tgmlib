@@ -22,6 +22,7 @@ import org.objectweb.asm.tree.*;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
+import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -33,56 +34,51 @@ public class GuiIngameForgeTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods)
-            if (method.name.equals("renderTitle"))
-                method.instructions.insertBefore(method.instructions.getFirst(), callTitleEvent());
-    }
+            if (method.name.equals("renderTitle")) {
+                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+                    /*
 
-    private InsnList callTitleEvent() {
-        InsnList list = new InsnList();
+                        Objective: Call `TitleEvent` and set the parameter values to its field values after calling.
 
-        /*
+                        TitleEvent titleEvent = new TitleEvent(this.displayedTitle, this.displayedSubTitle);
+                        if (ForgeHelper.postEvent(titleEvent)) {
+                            return;
+                        }
+                        this.displayedTitle = titleEvent.title;
+                        this.displayedSubTitle = titleEvent.subTitle;
 
-            Objective: Call `TitleEvent` and set the parameter values to it's field values after calling.
+                    */
 
-            TitleEvent titleEvent = new TitleEvent(this.displayedTitle, this.displayedSubTitle);
-            if (ForgeHelper.postEvent(titleEvent)) {
-                return;
+                    list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/TitleEvent"));
+                    list.add(new InsnNode(DUP));
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(EnumTransformerFields.displayedTitle.getField(EnumTransformerClasses.GuiIngameForge));
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(EnumTransformerFields.displayedSubTitle.getField(EnumTransformerClasses.GuiIngameForge));
+                    list.add(new MethodInsnNode(INVOKESPECIAL, "xyz/matthewtgm/tgmlib/events/TitleEvent", "<init>", "(Ljava/lang/String;Ljava/lang/String;)V", false));
+                    list.add(new VarInsnNode(ASTORE, 4));
+
+                    list.add(new VarInsnNode(ALOAD, 4));
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/util/ForgeHelper", "postEvent", "(Lnet/minecraftforge/fml/common/eventhandler/Event;)Z", false));
+                    LabelNode labelNode = new LabelNode();
+                    list.add(new JumpInsnNode(IFEQ, labelNode));
+                    list.add(new InsnNode(RETURN));
+                    list.add(labelNode);
+
+                    // TODO: 2021/07/11 : Set displayedTitle and displayedSubTitle fields from the event.
+
+
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(new VarInsnNode(ALOAD, 4));
+                    list.add(new FieldInsnNode(GETFIELD, "xyz/matthewtgm/tgmlib/events/TitleEvent", "title", "Ljava/lang/String;"));
+                    list.add(EnumTransformerFields.displayedTitle.putField(EnumTransformerClasses.GuiIngameForge));
+
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(new VarInsnNode(ALOAD, 4));
+                    list.add(new FieldInsnNode(GETFIELD, "xyz/matthewtgm/tgmlib/events/TitleEvent", "subTitle", "Ljava/lang/String;"));
+                    list.add(EnumTransformerFields.displayedSubTitle.putField(EnumTransformerClasses.GuiIngameForge));
+                }));
             }
-            this.displayedTitle = titleEvent.title;
-            this.displayedSubTitle = titleEvent.subTitle;
-
-         */
-
-        list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/TitleEvent"));
-        list.add(new InsnNode(DUP));
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(EnumTransformerFields.displayedTitle.getField(EnumTransformerClasses.GuiIngameForge));
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(EnumTransformerFields.displayedSubTitle.getField(EnumTransformerClasses.GuiIngameForge));
-        list.add(new MethodInsnNode(INVOKESPECIAL, "xyz/matthewtgm/tgmlib/events/TitleEvent", "<init>", "(Ljava/lang/String;Ljava/lang/String;)V", false));
-        list.add(new VarInsnNode(ASTORE, 4));
-
-        list.add(new VarInsnNode(ALOAD, 4));
-        list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/util/ForgeHelper", "postEvent", "(Lnet/minecraftforge/fml/common/eventhandler/Event;)Z", false));
-        LabelNode labelNode = new LabelNode();
-        list.add(new JumpInsnNode(IFEQ, labelNode));
-        list.add(new InsnNode(RETURN));
-        list.add(labelNode);
-
-        // TODO: 2021/07/11 : Set displayedTitle and displayedSubTitle fields from the event.
-
-
-        /*list.add(new VarInsnNode(ALOAD, 4));
-        list.add(new FieldInsnNode(GETFIELD, "xyz/matthewtgm/tgmlib/events/TitleEvent", "title", "Ljava/lang/String;"));
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(EnumTransformerFields.displayedTitle.putField(EnumTransformerClasses.GuiIngameForge));
-
-        list.add(new VarInsnNode(ALOAD, 4));
-        list.add(new FieldInsnNode(GETFIELD, "xyz/matthewtgm/tgmlib/events/TitleEvent", "subTitle", "Ljava/lang/String;"));
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(EnumTransformerFields.displayedSubTitle.putField(EnumTransformerClasses.GuiIngameForge));*/
-
-        return list;
     }
 
 }

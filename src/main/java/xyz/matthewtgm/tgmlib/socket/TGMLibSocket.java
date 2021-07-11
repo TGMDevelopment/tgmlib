@@ -43,11 +43,13 @@ import xyz.matthewtgm.tgmlib.socket.packets.impl.profiles.OnlineStatusUpdatePack
 import xyz.matthewtgm.tgmlib.socket.packets.impl.profiles.PrivateMessagePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.profiles.RetrieveProfilePacket;
 import xyz.matthewtgm.tgmlib.util.ChatHelper;
+import xyz.matthewtgm.tgmlib.util.Multithreading;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class TGMLibSocket extends WebSocketClient {
 
@@ -90,6 +92,11 @@ public class TGMLibSocket extends WebSocketClient {
     public void onError(Exception ex) {
         if (ex instanceof WebsocketNotConnectedException) {
             reconnect();
+            return;
+        }
+
+        if (ex.getMessage().contains("WebSocketClient objects are not reuseable")) {
+            Multithreading.schedule(TGMLib.getManager()::fixSocket, 3, TimeUnit.SECONDS);
             return;
         }
 

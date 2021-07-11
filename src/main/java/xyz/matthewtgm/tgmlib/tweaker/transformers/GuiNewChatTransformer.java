@@ -23,6 +23,7 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
+import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -34,51 +35,44 @@ public class GuiNewChatTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.printChatMessage.matches(method))
-                method.instructions.insertBefore(method.instructions.getFirst(), callPrintEvent());
-
-            if (EnumTransformerMethods.clearChatMessages.matches(method))
-                method.instructions.insertBefore(method.instructions.getFirst(), callChatClearEvent());
+            if (EnumTransformerMethods.printChatMessage.matches(method)) {
+                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+                    /*
+                        if (GuiNewChatHook.callPrintEvent(this, chatComponent)) {
+                            return;
+                        }
+                    */
+                    list.add(new VarInsnNode(ALOAD, 0)); /* this */
+                    list.add(new VarInsnNode(ALOAD, 1)); /* chatComponent */
+                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "GuiNewChatHook", "callPrintEvent", "(" + EnumTransformerClasses.GuiNewChat.getName() + EnumTransformerClasses.IChatComponent.getName() + ")Z", false)); /* GuiNewChatHook.callPrintEvent(this, chatComponent) */
+                    LabelNode labelNode = new LabelNode(); /* if (GuiNewChatHook.callPrintEvent(this, chatComponent)) */
+                    list.add(new JumpInsnNode(IFEQ, labelNode));
+                    list.add(new InsnNode(RETURN)); /* return; */
+                    list.add(labelNode);
+                }));
+            }
+            if (EnumTransformerMethods.clearChatMessages.matches(method)) {
+                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+                    /*
+                        if (GuiNewChatHook.callClearChatEvent(this, this.drawnChatLines, this.chatLines, this.sentMessages)) {
+                            return;
+                        }
+                    */
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(EnumTransformerFields.drawnChatLines.getField(EnumTransformerClasses.GuiNewChat));
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(EnumTransformerFields.chatLines.getField(EnumTransformerClasses.GuiNewChat));
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(EnumTransformerFields.sentMessages.getField(EnumTransformerClasses.GuiNewChat));
+                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "GuiNewChatHook", "callChatClearEvent", "(" + EnumTransformerClasses.GuiNewChat.getName() + "Ljava/util/List;Ljava/util/List;Ljava/util/List;)Z", false));
+                    LabelNode labelNode = new LabelNode();
+                    list.add(new JumpInsnNode(IFEQ, labelNode));
+                    list.add(new InsnNode(RETURN));
+                    list.add(labelNode);
+                }));
+            }
         }
-    }
-
-    private InsnList callPrintEvent() {
-        /*
-            if (GuiNewChatHook.callPrintEvent(this, chatComponent)) {
-                return;
-            }
-         */
-        InsnList list = new InsnList();
-        list.add(new VarInsnNode(ALOAD, 0)); /* this */
-        list.add(new VarInsnNode(ALOAD, 1)); /* chatComponent */
-        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "GuiNewChatHook", "callPrintEvent", "(" + EnumTransformerClasses.GuiNewChat.getName() + EnumTransformerClasses.IChatComponent.getName() + ")Z", false)); /* GuiNewChatHook.callPrintEvent(this, chatComponent) */
-        LabelNode labelNode = new LabelNode(); /* if (GuiNewChatHook.callPrintEvent(this, chatComponent)) */
-        list.add(new JumpInsnNode(IFEQ, labelNode));
-        list.add(new InsnNode(RETURN)); /* return; */
-        list.add(labelNode);
-        return list;
-    }
-
-    private InsnList callChatClearEvent() {
-        /*
-            if (GuiNewChatHook.callClearChatEvent(this, this.drawnChatLines, this.chatLines, this.sentMessages)) {
-                return;
-            }
-         */
-        InsnList list = new InsnList();
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(EnumTransformerFields.drawnChatLines.getField(EnumTransformerClasses.GuiNewChat));
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(EnumTransformerFields.chatLines.getField(EnumTransformerClasses.GuiNewChat));
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(EnumTransformerFields.sentMessages.getField(EnumTransformerClasses.GuiNewChat));
-        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "GuiNewChatHook", "callChatClearEvent", "(" + EnumTransformerClasses.GuiNewChat.getName() + "Ljava/util/List;Ljava/util/List;Ljava/util/List;)Z", false));
-        LabelNode labelNode = new LabelNode();
-        list.add(new JumpInsnNode(IFEQ, labelNode));
-        list.add(new InsnNode(RETURN));
-        list.add(labelNode);
-        return list;
     }
     
 }

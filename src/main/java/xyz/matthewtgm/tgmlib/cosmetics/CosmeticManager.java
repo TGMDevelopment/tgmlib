@@ -65,7 +65,7 @@ public class CosmeticManager {
         MinecraftForge.EVENT_BUS.register(this);
         for (BaseCosmetic cosmetic : cosmetics) PlayerRendererHelper.addLayer(createLayer(cosmetic));
 
-        TGMLib.getManager().getWebSocket().send(new CosmeticsRetrievePacket(Minecraft.getMinecraft().getSession().getProfile().getId().toString()));
+        get(Minecraft.getMinecraft().getSession().getProfile().getId().toString());
         loaded = true;
     }
 
@@ -104,7 +104,6 @@ public class CosmeticManager {
     }
 
     private LayerRenderer<AbstractClientPlayer> createLayer(BaseCosmetic cosmetic) {
-        TGMLibSocket socket = TGMLib.getManager().getWebSocket();
         return new LayerRenderer<AbstractClientPlayer>() {
             public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
                 if (!TGMLib.getManager().getConfigHandler().isShowCosmetics()) return;
@@ -122,17 +121,28 @@ public class CosmeticManager {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onEntityJoinedWorld(EntityJoinWorldEvent event) throws Exception {
+        if (cosmeticMap.size() > 200)
+            cosmeticMap.clear();
+        if (madeRequestsFor.size() > 200)
+            madeRequestsFor.clear();
+
         if (!tgmLibSocket.isOpen() && (tgmLibSocket.isClosed() || tgmLibSocket.isClosing()))
             tgmLibSocket.reconnectBlocking();
-        if (event.entity instanceof EntityPlayer && !cosmeticMap.containsKey(event.entity.getUniqueID().toString()) && !madeRequestsFor.contains(event.entity.getUniqueID().toString())) {
-            tgmLibSocket.send(new CosmeticsRetrievePacket(event.entity.getUniqueID().toString()));
-            madeRequestsFor.add(event.entity.getUniqueID().toString());
-        }
+        if (event.entity instanceof EntityPlayer && !cosmeticMap.containsKey(event.entity.getUniqueID().toString()) && !madeRequestsFor.contains(event.entity.getUniqueID().toString()))
+            get(event.entity.getUniqueID().toString());
     }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        for (BaseCosmetic cosmetic : cosmetics) cosmetic.tick();
+        for (BaseCosmetic cosmetic : cosmetics)
+            cosmetic.tick();
+    }
+
+    public void get(String uuid) {
+        if (madeRequestsFor.contains(uuid))
+            return;
+        tgmLibSocket.send(new CosmeticsRetrievePacket(uuid));
+        madeRequestsFor.add(uuid);
     }
 
 }

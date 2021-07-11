@@ -22,6 +22,7 @@ import org.objectweb.asm.tree.*;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
+import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -33,21 +34,18 @@ public class RenderTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.shouldRender.matches(method))
-                method.instructions.insertBefore(method.instructions.getFirst(), callRenderCheck());
+            if (EnumTransformerMethods.shouldRender.matches(method)) {
+                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+                    list.add(new VarInsnNode(ALOAD, 1)); /* livingEntity */
+                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "RenderHook", "callRenderCheckEvent", "(Lnet/minecraft/entity/Entity;)Z", false)); /* RenderHook.callRenderCheckEvent(livingEntity) */
+                    LabelNode labelNode = new LabelNode(); /* if (RenderHook.callRenderCheckEvent(livingEntity)) */
+                    list.add(new JumpInsnNode(IFEQ, labelNode));
+                    list.add(new InsnNode(ICONST_0)); /* return false; */
+                    list.add(new InsnNode(IRETURN));
+                    list.add(labelNode);
+                }));
+            }
         }
-    }
-
-    private InsnList callRenderCheck() {
-        InsnList list = new InsnList();
-        list.add(new VarInsnNode(ALOAD, 1)); /* livingEntity */
-        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "RenderHook", "callRenderCheckEvent", "(Lnet/minecraft/entity/Entity;)Z", false)); /* RenderHook.callRenderCheckEvent(livingEntity) */
-        LabelNode labelNode = new LabelNode(); /* if (RenderHook.callRenderCheckEvent(livingEntity)) */
-        list.add(new JumpInsnNode(IFEQ, labelNode));
-        list.add(new InsnNode(ICONST_0)); /* return false; */
-        list.add(new InsnNode(IRETURN));
-        list.add(labelNode);
-        return list;
     }
 
 }
