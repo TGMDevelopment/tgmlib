@@ -20,11 +20,15 @@ package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.events.BetterInputEvent;
+import xyz.matthewtgm.tgmlib.events.TGMLibEvent;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBindManager;
+import xyz.matthewtgm.tgmlib.util.ForgeHelper;
 import xyz.matthewtgm.tgmlib.util.MouseHelper;
 
 import java.util.List;
@@ -60,15 +64,35 @@ public class MinecraftHook {
         boolean down = Keyboard.getEventKeyState();
         boolean repeated = Keyboard.isRepeatEvent();
         if (mc.currentScreen == null && !keyBinds.isEmpty()) {
+            TGMLib tgmLib = TGMLib.getInstance();
             for (KeyBind keyBind : keyBinds) {
                 if (key == keyBind.getKey()) {
-                    if (down && !repeated) keyBind.pressed();
-                    if (down && repeated) keyBind.held();
-                    if (!down) keyBind.released();
+                    if (down && !repeated) {
+                        if (post(new TGMLibEvent.KeyEvent.KeyPressedEvent.Pre(tgmLib, keyBind)))
+                            continue;
+                        keyBind.pressed();
+                        post(new TGMLibEvent.KeyEvent.KeyPressedEvent.Post(tgmLib, keyBind));
+                    }
+                    if (down && repeated) {
+                        if (post(new TGMLibEvent.KeyEvent.KeyHeldEvent.Pre(tgmLib, keyBind)))
+                            continue;
+                        keyBind.held();
+                        post(new TGMLibEvent.KeyEvent.KeyHeldEvent.Post(tgmLib, keyBind));
+                    }
+                    if (!down) {
+                        if (post(new TGMLibEvent.KeyEvent.KeyReleasedEvent.Pre(tgmLib, keyBind)))
+                            continue;
+                        keyBind.released();
+                        post(new TGMLibEvent.KeyEvent.KeyReleasedEvent.Post(tgmLib, keyBind));
+                    }
                 }
             }
         }
         Keyboard.enableRepeatEvents(wereRepeatEventsEnabled);
+    }
+
+    private static boolean post(Event event) {
+        return ForgeHelper.postEvent(event);
     }
 
 }

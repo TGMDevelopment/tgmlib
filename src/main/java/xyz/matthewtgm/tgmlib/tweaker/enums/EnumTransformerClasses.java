@@ -35,6 +35,7 @@ public enum EnumTransformerClasses {
     AbstractClientPlayer("net/minecraft/client/entity/AbstractClientPlayer", "bet"),
     Render("net/minecraft/client/renderer/entity/Render", "biv"),
     GuiNewChat("net/minecraft/client/gui/GuiNewChat", "avt"),
+    GuiIngameForge("net/minecraftforge/client/GuiIngameForge", "net/minecraftforge/client/GuiIngameForge"),
     IChatComponent("net/minecraft/util/IChatComponent", "eu");
 
     private String name;

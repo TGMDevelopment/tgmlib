@@ -25,6 +25,7 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,6 +33,7 @@ import org.lwjgl.input.Keyboard;
 import xyz.matthewtgm.json.JsonVersion;
 import xyz.matthewtgm.tgmlib.commands.CommandManager;
 import xyz.matthewtgm.tgmlib.core.TGMLibManager;
+import xyz.matthewtgm.tgmlib.events.TitleEvent;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibLogging;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibMain;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
@@ -60,7 +62,8 @@ public class TGMLib {
 
     private void start() {
         logger.info("Starting TGMLib...");
-        if (!JsonVersion.CURRENT.isAtLeast(2, 3)) throw new IllegalStateException("JsonTGM is outdated! (minimum version is 2.3.0)");
+        if (!JsonVersion.CURRENT.isAtLeast(2, 3))
+            throw new IllegalStateException("JsonTGM is outdated! (minimum version is 2.3.0)");
         ForgeHelper.registerEventListeners(
                 this,
                 new CommandQueue(),
@@ -103,7 +106,16 @@ public class TGMLib {
         logger.info("TGMLib started.");
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onTitle(TitleEvent event) {
+        if (event.title != null && !event.title.isEmpty()) {
+            event.title = StringHelper.removeColourCodes(event.title);
+            System.out.println(event.title);
+            if (event.title.equals("poggers")) event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onGuiOpen(GuiScreenEvent.InitGuiEvent event) {
         if (event.gui instanceof GuiMainMenu && !manager.getDataHandler().isReceivedPrompt())
             GlobalMinecraft.displayGuiScreen(new GuiTGMLibLogging(event.gui));

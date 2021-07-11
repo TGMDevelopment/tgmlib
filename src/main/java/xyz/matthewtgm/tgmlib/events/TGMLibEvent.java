@@ -1,0 +1,106 @@
+/*
+ * Copyright (C) MatthewTGM
+ * This file is part of TGMLib <https://github.com/TGMDevelopment/TGMLib>.
+ *
+ * TGMLib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TGMLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package xyz.matthewtgm.tgmlib.events;
+
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.common.eventhandler.Cancelable;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import xyz.matthewtgm.tgmlib.TGMLib;
+import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
+import xyz.matthewtgm.tgmlib.util.GuiEditor;
+
+public class TGMLibEvent extends Event {
+    public final TGMLib tgmLib;
+    public TGMLibEvent(TGMLib tgmLib) {
+        this.tgmLib = tgmLib;
+    }
+    public static class KeyEvent extends TGMLibEvent {
+        public final KeyBind keyBind;
+        public KeyEvent(TGMLib tgmLib, KeyBind keyBind) {
+            super(tgmLib);
+            this.keyBind = keyBind;
+        }
+        public static class KeyPressedEvent extends KeyEvent {
+            public KeyPressedEvent(TGMLib tgmLib, KeyBind keyBind) {
+                super(tgmLib, keyBind);
+            }
+        }
+        public static class KeyReleasedEvent extends KeyEvent {
+            public KeyReleasedEvent(TGMLib tgmLib, KeyBind keyBind) {
+                super(tgmLib, keyBind);
+            }
+        }
+        public static class KeyHeldEvent extends KeyEvent {
+            public KeyHeldEvent(TGMLib tgmLib, KeyBind keyBind) {
+                super(tgmLib, keyBind);
+            }
+        }
+        @Cancelable
+        public static class Pre extends KeyEvent {
+            public Pre(TGMLib tgmLib, KeyBind keyBind) {
+                super(tgmLib, keyBind);
+            }
+        }
+        public static class Post extends KeyEvent {
+            public Post(TGMLib tgmLib, KeyBind keyBind) {
+                super(tgmLib, keyBind);
+            }
+        }
+    }
+    public static class GuiEditEvent extends TGMLibEvent {
+        public final Class<? extends GuiScreen> screenClz;
+        public final GuiEditor.GuiEditRunnable guiEditRunnable;
+        public GuiEditEvent(TGMLib tgmLib, Class<? extends GuiScreen> screenClz, GuiEditor.GuiEditRunnable guiEditRunnable) {
+            super(tgmLib);
+            this.screenClz = screenClz;
+            this.guiEditRunnable = guiEditRunnable;
+        }
+        public static class EditAddEvent extends GuiEditEvent {
+            public EditAddEvent(TGMLib tgmLib, Class<? extends GuiScreen> screenClz, GuiEditor.GuiEditRunnable guiEditRunnable) {
+                super(tgmLib, screenClz, guiEditRunnable);
+            }
+        }
+        public static class EditRemoveEvent extends GuiEditEvent {
+            public EditRemoveEvent(TGMLib tgmLib, Class<? extends GuiScreen> screenClz, GuiEditor.GuiEditRunnable guiEditRunnable) {
+                super(tgmLib, screenClz, guiEditRunnable);
+            }
+        }
+        @Cancelable
+        public static class Pre extends GuiEditEvent {
+            public Pre(TGMLib tgmLib, Class<? extends GuiScreen> screenClz, GuiEditor.GuiEditRunnable guiEditRunnable) {
+                super(tgmLib, screenClz, guiEditRunnable);
+            }
+        }
+        public static class Post extends GuiEditEvent {
+            public Post(TGMLib tgmLib, Class<? extends GuiScreen> screenClz, GuiEditor.GuiEditRunnable guiEditRunnable) {
+                super(tgmLib, screenClz, guiEditRunnable);
+            }
+        }
+    }
+    public static class Pre extends TGMLibEvent {
+        public Pre(TGMLib tgmLib) {
+            super(tgmLib);
+        }
+    }
+    public static class Post extends TGMLibEvent {
+        public Post(TGMLib tgmLib) {
+            super(tgmLib);
+        }
+    }
+}

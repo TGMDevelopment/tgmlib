@@ -1,0 +1,88 @@
+/*
+ * Copyright (C) MatthewTGM
+ * This file is part of TGMLib <https://github.com/TGMDevelopment/TGMLib>.
+ *
+ * TGMLib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TGMLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package xyz.matthewtgm.tgmlib.tweaker.transformers;
+
+import org.objectweb.asm.tree.*;
+import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
+import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
+
+import static org.objectweb.asm.Opcodes.*;
+
+public class GuiIngameForgeTransformer implements TGMLibTransformer {
+
+    public String[] getClassNames() {
+        return new String[]{"net.minecraftforge.client.GuiIngameForge"};
+    }
+
+    public void transform(ClassNode classNode, String name) {
+        for (MethodNode method : classNode.methods)
+            if (method.name.equals("renderTitle"))
+                method.instructions.insertBefore(method.instructions.getFirst(), callTitleEvent());
+    }
+
+    private InsnList callTitleEvent() {
+        InsnList list = new InsnList();
+
+        /*
+
+            Objective: Call `TitleEvent` and set the parameter values to it's field values after calling.
+
+            TitleEvent titleEvent = new TitleEvent(this.displayedTitle, this.displayedSubTitle);
+            if (ForgeHelper.postEvent(titleEvent)) {
+                return;
+            }
+            this.displayedTitle = titleEvent.title;
+            this.displayedSubTitle = titleEvent.subTitle;
+
+         */
+
+        list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/TitleEvent"));
+        list.add(new InsnNode(DUP));
+        list.add(new VarInsnNode(ALOAD, 0));
+        list.add(EnumTransformerFields.displayedTitle.getField(EnumTransformerClasses.GuiIngameForge));
+        list.add(new VarInsnNode(ALOAD, 0));
+        list.add(EnumTransformerFields.displayedSubTitle.getField(EnumTransformerClasses.GuiIngameForge));
+        list.add(new MethodInsnNode(INVOKESPECIAL, "xyz/matthewtgm/tgmlib/events/TitleEvent", "<init>", "(Ljava/lang/String;Ljava/lang/String;)V", false));
+        list.add(new VarInsnNode(ASTORE, 4));
+
+        list.add(new VarInsnNode(ALOAD, 4));
+        list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/util/ForgeHelper", "postEvent", "(Lnet/minecraftforge/fml/common/eventhandler/Event;)Z", false));
+        LabelNode labelNode = new LabelNode();
+        list.add(new JumpInsnNode(IFEQ, labelNode));
+        list.add(new InsnNode(RETURN));
+        list.add(labelNode);
+
+        // TODO: 2021/07/11 : Set displayedTitle and displayedSubTitle fields from the event.
+
+
+        /*list.add(new VarInsnNode(ALOAD, 4));
+        list.add(new FieldInsnNode(GETFIELD, "xyz/matthewtgm/tgmlib/events/TitleEvent", "title", "Ljava/lang/String;"));
+        list.add(new VarInsnNode(ALOAD, 0));
+        list.add(EnumTransformerFields.displayedTitle.putField(EnumTransformerClasses.GuiIngameForge));
+
+        list.add(new VarInsnNode(ALOAD, 4));
+        list.add(new FieldInsnNode(GETFIELD, "xyz/matthewtgm/tgmlib/events/TitleEvent", "subTitle", "Ljava/lang/String;"));
+        list.add(new VarInsnNode(ALOAD, 0));
+        list.add(EnumTransformerFields.displayedSubTitle.putField(EnumTransformerClasses.GuiIngameForge));*/
+
+        return list;
+    }
+
+}

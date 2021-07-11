@@ -31,6 +31,8 @@ import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.parser.JsonParser;
 import xyz.matthewtgm.json.util.JsonHelper;
 import xyz.matthewtgm.tgmlib.TGMLib;
+import xyz.matthewtgm.tgmlib.listeners.ListenerManager;
+import xyz.matthewtgm.tgmlib.listeners.ListenerType;
 import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.announcer.AnnouncementPacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
@@ -59,11 +61,15 @@ public class TGMLibSocket extends WebSocketClient {
 
     public void connect() {
         logger.info("Connecting to socket.");
+        for (ListenerManager.ListenerRunnable runnable : ListenerManager.getListeners().get(ListenerType.WEBSOCKET_CONNECT))
+            runnable.run(this);
         super.connect();
     }
 
     public void reconnect() {
         logger.info("Reconnecting to socket.");
+        for (ListenerManager.ListenerRunnable runnable : ListenerManager.getListeners().get(ListenerType.WEBSOCKET_RECONNECT))
+            runnable.run(this);
         new Thread(super::reconnect).start();
     }
 
@@ -95,6 +101,8 @@ public class TGMLibSocket extends WebSocketClient {
         try {
             if (!isOpen()) reconnectBlocking();
             if (!isOpen()) return;
+            for (ListenerManager.ListenerRunnable runnable : ListenerManager.getListeners().get(ListenerType.WEBSOCKET_SEND))
+                runnable.run(this);
             packet.write(this);
             super.send(packet.toJson().getAsString());
         } catch (Exception e) {

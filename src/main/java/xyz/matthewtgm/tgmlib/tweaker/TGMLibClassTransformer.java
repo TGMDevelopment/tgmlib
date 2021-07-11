@@ -53,6 +53,7 @@ public class TGMLibClassTransformer implements IClassTransformer {
         registerTransformer(new EntityLivingBaseTransformer());
         registerTransformer(new EntityPlayerSPTransformer());
         registerTransformer(new FontRendererTransformer());
+        registerTransformer(new GuiIngameForgeTransformer());
         registerTransformer(new GuiNewChatTransformer());
         registerTransformer(new MinecraftTransformer());
         registerTransformer(new NetHandlerPlayClientTransformer());

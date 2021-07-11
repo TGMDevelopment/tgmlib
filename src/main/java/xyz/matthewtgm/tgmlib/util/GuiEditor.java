@@ -26,6 +26,8 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import xyz.matthewtgm.tgmlib.TGMLib;
+import xyz.matthewtgm.tgmlib.events.TGMLibEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +40,12 @@ public class GuiEditor {
     private static final Map<Class<? extends GuiScreen>, List<GuiEditRunnable>> editMap = new ConcurrentHashMap<>();
 
     public static void addEdit(Class<? extends GuiScreen> screenClz, GuiEditRunnable edit) {
+        if (ForgeHelper.postEvent(new TGMLibEvent.GuiEditEvent.EditAddEvent.Pre(TGMLib.getInstance(), screenClz, edit))) return;
         if (screenClz == null) return;
         if (edit == null) return;
         editMap.putIfAbsent(screenClz, new ArrayList<>());
         editMap.get(screenClz).add(edit);
+        ForgeHelper.postEvent(new TGMLibEvent.GuiEditEvent.EditAddEvent.Post(TGMLib.getInstance(), screenClz, edit));
     }
 
     public static void addEdits(Class<? extends GuiScreen> screenClz, GuiEditRunnable... edits) {
@@ -52,6 +56,7 @@ public class GuiEditor {
     }
 
     public static void removeEdit(Class<? extends GuiScreen> screenClz, GuiEditRunnable edit) {
+        if (ForgeHelper.postEvent(new TGMLibEvent.GuiEditEvent.EditRemoveEvent.Pre(TGMLib.getInstance(), screenClz, edit))) return;
         if (screenClz == null) return;
         if (edit == null) return;
         if (editMap.containsKey(screenClz)) {
@@ -59,6 +64,7 @@ public class GuiEditor {
             if (edits != null && !edits.isEmpty())
                 edits.remove(edit);
         }
+        ForgeHelper.postEvent(new TGMLibEvent.GuiEditEvent.EditRemoveEvent.Post(TGMLib.getInstance(), screenClz, edit));
     }
 
     public static void removeEdits(Class<? extends GuiScreen> screenClz, GuiEditRunnable... edits) {
