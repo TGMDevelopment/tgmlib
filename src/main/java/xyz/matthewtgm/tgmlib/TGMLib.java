@@ -33,7 +33,6 @@ import org.lwjgl.input.Keyboard;
 import xyz.matthewtgm.json.JsonVersion;
 import xyz.matthewtgm.tgmlib.commands.CommandManager;
 import xyz.matthewtgm.tgmlib.core.TGMLibManager;
-import xyz.matthewtgm.tgmlib.events.TitleEvent;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibLogging;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibMain;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
@@ -104,15 +103,6 @@ public class TGMLib {
             public void released() {}
         });
         logger.info("TGMLib started.");
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onTitle(TitleEvent event) {
-        if (event.title != null && !event.title.isEmpty()) {
-            event.title = StringHelper.removeColourCodes(event.title);
-            System.out.println(event.title);
-            if (event.title.equals("poggers")) event.setCanceled(true);
-        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

@@ -30,6 +30,7 @@ public enum EnumTransformerFields {
     displayedSubTitle("displayedSubTitle", "field_175200_y", "y", "Ljava/lang/String;"),
     renderPartialTicks("renderPartialTicks", "field_74281_c", "c", "F"),
     drawnChatLines("drawnChatLines", "field_146253_i", "i", "Ljava/util/List;"),
+    netManager("netManager", "field_147302_e", "c", "Lnet/minecraft/network/NetworkManager;"),
     chatLines("chatLines", "field_146252_h", "h", "Ljava/util/List;"),
     sentMessages("sentMessages", "field_146248_g", "g", "Ljava/util/List;");
 

@@ -18,7 +18,9 @@
 
 package xyz.matthewtgm.tgmlib.events;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.network.NetworkManager;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import xyz.matthewtgm.tgmlib.TGMLib;
@@ -90,6 +92,26 @@ public class TGMLibEvent extends Event {
         public static class Post extends GuiEditEvent {
             public Post(TGMLib tgmLib, Class<? extends GuiScreen> screenClz, GuiEditor.GuiEditRunnable guiEditRunnable) {
                 super(tgmLib, screenClz, guiEditRunnable);
+            }
+        }
+    }
+    public static class CustomRegisterPacketEvent extends TGMLibEvent {
+        public final NetworkManager netManager;
+        public CustomRegisterPacketEvent(TGMLib tgmLib, NetworkManager netManager) {
+            super(tgmLib);
+            this.netManager = netManager;
+        }
+        @Cancelable
+        public static class Pre extends CustomRegisterPacketEvent {
+            public final ByteBuf byteBuf;
+            public Pre(TGMLib tgmLib, NetworkManager netManager, ByteBuf byteBuf) {
+                super(tgmLib, netManager);
+                this.byteBuf = byteBuf;
+            }
+        }
+        public static class Post extends CustomRegisterPacketEvent {
+            public Post(TGMLib tgmLib, NetworkManager netManager) {
+                super(tgmLib, netManager);
             }
         }
     }

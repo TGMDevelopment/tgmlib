@@ -22,7 +22,10 @@ import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.logging.log4j.LogManager;
@@ -53,9 +56,11 @@ public class CosmeticManager {
     private final Map<String, PlayerCosmeticsHolder> cosmeticMap = new HashMap<>();
     @Getter
     private static final List<String> madeRequestsFor = new ArrayList<>();
+    private TGMLibSocket tgmLibSocket;
     private final Logger logger = LogManager.getLogger(TGMLib.NAME + " (" + getClass().getSimpleName() + ")");
 
     public void start() {
+        tgmLibSocket = TGMLib.getManager().getWebSocket();
         initialize();
         MinecraftForge.EVENT_BUS.register(this);
         for (BaseCosmetic cosmetic : cosmetics) PlayerRendererHelper.addLayer(createLayer(cosmetic));
@@ -103,20 +108,26 @@ public class CosmeticManager {
         return new LayerRenderer<AbstractClientPlayer>() {
             public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
                 if (!TGMLib.getManager().getConfigHandler().isShowCosmetics()) return;
-                if (!socket.isOpen() && socket.isClosed() || !socket.isOpen() && socket.isClosing()) socket.reconnect();
-                if (!cosmeticMap.containsKey(player.getUniqueID().toString()) && !madeRequestsFor.contains(player.getUniqueID().toString())) {
-                    socket.send(new CosmeticsRetrievePacket(player.getUniqueID().toString()));
-                    madeRequestsFor.add(player.getUniqueID().toString());
-                }
                 if (cosmeticMap.containsKey(player.getUniqueID().toString())) {
                     List<BaseCosmetic> cosmetics = cosmeticMap.get(player.getUniqueID().toString()).getEnabledCosmetics();
-                    if (cosmetics.contains(cosmetic)) cosmetic.render(player, limbSwing, limbSwingAmount, partialTicks, tickAge, netHeadYaw, netHeadPitch, scale);
+                    if (cosmetics.contains(cosmetic))
+                        cosmetic.render(player, limbSwing, limbSwingAmount, partialTicks, tickAge, netHeadYaw, netHeadPitch, scale);
                 }
             }
             public boolean shouldCombineTextures() {
                 return false;
             }
         };
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onEntityJoinedWorld(EntityJoinWorldEvent event) throws Exception {
+        if (!tgmLibSocket.isOpen() && (tgmLibSocket.isClosed() || tgmLibSocket.isClosing()))
+            tgmLibSocket.reconnectBlocking();
+        if (event.entity instanceof EntityPlayer && !cosmeticMap.containsKey(event.entity.getUniqueID().toString()) && !madeRequestsFor.contains(event.entity.getUniqueID().toString())) {
+            tgmLibSocket.send(new CosmeticsRetrievePacket(event.entity.getUniqueID().toString()));
+            madeRequestsFor.add(event.entity.getUniqueID().toString());
+        }
     }
 
     @SubscribeEvent

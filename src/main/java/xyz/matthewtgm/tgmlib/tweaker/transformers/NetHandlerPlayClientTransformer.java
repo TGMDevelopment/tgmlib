@@ -21,6 +21,7 @@ package xyz.matthewtgm.tgmlib.tweaker.transformers;
 import org.objectweb.asm.tree.*;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
+import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -35,6 +36,8 @@ public class NetHandlerPlayClientTransformer implements TGMLibTransformer {
         for (MethodNode method : classNode.methods) {
             if (EnumTransformerMethods.addToSendQueue.matches(method))
                 method.instructions.insertBefore(method.instructions.getFirst(), call());
+            if (EnumTransformerMethods.handleJoinGame.matches(method))
+                method.instructions.insertBefore(method.instructions.getLast(), register());
         }
     }
 
@@ -42,7 +45,15 @@ public class NetHandlerPlayClientTransformer implements TGMLibTransformer {
         InsnList list = new InsnList();
         list.add(new VarInsnNode(ALOAD, 0)); /* this */
         list.add(new VarInsnNode(ALOAD, 1)); /* packet */
-        list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/NetHandlerPlayClientHook", "callEvent", "(" + EnumTransformerClasses.NetHandlerPlayClient.getName() + EnumTransformerClasses.Packet.getName() + ")V", false)); /* NetHandlerPlayClientHook.callEvent(this, packet); */
+        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "NetHandlerPlayClientHook", "callEvent", "(" + EnumTransformerClasses.NetHandlerPlayClient.getName() + EnumTransformerClasses.Packet.getName() + ")V", false)); /* NetHandlerPlayClientHook.callEvent(this, packet); */
+        return list;
+    }
+
+    private InsnList register() {
+        InsnList list = new InsnList();
+        list.add(new VarInsnNode(ALOAD, 0));
+        list.add(EnumTransformerFields.netManager.getField(EnumTransformerClasses.NetHandlerPlayClient));
+        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "NetHandlerPlayClientHook", "register", "(" + EnumTransformerClasses.NetworkManager.getName() + ")V", false));
         return list;
     }
 
