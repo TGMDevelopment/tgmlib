@@ -32,6 +32,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.*;
+import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.contentcreators.TwitchCloakCosmetic;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.contentcreators.YouTubCloakCosmetic;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.exclusive.MatthewTgmCloakCosmetic;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.exclusive.WyvestCloakCosmetic;
@@ -76,6 +77,8 @@ public class CosmeticManager extends Thread {
         cosmetics.add(new BoosterCloakCosmetic());
         cosmetics.add(new BugHunterCloakCosmetic());
         cosmetics.add(new DarkCheeseIglooCloakCosmetic());
+        cosmetics.add(new DiscordCloakCosmetic());
+        cosmetics.add(new DragonsEyeCloakCosmetic());
         cosmetics.add(new EnchanterCloakCosmetic());
         cosmetics.add(new DeveloperCloakCosmetic());
         cosmetics.add(new KeycapCloakCosmetic());
@@ -84,6 +87,7 @@ public class CosmeticManager extends Thread {
         cosmetics.add(new ModderCloakCosmetic());
         cosmetics.add(new PartnerCloakCosmetic());
         cosmetics.add(new SunsetSkyCloakCosmetic());
+        cosmetics.add(new TwitchCloakCosmetic());
         cosmetics.add(new UwUCloakCosmetic());
         cosmetics.add(new VaporwaveCloakCosmetic());
         cosmetics.add(new WaterMeadowCloakCosmetic());
