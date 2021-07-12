@@ -108,7 +108,7 @@ public class CosmeticManager extends Thread {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onEntityJoinedWorld(EntityJoinWorldEvent event) throws Exception {
+    public void onEntityJoinedWorld(EntityJoinWorldEvent event) {
         if (cosmeticMap.size() > 200)
             cosmeticMap.clear();
         if (madeRequestsFor.size() > 200)

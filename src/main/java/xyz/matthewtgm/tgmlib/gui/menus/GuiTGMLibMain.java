@@ -38,14 +38,14 @@ public class GuiTGMLibMain extends GuiTGMLibBase {
     }
 
     public void initialize() {
-        buttonList.add(new GuiTransFadingImageButton(1, width / 2 - 25, height / 2 - 40, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/keybinds_icon.png")) {
+        buttonList.add(new GuiTransFadingImageButton(1, width / 2 - 52, height / 2 - 10, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/keybinds_icon.png")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY))
                     mc.displayGuiScreen(new GuiTGMLibKeyBinds($this));
                 return false;
             }
         });
-        buttonList.add(new GuiTransFadingImageButton(2, width / 2 + 30, height / 2 - 40, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/settings_icon.png")) {
+        buttonList.add(new GuiTransFadingImageButton(2, width / 2 + 2, height / 2 - 10, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/settings_icon.png")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY))
                     mc.displayGuiScreen(new GuiTGMLibSettings($this));
@@ -54,7 +54,7 @@ public class GuiTGMLibMain extends GuiTGMLibBase {
         });
 
         if (CosmeticManager.isLoaded() && TGMLib.getManager().getWebSocket().isOpen()) {
-            buttonList.add(new GuiTransFadingImageButton(3, width / 2 - 80, height / 2 - 40, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/cosmetics_icon.png")) {
+            buttonList.add(new GuiTransFadingImageButton(3, width / 2 - 25, height / 2 - 63, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/cosmetics_icon.png")) {
                 public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                     if (super.mousePressed(mc, mouseX, mouseY))
                         mc.displayGuiScreen(new GuiTGMLibCosmetics($this));
@@ -65,7 +65,7 @@ public class GuiTGMLibMain extends GuiTGMLibBase {
 
         if (ProfileManager.isLoaded() && TGMLib.getManager().getWebSocket().isOpen()) {
             // TODO: 2021/07/02
-            // x: width / 2 - 25 | y: height / 2 + 20
+            // x: width / 2 - 25 | y: height / 2 + 33
         }
     }
 
