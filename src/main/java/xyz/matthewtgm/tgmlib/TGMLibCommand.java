@@ -20,6 +20,8 @@ package xyz.matthewtgm.tgmlib;
 
 import net.minecraft.util.EnumChatFormatting;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.tgmlib.commands.advanced.Command;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibCosmetics;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibKeyBinds;
@@ -27,6 +29,7 @@ import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibMain;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.announcer.AnnouncementPacket;
 import xyz.matthewtgm.tgmlib.util.ChatHelper;
 import xyz.matthewtgm.tgmlib.util.GuiHelper;
+import xyz.matthewtgm.tgmlib.util.HypixelHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +37,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Command(name = "tgmlib", tabCompleteOptions = {"cosmetics"})
+@Command(name = "tgmlib", tabCompleteOptions = {"cosmetics", "keybinds", "keybindings", "locraw"})
 public class TGMLibCommand {
 
     private final Pattern announcementPattern = Pattern.compile("(\\\".+\\\") (\\\".+\\\") (\\\".+\\\")");
@@ -52,6 +55,16 @@ public class TGMLibCommand {
     @Command.Argument(name = "keybinds", aliases = "keybindings")
     private void keybinds() {
         GuiHelper.open(new GuiTGMLibKeyBinds(null));
+    }
+
+    @Command.Argument(name = "locraw")
+    private void locraw() {
+        ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, HypixelHelper.getLocraw());
+    }
+
+    @Command.Argument(name = "test")
+    private void test() {
+        Logger logger = LogManager.getLogger("TGMLib (TGMLibCommand - Test)");
     }
 
     @Command.Argument(name = "announce")

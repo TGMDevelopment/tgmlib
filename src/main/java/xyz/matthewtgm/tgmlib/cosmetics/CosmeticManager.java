@@ -39,8 +39,10 @@ import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.partners.DarkCheeseIglooCloak
 import xyz.matthewtgm.tgmlib.cosmetics.impl.wings.ChromaDragonWingsCosmetic;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.wings.DragonWingsCosmetic;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.wings.TgmWingsCosmetic;
+import xyz.matthewtgm.tgmlib.events.TGMLibEvent;
 import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
+import xyz.matthewtgm.tgmlib.util.ForgeHelper;
 import xyz.matthewtgm.tgmlib.util.PlayerRendererHelper;
 
 import java.util.*;
@@ -109,8 +111,11 @@ public class CosmeticManager {
                 if (!TGMLib.getManager().getConfigHandler().isShowCosmetics()) return;
                 if (cosmeticMap.containsKey(player.getUniqueID().toString())) {
                     List<BaseCosmetic> cosmetics = cosmeticMap.get(player.getUniqueID().toString()).getEnabledCosmetics();
-                    if (cosmetics.contains(cosmetic))
+                    if (cosmetics.contains(cosmetic)) {
+                        if (ForgeHelper.postEvent(new TGMLibEvent.CosmeticRenderEvent(TGMLib.getInstance(), player, limbSwing, limbSwing, partialTicks, tickAge, netHeadYaw, netHeadPitch, scale, cosmetic, cosmetic.getType())))
+                            return;
                         cosmetic.render(player, limbSwing, limbSwingAmount, partialTicks, tickAge, netHeadYaw, netHeadPitch, scale);
+                    }
                 }
             }
             public boolean shouldCombineTextures() {

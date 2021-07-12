@@ -49,6 +49,7 @@ public class HypixelHelper {
         tickTimer++;
         if (tickTimer % 20 == 0 && ServerHelper.hypixel() && !allowLocrawCancel && !checked) {
             Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw");
+            tickTimer = 0;
             allowLocrawCancel = true;
             checked = true;
         }
@@ -66,15 +67,15 @@ public class HypixelHelper {
             String stripped = StringUtils.stripControlCodes(event.message.getUnformattedText());
             if (stripped.startsWith("{") && stripped.contains("server") && stripped.endsWith("}") && allowLocrawCancel) {
                 if (stripped.contains("limbo")) {
-                    if (limboLoop.get() > 10)
+                    if (limboLoop.get() > 3)
                         return;
                     allowLocrawCancel = false;
                     checked = false;
                     limboLoop.set(limboLoop.get() + 1);
                     return;
                 }
-                JsonObject strippedAsJson = (JsonObject) JsonParser.parse(stripped);
-                locraw = new HypixelLocraw(strippedAsJson.get("server").getAsString(), strippedAsJson.get("mode").getAsString(), strippedAsJson.get("map").getAsString(), strippedAsJson.get("gametype").getAsString(), HypixelLocraw.GameType.getFromLocraw(strippedAsJson.get("gametype").getAsString()));
+                JsonObject strippedAsJson = JsonParser.parse(stripped).getAsJsonObject();
+                locraw = new HypixelLocraw(strippedAsJson.get("server"), strippedAsJson.get("mode"), strippedAsJson.get("map"), strippedAsJson.get("gametype"));
                 allowLocrawCancel = false;
                 limboLoop.set(0);
                 event.setCanceled(true);
@@ -103,12 +104,12 @@ public class HypixelHelper {
             return toJson().getAsString();
         }
 
-        public HypixelLocraw(String serverId, String gameMode, String mapName, String rawGameType, GameType gameType) {
-            this.serverId = serverId;
-            this.gameMode = gameMode;
-            this.mapName = mapName;
-            this.rawGameType = rawGameType;
-            this.gameType = gameType;
+        public HypixelLocraw(Object serverId, Object gameMode, Object mapName, Object rawGameType) {
+            this.serverId = serverId == null ? "" : serverId.toString();
+            this.gameMode = gameMode == null ? "" : gameMode.toString();
+            this.mapName = mapName == null ? "" : mapName.toString();
+            this.rawGameType = rawGameType == null ? "" : rawGameType.toString();
+            this.gameType = GameType.getFromLocraw(this.rawGameType);
         }
 
         public enum GameType {

@@ -50,7 +50,7 @@ public class AnnouncementPacket extends BasePacket {
 
     public void read(TGMLibSocket socket, JsonObject json) {
         JsonObject jsonData = json.get("data").getAsJsonObject();
-        Notifications.push(jsonData.get("title").getAsString(), jsonData.get("description").getAsString());
+        Notifications.push(jsonData.get("title").toString(), jsonData.get("description").toString());
         ChatHelper.sendMessage(EnumChatFormatting.GRAY + "[" + EnumChatFormatting.RED + EnumChatFormatting.BOLD + "TGMLib Announcement" + EnumChatFormatting.RESET + EnumChatFormatting.GRAY + "] [" + jsonData.get("title").getAsString() + "]", jsonData.get("description").getAsString());
     }
 

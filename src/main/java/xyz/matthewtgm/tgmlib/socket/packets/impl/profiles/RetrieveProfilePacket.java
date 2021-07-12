@@ -53,10 +53,10 @@ public class RetrieveProfilePacket extends BasePacket {
         ProfileManager profileManager = TGMLib.getManager().getProfileManager();
         try {
             profileManager.create(
-                    jsonData.get("uuid").getAsString(),
+                    jsonData.get("uuid").toString(),
                     jsonData.get("friend").getAsBoolean(),
-                    ImageIO.read(new URL(jsonData.get("icon_url").getAsString())),
-                    ProfileOnlineStatus.valueOf(jsonData.get("online").getAsString())
+                    ImageIO.read(new URL(jsonData.get("icon_url").toString())),
+                    ProfileOnlineStatus.valueOf(jsonData.get("online").toString())
             );
         } catch (Exception e) {
             e.printStackTrace();

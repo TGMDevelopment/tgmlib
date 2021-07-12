@@ -19,11 +19,14 @@
 package xyz.matthewtgm.tgmlib.events;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.network.NetworkManager;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import xyz.matthewtgm.tgmlib.TGMLib;
+import xyz.matthewtgm.tgmlib.cosmetics.BaseCosmetic;
+import xyz.matthewtgm.tgmlib.cosmetics.CosmeticType;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
 import xyz.matthewtgm.tgmlib.util.GuiEditor;
 
@@ -62,6 +65,38 @@ public class TGMLibEvent extends Event {
         public static class Post extends KeyEvent {
             public Post(TGMLib tgmLib, KeyBind keyBind) {
                 super(tgmLib, keyBind);
+            }
+        }
+    }
+    public static class CosmeticRenderEvent extends TGMLibEvent {
+        public final AbstractClientPlayer player;
+        public final float limbSwing, limbSwingAmount, partialTicks, tickAge, netHeadYaw, netHeadPitch, scale;
+
+        public final BaseCosmetic cosmetic;
+        public final CosmeticType type;
+        public CosmeticRenderEvent(TGMLib tgmLib, AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale, BaseCosmetic cosmetic, CosmeticType type) {
+            super(tgmLib);
+            this.player = player;
+            this.limbSwing = limbSwing;
+            this.limbSwingAmount = limbSwingAmount;
+            this.partialTicks = partialTicks;
+            this.tickAge = tickAge;
+            this.netHeadYaw = netHeadYaw;
+            this.netHeadPitch = netHeadPitch;
+            this.scale = scale;
+            this.cosmetic = cosmetic;
+            this.type = type;
+        }
+        public static class Pre extends TGMLibEvent {
+            public Pre(TGMLib tgmLib) {
+                super(tgmLib);
+                throw new UnsupportedOperationException("CosmeticRenderEvent doesn't have a pre-event!");
+            }
+        }
+        public static class Post extends TGMLibEvent {
+            public Post(TGMLib tgmLib) {
+                super(tgmLib);
+                throw new UnsupportedOperationException("CosmeticRenderEvent doesn't have a post-event!");
             }
         }
     }

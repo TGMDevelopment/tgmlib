@@ -111,9 +111,9 @@ public class TGMLibManager {
 
     private URI websocketUri() {
         if (webSocketTest)
-            return URI.create("ws://localhost:");
+            return URI.create("ws://localhost:INSERT-PORT");
         JsonObject object = JsonApiHelper.getJsonObject("https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/websocket.json", true);
-        String uri = object.get("uri").getAsString();
+        String uri = object.get("uri").toString();
         for (int i = 0; i < object.get("loop").getAsInt(); i++)
             uri = new String(Base64.getDecoder().decode(uri));
         return URI.create(uri);

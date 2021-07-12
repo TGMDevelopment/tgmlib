@@ -49,8 +49,8 @@ public class CosmeticsTogglePacket extends BasePacket {
     public void read(TGMLibSocket socket, JsonObject json) {
         JsonObject jsonData = json.get("data").getAsJsonObject();
         CosmeticManager cosmeticManager = TGMLib.getManager().getCosmeticManager();
-        BaseCosmetic cosmetic = cosmeticManager.getCosmeticFromId(jsonData.get("cosmetic").getAsString());
-        PlayerCosmeticsHolder holder = cosmeticManager.getCosmeticMap().get(jsonData.get("uuid").getAsString());
+        BaseCosmetic cosmetic = cosmeticManager.getCosmeticFromId(jsonData.get("cosmetic").toString());
+        PlayerCosmeticsHolder holder = cosmeticManager.getCosmeticMap().get(jsonData.get("uuid").toString());
         if (jsonData.get("toggled").getAsBoolean()) holder.getEnabledCosmetics().add(cosmetic);
         else holder.getEnabledCosmetics().remove(cosmetic);
     }

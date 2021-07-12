@@ -101,7 +101,7 @@ public class ColourRGB {
     }
 
     public String toJson() {
-        return new JsonObject().add("r", r).add("g", g).add("b", b).add("a", a).getAsString();
+        return new JsonObject().add("red", r).add("green", g).add("blue", b).add("alpha", a).getAsString();
     }
 
     @Override
