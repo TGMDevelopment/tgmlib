@@ -20,6 +20,7 @@ package xyz.matthewtgm.tgmlib.gui.menus;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
 import xyz.matthewtgm.tgmlib.gui.GuiTGMLibBase;
 import xyz.matthewtgm.tgmlib.gui.GuiTransFadingImageButton;
@@ -52,7 +53,7 @@ public class GuiTGMLibMain extends GuiTGMLibBase {
             }
         });
 
-        if (CosmeticManager.isLoaded()) {
+        if (CosmeticManager.isLoaded() && TGMLib.getManager().getWebSocket().isOpen()) {
             buttonList.add(new GuiTransFadingImageButton(3, width / 2 - 80, height / 2 - 40, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/cosmetics_icon.png")) {
                 public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                     if (super.mousePressed(mc, mouseX, mouseY))
@@ -62,7 +63,7 @@ public class GuiTGMLibMain extends GuiTGMLibBase {
             });
         }
 
-        if (ProfileManager.isLoaded()) {
+        if (ProfileManager.isLoaded() && TGMLib.getManager().getWebSocket().isOpen()) {
             // TODO: 2021/07/02
             // x: width / 2 - 25 | y: height / 2 + 20
         }

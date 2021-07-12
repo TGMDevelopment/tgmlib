@@ -86,7 +86,6 @@ public class TGMLibSocket extends WebSocketClient {
 
     public void onClose(int code, String reason, boolean remote) {
         logger.warn("Connection to socket was closed! ({} | {})", code, reason);
-        reconnect();
     }
 
     public void onError(Exception ex) {
@@ -106,8 +105,8 @@ public class TGMLibSocket extends WebSocketClient {
 
     public void send(BasePacket packet) {
         try {
-            if (!isOpen()) reconnectBlocking();
-            if (!isOpen()) return;
+            if (!isOpen())
+                return;
             for (ListenerManager.ListenerRunnable runnable : ListenerManager.getListeners().get(ListenerType.WEBSOCKET_SEND))
                 runnable.run(this);
             packet.write(this);

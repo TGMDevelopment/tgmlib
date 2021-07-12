@@ -114,8 +114,6 @@ public class CosmeticManager extends Thread {
         if (madeRequestsFor.size() > 200)
             madeRequestsFor.clear();
 
-        if (!tgmLibSocket.isOpen() && (tgmLibSocket.isClosed() || tgmLibSocket.isClosing()))
-            tgmLibSocket.reconnectBlocking();
         if (event.entity instanceof EntityPlayer && !cosmeticMap.containsKey(event.entity.getUniqueID().toString()) && !madeRequestsFor.contains(event.entity.getUniqueID().toString()))
             get(event.entity.getUniqueID().toString());
     }

@@ -34,6 +34,7 @@ import xyz.matthewtgm.tgmlib.profiles.ProfileManager;
 import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.other.GameClosePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.other.GameOpenPacket;
+import xyz.matthewtgm.tgmlib.util.Multithreading;
 import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 
 import java.io.File;
@@ -90,6 +91,8 @@ public class TGMLibManager {
             (keyBindConfigHandler = new KeyBindConfigHandler(keyBindConfig)).update();
             (dataHandler = new DataHandler(data)).start();
             fixSocket();
+            if (!webSocket.isOpen())
+                scheduleSocketReconnect();
             (cosmeticManager = new CosmeticManager()).start();
             //(profileManager = new ProfileManager()).start();
 
@@ -120,7 +123,7 @@ public class TGMLibManager {
     }
 
     private TGMLibSocket createWebSocket(TGMLibSocket original) {
-        original.setConnectionLostTimeout(30);
+        original.setConnectionLostTimeout(120);
         original.setTcpNoDelay(true);
         return original;
     }
@@ -131,6 +134,18 @@ public class TGMLibManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void scheduleSocketReconnect() {
+        Multithreading.schedule(new Thread(() -> {
+            try {
+                webSocket.reconnectBlocking();
+                if (!webSocket.isOpen())
+                    scheduleSocketReconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "TGMLib WebSocket Reconnect Thread"), 15, TimeUnit.MINUTES);
     }
 
 }
