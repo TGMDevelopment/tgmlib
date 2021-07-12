@@ -72,7 +72,6 @@ public class CosmeticManager extends Thread {
 
     private void initialize() {
         logger.info("Initializing cosmetics...");
-        cosmetics.add(new AutumnGloomCloakCosmetic());
         cosmetics.add(new BeehiveCloakCosmetic());
         cosmetics.add(new BoosterCloakCosmetic());
         cosmetics.add(new BugHunterCloakCosmetic());
