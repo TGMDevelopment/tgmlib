@@ -39,16 +39,14 @@ import xyz.matthewtgm.tgmlib.cosmetics.impl.cloaks.partners.DarkCheeseIglooCloak
 import xyz.matthewtgm.tgmlib.cosmetics.impl.wings.ChromaDragonWingsCosmetic;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.wings.DragonWingsCosmetic;
 import xyz.matthewtgm.tgmlib.cosmetics.impl.wings.TgmWingsCosmetic;
-import xyz.matthewtgm.tgmlib.events.TGMLibEvent;
 import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
-import xyz.matthewtgm.tgmlib.util.ForgeHelper;
 import xyz.matthewtgm.tgmlib.util.PlayerRendererHelper;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class CosmeticManager {
+public class CosmeticManager extends Thread {
 
     @Getter
     private static boolean loaded;
@@ -65,7 +63,8 @@ public class CosmeticManager {
         tgmLibSocket = TGMLib.getManager().getWebSocket();
         initialize();
         MinecraftForge.EVENT_BUS.register(this);
-        for (BaseCosmetic cosmetic : cosmetics) PlayerRendererHelper.addLayer(createLayer(cosmetic));
+        for (BaseCosmetic cosmetic : cosmetics)
+            PlayerRendererHelper.addLayer(new TGMLibCosmeticLayer(this, cosmetic));
 
         get(Minecraft.getMinecraft().getSession().getProfile().getId().toString());
         loaded = true;
@@ -103,25 +102,6 @@ public class CosmeticManager {
         AtomicReference<BaseCosmetic> gotten = new AtomicReference<>(null);
         cosmetics.stream().filter(cosmetic -> cosmetic.getId().equalsIgnoreCase(id)).findFirst().ifPresent(gotten::set);
         return gotten.get();
-    }
-
-    private LayerRenderer<AbstractClientPlayer> createLayer(BaseCosmetic cosmetic) {
-        return new LayerRenderer<AbstractClientPlayer>() {
-            public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
-                if (!TGMLib.getManager().getConfigHandler().isShowCosmetics()) return;
-                if (cosmeticMap.containsKey(player.getUniqueID().toString())) {
-                    List<BaseCosmetic> cosmetics = cosmeticMap.get(player.getUniqueID().toString()).getEnabledCosmetics();
-                    if (cosmetics.contains(cosmetic)) {
-                        if (ForgeHelper.postEvent(new TGMLibEvent.CosmeticRenderEvent(TGMLib.getInstance(), player, limbSwing, limbSwing, partialTicks, tickAge, netHeadYaw, netHeadPitch, scale, cosmetic, cosmetic.getType())))
-                            return;
-                        cosmetic.render(player, limbSwing, limbSwingAmount, partialTicks, tickAge, netHeadYaw, netHeadPitch, scale);
-                    }
-                }
-            }
-            public boolean shouldCombineTextures() {
-                return false;
-            }
-        };
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

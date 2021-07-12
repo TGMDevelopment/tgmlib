@@ -53,7 +53,8 @@ public class TGMLib {
     @Getter private final Logger logger = LogManager.getLogger(NAME);
 
     public void initialize(File mcDir) {
-        if (initialized) return;
+        if (initialized)
+            return;
         manager.initialize(mcDir);
         initialized = true;
         start();
@@ -61,8 +62,8 @@ public class TGMLib {
 
     private void start() {
         logger.info("Starting TGMLib...");
-        if (!JsonVersion.CURRENT.isAtLeast(2, 4, 0))
-            throw new IllegalStateException("JsonTGM is outdated! (minimum version is 2.4.0)");
+        if (!JsonVersion.CURRENT.isAtLeast(2, 4, 1))
+            throw new IllegalStateException("JsonTGM is outdated! (minimum version is 2.4.1)");
         ForgeHelper.registerEventListeners(
                 this,
                 new CommandQueue(),
