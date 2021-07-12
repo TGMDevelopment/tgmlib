@@ -50,7 +50,7 @@ public class PrivateMessagePacket extends BasePacket {
         if (!jsonData.hasKey("uuid") || !jsonData.hasKey("message")) return;
 
         ProfileManager profileManager = TGMLib.getManager().getProfileManager();
-        profileManager.receiveMessage(jsonData.get("uuid").getAsString(), jsonData.get("message").getAsString());
+        profileManager.receiveMessage(jsonData.get("uuid").toString(), jsonData.get("message").toString());
     }
 
     public void handle(TGMLibSocket socket) {}

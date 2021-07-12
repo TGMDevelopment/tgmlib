@@ -51,7 +51,7 @@ public class OnlineStatusUpdatePacket extends BasePacket {
         if (!jsonData.hasKey("online_status") || !jsonData.hasKey("uuid")) return;
 
         ProfileManager profileManager = TGMLib.getManager().getProfileManager();
-        profileManager.updateOnlineStatus(jsonData.get("uuid").getAsString(), ProfileOnlineStatus.valueOf(jsonData.get("online_status").getAsString()), false);
+        profileManager.updateOnlineStatus(jsonData.get("uuid").toString(), ProfileOnlineStatus.valueOf(jsonData.get("online_status").toString()), false);
     }
 
     public void handle(TGMLibSocket socket) {}
