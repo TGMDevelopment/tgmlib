@@ -25,12 +25,15 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
 
 public enum EnumTransformerMethods {
 
-    runGameLoop("runGameLoop", "func_71411_J", "av", "()V"),
+    runTick("runTick", "func_71407_l", "s", "()V"),
     dispatchKeypresses("dispatchKeypresses", "func_152348_aa", "Z", "()V"),
+    renderString("renderString", "func_180455_b", "b", "(Ljava/lang/String;FFIZ)I"),
     updateTimer("updateTimer", "func_74275_a", "a", "()V"),
     addPotionEffect("addPotionEffect", "func_70690_d", "c", "(Lnet/minecraft/potion/PotionEffect;)V", "(" + EnumTransformerClasses.PotionEffect.getName() +")V"),
     dropOneItem("dropOneItem", "func_71040_bB", "a", "(Z)Lnet/minecraft/entity/item/EntityItem;", "(Z)Luz;"),
+    sendChatMessage("sendChatMessage", "func_71165_d", "e", "(Ljava/lang/String;)V"),
     addToSendQueue("addToSendQueue", "func_147297_a", "a", "(Lnet/minecraft/network/Packet;)V"),
+    handleJoinGame("handleJoinGame", "func_147282_a", "a", "(Lnet/minecraft/network/play/server/S01PacketJoinGame;)V", "(Lgt;)V"),
     channelRead0("channelRead0", "channelRead0", "a", "(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V"),
     shouldRender("shouldRender", "func_177071_a", "a", "(Lnet/minecraft/entity/Entity;Lnet/minecraft/client/renderer/culling/ICamera;DDD)Z", "(Lpk;Lbia;DDD)Z"),
     getLocationCape("getLocationCape", "func_110303_q", "k", "()Lnet/minecraft/util/ResourceLocation;", "()Ljy;"),

@@ -22,6 +22,7 @@ import org.objectweb.asm.tree.*;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
+import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -33,17 +34,14 @@ public class NetworkManagerTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.channelRead0.matches(method))
-                method.instructions.insertBefore(method.instructions.getFirst(), call());
+            if (EnumTransformerMethods.channelRead0.matches(method)) {
+                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+                    list.add(new VarInsnNode(ALOAD, 0)); /* this */
+                    list.add(new VarInsnNode(ALOAD, 1)); /* packet */
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/NetworkManagerHook", "callEvent", "(" + EnumTransformerClasses.NetworkManager.getName() + EnumTransformerClasses.Packet.getName() + ")V", false)); /* NetworkManagerHook.callEvent(this, packet); */
+                }));
+            }
         }
-    }
-
-    private InsnList call() {
-        InsnList list = new InsnList();
-        list.add(new VarInsnNode(ALOAD, 0)); /* this */
-        list.add(new VarInsnNode(ALOAD, 1)); /* packet */
-        list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/NetworkManagerHook", "callEvent", "(" + EnumTransformerClasses.NetworkManager.getName() + EnumTransformerClasses.Packet.getName() + ")V", false)); /* NetworkManagerHook.callEvent(this, packet); */
-        return list;
     }
 
 }

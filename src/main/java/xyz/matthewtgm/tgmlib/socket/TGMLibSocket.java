@@ -31,19 +31,25 @@ import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.parser.JsonParser;
 import xyz.matthewtgm.json.util.JsonHelper;
 import xyz.matthewtgm.tgmlib.TGMLib;
+import xyz.matthewtgm.tgmlib.listeners.ListenerManager;
+import xyz.matthewtgm.tgmlib.listeners.ListenerType;
 import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.announcer.AnnouncementPacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsTogglePacket;
+import xyz.matthewtgm.tgmlib.socket.packets.impl.other.GameClosePacket;
+import xyz.matthewtgm.tgmlib.socket.packets.impl.other.GameOpenPacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.profiles.OnlineStatusUpdatePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.profiles.PrivateMessagePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.profiles.RetrieveProfilePacket;
 import xyz.matthewtgm.tgmlib.util.ChatHelper;
+import xyz.matthewtgm.tgmlib.util.Multithreading;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class TGMLibSocket extends WebSocketClient {
 
@@ -57,11 +63,15 @@ public class TGMLibSocket extends WebSocketClient {
 
     public void connect() {
         logger.info("Connecting to socket.");
+        for (ListenerManager.ListenerRunnable runnable : ListenerManager.getListeners().get(ListenerType.WEBSOCKET_CONNECT))
+            runnable.run(this);
         super.connect();
     }
 
     public void reconnect() {
         logger.info("Reconnecting to socket.");
+        for (ListenerManager.ListenerRunnable runnable : ListenerManager.getListeners().get(ListenerType.WEBSOCKET_RECONNECT))
+            runnable.run(this);
         new Thread(super::reconnect).start();
     }
 
@@ -76,12 +86,16 @@ public class TGMLibSocket extends WebSocketClient {
 
     public void onClose(int code, String reason, boolean remote) {
         logger.warn("Connection to socket was closed! ({} | {})", code, reason);
-        reconnect();
     }
 
     public void onError(Exception ex) {
         if (ex instanceof WebsocketNotConnectedException) {
             reconnect();
+            return;
+        }
+
+        if (ex.getMessage().contains("WebSocketClient objects are not reuseable")) {
+            Multithreading.schedule(TGMLib.getManager()::fixSocket, 3, TimeUnit.SECONDS);
             return;
         }
 
@@ -91,8 +105,10 @@ public class TGMLibSocket extends WebSocketClient {
 
     public void send(BasePacket packet) {
         try {
-            if (!isOpen()) reconnectBlocking();
-            if (!isOpen()) return;
+            if (!isOpen())
+                return;
+            for (ListenerManager.ListenerRunnable runnable : ListenerManager.getListeners().get(ListenerType.WEBSOCKET_SEND))
+                runnable.run(this);
             packet.write(this);
             super.send(packet.toJson().getAsString());
         } catch (Exception e) {
@@ -115,12 +131,14 @@ public class TGMLibSocket extends WebSocketClient {
         }
     }
 
-    public void addOpenListener(TGMLibSocket.OpenRunnable runnable) {
+    public TGMLibSocket addOpenListener(TGMLibSocket.OpenRunnable runnable) {
         openListeners.add(runnable);
+        return this;
     }
 
-    public void removeOpenListener(TGMLibSocket.OpenRunnable runnable) {
+    public TGMLibSocket removeOpenListener(TGMLibSocket.OpenRunnable runnable) {
         openListeners.remove(runnable);
+        return this;
     }
 
     static {
@@ -132,9 +150,14 @@ public class TGMLibSocket extends WebSocketClient {
         packets.put(AnnouncementPacket.class, 2f);
 
         /* Profiles. */
-        packets.put(RetrieveProfilePacket.class, 3f);
-        packets.put(PrivateMessagePacket.class, 4f);
-        packets.put(OnlineStatusUpdatePacket.class, 5f);
+        /* IDs 3 and 4 are occupied on the server. */
+        packets.put(RetrieveProfilePacket.class, 5f);
+        packets.put(PrivateMessagePacket.class, 6f);
+        packets.put(OnlineStatusUpdatePacket.class, 7f);
+
+        /* Game. */
+        packets.put(GameOpenPacket.class, 8f);
+        packets.put(GameClosePacket.class, 9f);
     }
 
     public interface OpenRunnable {

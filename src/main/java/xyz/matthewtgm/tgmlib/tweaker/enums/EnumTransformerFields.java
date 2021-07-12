@@ -18,20 +18,24 @@
 
 package xyz.matthewtgm.tgmlib.tweaker.enums;
 
+import lombok.Getter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.FieldInsnNode;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
 
 public enum EnumTransformerFields {
 
-    timer("timer", "field_71428_T", "Y", "Lnet/minecraft/util/Timer"),
+    timer("timer", "field_71428_T", "Y", "Lnet/minecraft/util/Timer;"),
+    displayedTitle("displayedTitle", "field_175201_x", "x", "Ljava/lang/String;"),
+    displayedSubTitle("displayedSubTitle", "field_175200_y", "y", "Ljava/lang/String;"),
     renderPartialTicks("renderPartialTicks", "field_74281_c", "c", "F"),
     drawnChatLines("drawnChatLines", "field_146253_i", "i", "Ljava/util/List;"),
+    netManager("netManager", "field_147302_e", "c", "Lnet/minecraft/network/NetworkManager;"),
     chatLines("chatLines", "field_146252_h", "h", "Ljava/util/List;"),
     sentMessages("sentMessages", "field_146248_g", "g", "Ljava/util/List;");
 
-    private String name;
-    private String type;
+    @Getter private String name;
+    @Getter private String type;
 
     EnumTransformerFields(String deobfName, String seargeName, String notchName18, String type) {
         this.type = type;

@@ -48,11 +48,11 @@ public enum ChatColour {
     private final boolean isFormat;
     private final String toString;
 
-    ChatColour(final char code) {
+    ChatColour(char code) {
         this(code, false);
     }
 
-    ChatColour(final char code, final boolean isFormat) {
+    ChatColour(char code, boolean isFormat) {
         this.code = code;
         this.isFormat = isFormat;
         this.toString = new String(new char[] { COLOR_CHAR.charAt(0), code });

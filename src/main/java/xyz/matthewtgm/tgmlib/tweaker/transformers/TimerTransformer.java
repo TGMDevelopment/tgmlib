@@ -23,6 +23,7 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
+import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -34,17 +35,14 @@ public class TimerTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.updateTimer.matches(method))
-                method.instructions.insertBefore(method.instructions.getLast(), updatePartialTicks());
+            if (EnumTransformerMethods.updateTimer.matches(method)) {
+                method.instructions.insertBefore(method.instructions.getLast(), AsmHelper.createQuickInsnList(list -> {
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(EnumTransformerFields.renderPartialTicks.getField(EnumTransformerClasses.Timer));
+                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "TimerHook", "updatePartialTicks", "(F;)V", false));
+                }));
+            }
         }
-    }
-
-    private InsnList updatePartialTicks() {
-        InsnList list = new InsnList();
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(EnumTransformerFields.renderPartialTicks.getField(EnumTransformerClasses.Timer));
-        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "TimerHook", "updatePartialTicks", "(F;)V", false));
-        return list;
     }
 
 }

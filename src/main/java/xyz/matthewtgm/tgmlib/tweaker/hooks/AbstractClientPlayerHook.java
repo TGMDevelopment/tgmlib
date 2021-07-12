@@ -21,12 +21,28 @@ package xyz.matthewtgm.tgmlib.tweaker.hooks;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
+import xyz.matthewtgm.tgmlib.cosmetics.PlayerCosmeticsHolder;
+import xyz.matthewtgm.tgmlib.files.ConfigHandler;
+
+import java.util.Map;
 
 public class AbstractClientPlayerHook {
 
     public static boolean returnValue(AbstractClientPlayer player) {
         CosmeticManager cosmeticManager = TGMLib.getManager().getCosmeticManager();
-        return TGMLib.getManager().getConfigHandler().isOverrideCapes() && TGMLib.getManager().getConfigHandler().isShowCosmetics() && cosmeticManager.getCosmeticMap().containsKey(player.getUniqueID().toString()) && !cosmeticManager.getCosmeticMap().get(player.getUniqueID().toString()).getEnabledCloakCosmetics().isEmpty();
+        ConfigHandler configHandler = TGMLib.getManager().getConfigHandler();
+        if (configHandler.isOverrideCapes() && configHandler.isShowCosmetics()) {
+            if (!cosmeticManager.getCosmeticMap().containsKey(player.getUniqueID().toString()))
+                return false;
+            Map<String, PlayerCosmeticsHolder> cosmeticMap = cosmeticManager.getCosmeticMap();
+            if (cosmeticMap == null || cosmeticMap.isEmpty())
+                return false;
+            PlayerCosmeticsHolder cosmeticsHolder = cosmeticMap.get(player.getUniqueID().toString());
+            if (cosmeticsHolder == null || cosmeticsHolder.getEnabledCosmetics() == null)
+                return false;
+            return !cosmeticsHolder.getEnabledCosmetics().isEmpty();
+        }
+        return false;
     }
 
 }

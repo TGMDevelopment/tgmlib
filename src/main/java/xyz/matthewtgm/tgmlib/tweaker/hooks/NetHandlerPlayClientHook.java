@@ -18,15 +18,34 @@
 
 package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraftforge.common.MinecraftForge;
+import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.events.PacketEvent;
+import xyz.matthewtgm.tgmlib.events.TGMLibEvent;
+import xyz.matthewtgm.tgmlib.util.ForgeHelper;
+
+import java.nio.charset.StandardCharsets;
 
 public class NetHandlerPlayClientHook {
 
     public static void callEvent(NetHandlerPlayClient netHandler, Packet<?> packet) {
         MinecraftForge.EVENT_BUS.post(new PacketEvent.SendEvent(packet, netHandler));
+    }
+
+    public static void register(NetworkManager netManager) {
+        ByteBuf byteBuf = Unpooled.buffer();
+        byteBuf.writeBytes("TGMLib".getBytes(StandardCharsets.UTF_8));
+        if (ForgeHelper.postEvent(new TGMLibEvent.CustomRegisterPacketEvent.Pre(TGMLib.getInstance(), netManager, byteBuf)))
+            return;
+        netManager.sendPacket(new C17PacketCustomPayload("REGISTER", new PacketBuffer(byteBuf)));
+        ForgeHelper.postEvent(new TGMLibEvent.CustomRegisterPacketEvent.Post(TGMLib.getInstance(), netManager));
     }
 
 }

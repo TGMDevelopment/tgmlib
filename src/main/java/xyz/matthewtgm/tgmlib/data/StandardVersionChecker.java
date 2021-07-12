@@ -30,19 +30,19 @@ public class StandardVersionChecker {
     }
 
     public String getLatestVersion() {
-        return versionObject.get("version").getAsString();
+        return versionObject.get("version").toString();
     }
 
     public String getLatestBeta() {
-        return versionObject.get("beta").getAsString();
+        return versionObject.get("beta").toString();
     }
 
     public String getDownloadUrl() {
-        return versionObject.get("download").getAsString();
+        return versionObject.get("download").toString();
     }
 
     public String getBetaDownloadUrl() {
-        return versionObject.get("beta_download").getAsString();
+        return versionObject.get("beta_download").toString();
     }
 
     public boolean isLatestVersion(String version) {

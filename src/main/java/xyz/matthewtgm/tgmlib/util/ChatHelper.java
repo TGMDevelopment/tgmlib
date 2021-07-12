@@ -28,7 +28,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class ChatHelper {
 
-    public static final String tgmLibChatPrefix = EnumChatFormatting.GRAY + "[" + EnumChatFormatting.GOLD + EnumChatFormatting.BOLD.toString() + "TGMLib" + EnumChatFormatting.RESET + EnumChatFormatting.GRAY.toString() + "]";
+    public static final String tgmLibChatPrefix = ChatColour.GRAY + "[" + ChatColour.GOLD + ChatColour.BOLD + "TGMLib" + ChatColour.RESET + ChatColour.GRAY + "]";
 
     /**
      * @param msg The message to send.

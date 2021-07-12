@@ -30,7 +30,7 @@ public class PrivateMessagePacket extends BasePacket {
     private final String message;
 
     public PrivateMessagePacket(String uuid, String message) {
-        super("SEND_PM", "PROFILES", 4f);
+        super("SEND_PM", "PROFILES", 6f);
         this.uuid = uuid;
         this.message = message;
     }

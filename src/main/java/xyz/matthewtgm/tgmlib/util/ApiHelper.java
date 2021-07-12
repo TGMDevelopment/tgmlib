@@ -94,4 +94,11 @@ public class ApiHelper {
         return JsonParser.parse(getJsonOnline(uri));
     }
 
+    public static String fetchUuid(String username) {
+        JsonElement response = getParsedJsonOnline("https://api.mojang.com/users/profiles/minecraft/" + username);
+        if (response == null)
+            return null;
+        return response.getAsJsonObject().get("id").getAsString();
+    }
+
 }

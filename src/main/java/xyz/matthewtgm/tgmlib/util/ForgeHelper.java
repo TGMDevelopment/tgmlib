@@ -23,6 +23,7 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -30,6 +31,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ForgeHelper {
 
     @Getter private static final List<Object> registeredListeners = new CopyOnWriteArrayList<>();
+
+    public static boolean postEvent(Event event) {
+        return MinecraftForge.EVENT_BUS.post(event);
+    }
 
     public static void registerEventListener(Object listener) {
         if (!registeredListeners.contains(listener)) {

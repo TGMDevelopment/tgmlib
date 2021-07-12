@@ -31,7 +31,7 @@ public class OnlineStatusUpdatePacket extends BasePacket {
     private final ProfileOnlineStatus onlineStatus;
 
     public OnlineStatusUpdatePacket(String uuid, ProfileOnlineStatus onlineStatus) {
-        super("ONLINE_STATUS_UPDATE", "PROFILES", 5f);
+        super("ONLINE_STATUS_UPDATE", "PROFILES", 7f);
         this.uuid = uuid;
         this.onlineStatus = onlineStatus;
     }

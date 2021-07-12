@@ -22,7 +22,7 @@ plugins {
     id "java"
 }
 
-archivesBaseName = "${mod_name}-${mod_ver}"
+archivesBaseName = mod_name
 version = mod_ver
 group = mod_group
 
@@ -59,7 +59,7 @@ configurations {
 
 /* Define dependencies, also where dependencies are automatically handled. */
 dependencies {
-    shade('xyz.matthewtgm:JsonTGM:2.4.1')
+    shade('xyz.matthewtgm:JsonTGM:2.5.0')
     shade('xyz.matthewtgm:TGMConfig:2.2')
     shade('org.java-websocket:Java-WebSocket:1.5.1')
     implementation('org.projectlombok:lombok:1.18.16')
@@ -68,7 +68,6 @@ dependencies {
 
 /* Set the duplicatesStrategy and define configs. */
 jar {
-    archiveName = "${archivesBaseName}.jar"
     enabled = false
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest.attributes(
@@ -86,10 +85,6 @@ shadowJar {
     configurations = [project.configurations.shade]
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-    //relocate('com.google.common', 'tgmlib.com.google.common')
-
-    archiveBaseName.set(archivesBaseName)
-    archiveVersion.set('')
     archiveClassifier.set('')
 }
 

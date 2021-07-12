@@ -130,6 +130,10 @@ public class GlobalMinecraft {
         return instance.theWorld;
     }
 
+    public static void displayGuiScreen(GuiScreen screen) {
+        instance.displayGuiScreen(screen);
+    }
+
     public static Minecraft getInstance() {
         return instance;
     }
