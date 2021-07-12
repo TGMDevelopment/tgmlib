@@ -24,6 +24,8 @@ import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
 import xyz.matthewtgm.tgmlib.cosmetics.PlayerCosmeticsHolder;
 import xyz.matthewtgm.tgmlib.files.ConfigHandler;
 
+import java.util.Map;
+
 public class AbstractClientPlayerHook {
 
     public static boolean returnValue(AbstractClientPlayer player) {
@@ -32,7 +34,12 @@ public class AbstractClientPlayerHook {
         if (configHandler.isOverrideCapes() && configHandler.isShowCosmetics()) {
             if (!cosmeticManager.getCosmeticMap().containsKey(player.getUniqueID().toString()))
                 return false;
-            PlayerCosmeticsHolder cosmeticsHolder = cosmeticManager.getCosmeticMap().get(player.getUniqueID().toString());
+            Map<String, PlayerCosmeticsHolder> cosmeticMap = cosmeticManager.getCosmeticMap();
+            if (cosmeticMap == null || cosmeticMap.isEmpty())
+                return false;
+            PlayerCosmeticsHolder cosmeticsHolder = cosmeticMap.get(player.getUniqueID().toString());
+            if (cosmeticsHolder == null || cosmeticsHolder.getEnabledCosmetics() == null)
+                return false;
             return !cosmeticsHolder.getEnabledCosmetics().isEmpty();
         }
         return false;

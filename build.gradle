@@ -22,7 +22,7 @@ plugins {
     id "java"
 }
 
-archivesBaseName = "${mod_name}-${mod_ver}"
+archivesBaseName = mod_name
 version = mod_ver
 group = mod_group
 

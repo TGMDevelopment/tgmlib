@@ -120,7 +120,7 @@ public class TGMLibManager {
     }
 
     private TGMLibSocket createWebSocket(TGMLibSocket original) {
-        original.setConnectionLostTimeout(120);
+        original.setConnectionLostTimeout(30);
         original.setTcpNoDelay(true);
         return original;
     }
