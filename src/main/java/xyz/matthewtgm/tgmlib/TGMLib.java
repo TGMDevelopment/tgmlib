@@ -47,12 +47,14 @@ import java.util.List;
 public class TGMLib {
 
     public static final String NAME = "@NAME@", ID = "@ID@", VER = "@VER@", TRANSFORMER = TGMLibClassTransformer.class.getName();
-    @Getter private static final TGMLib instance = new TGMLib();
-    @Getter private static final TGMLibManager manager = new TGMLibManager();
+    private static TGMLib instance;
+    @Getter private static TGMLibManager manager;
     @Getter private static boolean initialized = false;
     @Getter private final Logger logger = LogManager.getLogger(NAME);
 
     public void initialize(File mcDir) {
+        if (manager == null)
+            manager = new TGMLibManager();
         if (initialized)
             return;
         manager.initialize(mcDir);
@@ -106,10 +108,10 @@ public class TGMLib {
         logger.info("TGMLib started.");
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onGuiOpen(GuiScreenEvent.InitGuiEvent event) {
-        if (event.gui instanceof GuiMainMenu && !manager.getDataHandler().isReceivedPrompt())
-            GlobalMinecraft.displayGuiScreen(new GuiTGMLibLogging(event.gui));
+    public static TGMLib getInstance() {
+        if (instance == null)
+            instance = new TGMLib();
+        return instance;
     }
 
 }

@@ -57,7 +57,7 @@ configurations {
     implementation.extendsFrom(shade)
 }
 
-/* Define dependencies, also where dependencies are automatically handled. */
+/* Define dependencies. */
 dependencies {
     shade('xyz.matthewtgm:JsonTGM:2.5.0')
     shade('xyz.matthewtgm:TGMConfig:2.2')
