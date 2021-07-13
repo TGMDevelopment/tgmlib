@@ -42,7 +42,7 @@ public abstract class BaseCloakCosmetic extends BaseCosmetic {
 
     public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
         ResourceLocation texture = texture();
-        if (texture != null && player.hasPlayerInfo() && !player.isInvisible() && player.isWearing(EnumPlayerModelParts.CAPE) && show(player)) {
+        if (texture != null && player.hasPlayerInfo() && !player.isInvisible() && player.isWearing(EnumPlayerModelParts.CAPE) && player.getLocationCape() == null) {
             GlStateManager.color(1f, 1f, 1f, 1f);
             Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
             GlStateManager.pushMatrix();
@@ -74,14 +74,6 @@ public abstract class BaseCloakCosmetic extends BaseCosmetic {
             model.render(player, limbSwing, limbSwingAmount, tickAge, netHeadYaw, netHeadPitch, scale);
             GlStateManager.popMatrix();
         }
-    }
-
-    private boolean show(AbstractClientPlayer player) {
-        boolean override = TGMLib.getManager().getConfigHandler().isOverrideCapes();
-
-        if (override) return true;
-        if (player.getLocationCape() == null) return true;
-        return false;
     }
 
     private static class CloakModel extends ModelBase {

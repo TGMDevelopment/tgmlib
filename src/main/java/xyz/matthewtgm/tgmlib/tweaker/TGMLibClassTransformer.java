@@ -38,6 +38,7 @@ import java.util.Collection;
 public class TGMLibClassTransformer implements IClassTransformer {
 
     private static boolean created;
+    private static boolean registeredTransformers;
     private static Logger logger;
     private static Multimap<String, TGMLibTransformer> transformerMap;
 
@@ -46,9 +47,14 @@ public class TGMLibClassTransformer implements IClassTransformer {
 
     public TGMLibClassTransformer() {
         logger = LogManager.getLogger(TGMLib.NAME + " (TGMLibClassTransformer)");
-        transformerMap = ArrayListMultimap.create();
-        if (created) return;
+        if (!registeredTransformers && transformerMap != null && !transformerMap.isEmpty())
+            transformerMap.clear();
+        if (created) {
+            System.out.println("TGMLibClassTransformer was already created, returning.");
+            return;
+        }
         created = true;
+        transformerMap = ArrayListMultimap.create();
         registerTransformer(new AbstractClientPlayerTransformer());
         registerTransformer(new EntityLivingBaseTransformer());
         registerTransformer(new EntityPlayerSPTransformer());
@@ -60,10 +66,12 @@ public class TGMLibClassTransformer implements IClassTransformer {
         registerTransformer(new NetworkManagerTransformer());
         registerTransformer(new RenderTransformer());
         registerTransformer(new TimerTransformer());
+        registeredTransformers = true;
     }
 
     private void registerTransformer(TGMLibTransformer transformer) {
-        for (String className : transformer.getClassNames()) transformerMap.put(className, transformer);
+        for (String className : transformer.getClassNames())
+            transformerMap.put(className, transformer);
     }
 
     public byte[] transform(String name, String transformedName, byte[] bytes) {
