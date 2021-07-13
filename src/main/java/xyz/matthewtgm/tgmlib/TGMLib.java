@@ -21,25 +21,20 @@ package xyz.matthewtgm.tgmlib;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 import xyz.matthewtgm.json.JsonVersion;
 import xyz.matthewtgm.tgmlib.commands.CommandManager;
 import xyz.matthewtgm.tgmlib.core.TGMLibManager;
-import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibLogging;
+import xyz.matthewtgm.tgmlib.data.ColourRGB;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibMain;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBindManager;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
 import xyz.matthewtgm.tgmlib.util.*;
-import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 
 import java.io.File;
 import java.util.List;
@@ -104,6 +99,22 @@ public class TGMLib {
             }
             public void held() {}
             public void released() {}
+        });
+        KeyBindManager.register(new KeyBind(Keyboard.KEY_NUMPAD0) {
+            public String name() {
+                return "Notification Test";
+            }
+            public String category() {
+                return "TGMLib";
+            }
+            public void pressed() {
+                Notifications.push("Hello, World!", "I'm a notification!");
+                Notifications.push("Hello, World!", "I'm a notification with a custom duration :)", 10);
+            }
+            public void held() {}
+            public void released() {
+                Notifications.push("Hello, World!", "I'm a coloured notification!", new ColourRGB(227, 176, 25));
+            }
         });
         logger.info("TGMLib started.");
     }

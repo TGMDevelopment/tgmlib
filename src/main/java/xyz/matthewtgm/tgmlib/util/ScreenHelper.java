@@ -63,13 +63,13 @@ public class ScreenHelper {
     }
 
    private static void makeNullChecks() {
-       if (resolution == null) resolution = new ScaledResolution(Minecraft.getMinecraft());
+       if (resolution == null)
+           resolution = new ScaledResolution(Minecraft.getMinecraft());
    }
 
    @SubscribeEvent
     protected void onGameOverlayRendered(RenderGameOverlayEvent event) {
-       if (resolution == null)
-           resolution = event.resolution;
+       resolution = event.resolution;
    }
 
 }
