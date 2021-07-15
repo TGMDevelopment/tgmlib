@@ -20,13 +20,28 @@ package xyz.matthewtgm.tgmlib.data;
 
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.util.JsonApiHelper;
+import xyz.matthewtgm.tgmlib.util.Multithreading;
+
+import java.util.concurrent.TimeUnit;
 
 public class StandardVersionChecker {
 
-    private final JsonObject versionObject;
+    private final String url;
+    private JsonObject versionObject;
+
+    public StandardVersionChecker(String url, boolean periodicallyFetch) {
+        this.url = url;
+        if (periodicallyFetch)
+            Multithreading.schedule(this::fetch, 0, 10, TimeUnit.MINUTES);
+    }
 
     public StandardVersionChecker(String url) {
+        this(url, false);
+    }
+
+    public StandardVersionChecker fetch() {
         versionObject = JsonApiHelper.getJsonObject(url);
+        return this;
     }
 
     public String getLatestVersion() {

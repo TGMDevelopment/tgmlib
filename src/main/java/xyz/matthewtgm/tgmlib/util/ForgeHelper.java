@@ -44,10 +44,8 @@ public class ForgeHelper {
     }
 
     public static void unregisterEventListener(Object listener) {
-        if (registeredListeners.contains(listener)) {
-            MinecraftForge.EVENT_BUS.unregister(listener);
-            registeredListeners.remove(listener);
-        }
+        MinecraftForge.EVENT_BUS.unregister(listener);
+        registeredListeners.remove(listener);
     }
 
     /**
@@ -55,11 +53,13 @@ public class ForgeHelper {
      * @author MatthewTGM
      */
     public static void registerEventListeners(Object... listeners) {
-        for (Object listener : listeners) registerEventListener(listener);
+        for (Object listener : listeners)
+            registerEventListener(listener);
     }
 
     public static void unregisterEventListeners(Object... listeners) {
-        for (Object listener : listeners) unregisterEventListener(listener);
+        for (Object listener : listeners)
+            unregisterEventListener(listener);
     }
 
     public static boolean isModLoaded(String id) {

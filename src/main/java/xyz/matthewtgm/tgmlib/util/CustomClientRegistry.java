@@ -23,6 +23,7 @@ import net.minecraft.client.settings.KeyBinding;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class CustomClientRegistry {
 
@@ -31,8 +32,9 @@ public class CustomClientRegistry {
     }
 
     public static void unregisterKeyBinding(KeyBinding key) {
-        if (Arrays.asList(Minecraft.getMinecraft().gameSettings.keyBindings).contains(key))
-            Minecraft.getMinecraft().gameSettings.keyBindings = ArrayUtils.remove(Minecraft.getMinecraft().gameSettings.keyBindings, Arrays.asList(Minecraft.getMinecraft().gameSettings.keyBindings).indexOf(key));
+        List<KeyBinding> keyBindingList = Arrays.asList(Minecraft.getMinecraft().gameSettings.keyBindings);
+        if (keyBindingList.contains(key))
+            Minecraft.getMinecraft().gameSettings.keyBindings = ArrayUtils.remove(Minecraft.getMinecraft().gameSettings.keyBindings, keyBindingList.indexOf(key));
     }
 
 }

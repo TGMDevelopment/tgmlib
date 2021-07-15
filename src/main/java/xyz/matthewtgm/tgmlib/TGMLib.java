@@ -29,7 +29,6 @@ import org.lwjgl.input.Keyboard;
 import xyz.matthewtgm.json.JsonVersion;
 import xyz.matthewtgm.tgmlib.commands.CommandManager;
 import xyz.matthewtgm.tgmlib.core.TGMLibManager;
-import xyz.matthewtgm.tgmlib.data.ColourRGB;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibMain;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBindManager;
@@ -99,22 +98,6 @@ public class TGMLib {
             }
             public void held() {}
             public void released() {}
-        });
-        KeyBindManager.register(new KeyBind(Keyboard.KEY_NUMPAD0) {
-            public String name() {
-                return "Notification Test";
-            }
-            public String category() {
-                return "TGMLib";
-            }
-            public void pressed() {
-                Notifications.push("Hello, World!", "I'm a notification!");
-                Notifications.push("Hello, World!", "I'm a notification with a custom duration :)", 10);
-            }
-            public void held() {}
-            public void released() {
-                Notifications.push("Hello, World!", "I'm a coloured notification!", new ColourRGB(227, 176, 25));
-            }
         });
         logger.info("TGMLib started.");
     }

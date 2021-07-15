@@ -18,7 +18,6 @@
 
 package xyz.matthewtgm.tgmlib.util;
 
-import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -27,7 +26,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ScreenHelper {
 
-   @Getter
    private static ScaledResolution resolution;
 
    public static int getScaledWidth() {
@@ -71,5 +69,10 @@ public class ScreenHelper {
     protected void onGameOverlayRendered(RenderGameOverlayEvent event) {
        resolution = event.resolution;
    }
+
+    public static ScaledResolution getResolution() {
+       makeNullChecks();
+        return resolution;
+    }
 
 }

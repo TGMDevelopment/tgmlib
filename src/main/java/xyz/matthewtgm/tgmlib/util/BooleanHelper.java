@@ -30,4 +30,8 @@ public class BooleanHelper {
         return false;
     }
 
+    public static Boolean objectify(boolean bool) {
+        return new Boolean(bool);
+    }
+
 }

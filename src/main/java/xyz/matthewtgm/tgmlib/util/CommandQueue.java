@@ -21,22 +21,26 @@ package xyz.matthewtgm.tgmlib.util;
 public class CommandQueue extends MessageQueue {
 
     public static void queue(String msg, Runnable runnable) {
-        if (!msg.startsWith("/")) msg = "/" + msg;
+        if (!msg.startsWith("/"))
+            msg = "/" + msg;
         queue.add(new QueueEntry(msg, runnable));
     }
 
     public static void queue(String msg, Runnable runnable, long delay) {
-        if (!msg.startsWith("/")) msg = "/" + msg;
+        if (!msg.startsWith("/"))
+            msg = "/" + msg;
         queue.add(new QueueEntry(msg, runnable, delay));
     }
 
     public static void queue(String msg) {
-        if (!msg.startsWith("/")) msg = "/" + msg;
+        if (!msg.startsWith("/"))
+            msg = "/" + msg;
         queue(msg, () -> {});
     }
 
     public static void queue(String msg, long delay) {
-        if (!msg.startsWith("/")) msg = "/" + msg;
+        if (!msg.startsWith("/"))
+            msg = "/" + msg;
         queue(msg, () -> {}, delay);
     }
 

@@ -19,39 +19,26 @@
 package xyz.matthewtgm.tgmlib.core;
 
 import lombok.Getter;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiOptions;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.input.Keyboard;
 import xyz.matthewtgm.json.entities.JsonArray;
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.util.JsonApiHelper;
 import xyz.matthewtgm.tgmconfig.TGMConfig;
-import xyz.matthewtgm.tgmlib.TGMLibCommand;
-import xyz.matthewtgm.tgmlib.commands.CommandManager;
 import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
 import xyz.matthewtgm.tgmlib.files.ConfigHandler;
 import xyz.matthewtgm.tgmlib.files.DataHandler;
 import xyz.matthewtgm.tgmlib.files.FileHandler;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibLogging;
-import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibMain;
-import xyz.matthewtgm.tgmlib.keybinds.KeyBind;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBindConfigHandler;
-import xyz.matthewtgm.tgmlib.keybinds.KeyBindManager;
-import xyz.matthewtgm.tgmlib.profiles.ProfileManager;
 import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.other.GameClosePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.other.GameOpenPacket;
 import xyz.matthewtgm.tgmlib.util.ForgeHelper;
-import xyz.matthewtgm.tgmlib.util.GuiEditor;
-import xyz.matthewtgm.tgmlib.util.GuiHelper;
 import xyz.matthewtgm.tgmlib.util.Multithreading;
 import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 
@@ -87,8 +74,6 @@ public class TGMLibManager {
     private TGMLibSocket webSocket;
     @Getter
     private CosmeticManager cosmeticManager;
-    @Getter
-    private ProfileManager profileManager;
 
     public void initialize(File mcDir) {
         if (initialized)
@@ -113,7 +98,6 @@ public class TGMLibManager {
             if (!webSocket.isOpen())
                 scheduleSocketReconnect();
             (cosmeticManager = new CosmeticManager()).start();
-            //(profileManager = new ProfileManager()).start();
 
             ForgeHelper.registerEventListeners(this);
 
