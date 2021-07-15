@@ -66,24 +66,26 @@ public class MinecraftHook {
         if (mc.currentScreen == null && !keyBinds.isEmpty()) {
             TGMLib tgmLib = TGMLib.getInstance();
             for (KeyBind keyBind : keyBinds) {
-                if (key == keyBind.getKey()) {
-                    if (down && !repeated) {
-                        if (post(new TGMLibEvent.KeyEvent.KeyPressedEvent.Pre(tgmLib, keyBind)))
-                            continue;
-                        keyBind.pressed();
-                        post(new TGMLibEvent.KeyEvent.KeyPressedEvent.Post(tgmLib, keyBind));
-                    }
-                    if (down && repeated) {
-                        if (post(new TGMLibEvent.KeyEvent.KeyHeldEvent.Pre(tgmLib, keyBind)))
-                            continue;
-                        keyBind.held();
-                        post(new TGMLibEvent.KeyEvent.KeyHeldEvent.Post(tgmLib, keyBind));
-                    }
-                    if (!down) {
-                        if (post(new TGMLibEvent.KeyEvent.KeyReleasedEvent.Pre(tgmLib, keyBind)))
-                            continue;
-                        keyBind.released();
-                        post(new TGMLibEvent.KeyEvent.KeyReleasedEvent.Post(tgmLib, keyBind));
+                if (!keyBind.worksInGuis() && mc.currentScreen == null || keyBind.worksInGuis()) {
+                    if (key == keyBind.getKey()) {
+                        if (down && !repeated) {
+                            if (post(new TGMLibEvent.KeyEvent.KeyPressedEvent.Pre(tgmLib, keyBind)))
+                                continue;
+                            keyBind.pressed();
+                            post(new TGMLibEvent.KeyEvent.KeyPressedEvent.Post(tgmLib, keyBind));
+                        }
+                        if (down && repeated) {
+                            if (post(new TGMLibEvent.KeyEvent.KeyHeldEvent.Pre(tgmLib, keyBind)))
+                                continue;
+                            keyBind.held();
+                            post(new TGMLibEvent.KeyEvent.KeyHeldEvent.Post(tgmLib, keyBind));
+                        }
+                        if (!down) {
+                            if (post(new TGMLibEvent.KeyEvent.KeyReleasedEvent.Pre(tgmLib, keyBind)))
+                                continue;
+                            keyBind.released();
+                            post(new TGMLibEvent.KeyEvent.KeyReleasedEvent.Post(tgmLib, keyBind));
+                        }
                     }
                 }
             }

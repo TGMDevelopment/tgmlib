@@ -30,6 +30,9 @@ import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @SuppressWarnings({"unused"})
 public class EnhancedFontRenderer {
@@ -613,6 +616,35 @@ public class EnhancedFontRenderer {
         GlStateManager.disableBlend();
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         GlStateManager.popMatrix();
+    }
+
+    public static List<String> wrapTextLines(String text, int lineWidth, String split) {
+        String wrapped = wrapText(text, lineWidth, split);
+        if (wrapped.equals(""))
+            return new ArrayList<>();
+        return Arrays.asList(wrapped.split("\n"));
+    }
+
+    public static String wrapText(String text, int lineWidth, String split) {
+        String[] words = text.split("(" + split + "|\n)");
+        int lineLength = 0;
+        StringBuilder output = new StringBuilder();
+
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            if (i != words.length - 1)
+                word += split;
+            int wordLength = getWidth(word);
+            if (lineLength + wordLength <= lineWidth) {
+                output.append(word);
+                lineLength += wordLength;
+            } else if (wordLength <= lineWidth) {
+                output.append("\n").append(word);
+                lineLength = wordLength;
+            } else
+                output.append(wrapText(word, lineWidth, "")).append(split);
+        }
+        return output.toString();
     }
 
 }

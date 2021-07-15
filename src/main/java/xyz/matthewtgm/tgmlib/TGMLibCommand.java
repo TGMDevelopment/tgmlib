@@ -23,13 +23,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.tgmlib.commands.advanced.Command;
+import xyz.matthewtgm.tgmlib.data.ColourRGB;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibCosmetics;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibKeyBinds;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibMain;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.announcer.AnnouncementPacket;
-import xyz.matthewtgm.tgmlib.util.ChatHelper;
-import xyz.matthewtgm.tgmlib.util.GuiHelper;
-import xyz.matthewtgm.tgmlib.util.HypixelHelper;
+import xyz.matthewtgm.tgmlib.util.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,11 +56,6 @@ public class TGMLibCommand {
         GuiHelper.open(new GuiTGMLibKeyBinds(null));
     }
 
-    @Command.Argument(name = "locraw")
-    private void locraw() {
-        ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, HypixelHelper.getLocraw());
-    }
-
     @Command.Argument(name = "test")
     private void test() {
         Logger logger = LogManager.getLogger("TGMLib (TGMLibCommand - Test)");
@@ -76,7 +70,25 @@ public class TGMLibCommand {
         if (announcementMatcher.find())
             TGMLib.getManager().getWebSocket().send(new AnnouncementPacket(announcementMatcher.group(1).replaceAll("\"", "").trim(), announcementMatcher.group(2).replaceAll("\"", "").trim(), announcementMatcher.group(3).replaceAll("\"", "").trim()));
         else
-            ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, EnumChatFormatting.RED + "Invalid format! (/tgmlib announce \"password\" \"title\" \"description\")");
+            ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, ChatColour.RED + "Invalid format! (/tgmlib announce \"password\" \"title\" \"description\")");
+    }
+
+    @Command.Argument(name = "locraw")
+    private void locraw() {
+        ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, HypixelHelper.getLocraw());
+    }
+
+    @Command.Argument(name = "notification")
+    private void notification() {
+        //Notifications.push("Hello, World!", "I'm a cooler notification!");
+        Notifications.push("Hello, World 2!", "I'm an even cooler notification with text wrappinggg YOOOOOOOOOO!");
+        Notifications.push("Hello, World 3!", "I'm a custom coloured notification!", new Notifications.Notification.NotificationColour(null, new ColourRGB(0, 0, 255)));
+        Notifications.push("Hello, World 4!", "I'm a an even more custom coloured notification!", new Notifications.Notification.NotificationColour(new ColourRGB(255, 0, 0), new ColourRGB(0, 0, 255)));
+    }
+
+    @Command.Argument(name = "debug")
+    private void debug(String[] args) {
+
     }
 
 }

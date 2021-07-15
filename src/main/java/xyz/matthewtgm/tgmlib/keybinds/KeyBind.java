@@ -34,6 +34,10 @@ public abstract class KeyBind {
     public abstract void held();
     public abstract void released();
 
+    public boolean worksInGuis() {
+        return false;
+    }
+
     public void updateKey(int key) {
         this.key = key;
     }
