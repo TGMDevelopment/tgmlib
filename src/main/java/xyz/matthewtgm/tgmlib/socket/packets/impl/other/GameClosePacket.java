@@ -27,7 +27,7 @@ public class GameClosePacket extends BasePacket {
     private final String uuid;
 
     public GameClosePacket(String uuid) {
-        super("CLOSE", "GAME", 9f);
+        super("CLOSE", "GAME", 6f);
         this.uuid = uuid;
     }
 

@@ -24,7 +24,6 @@ import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
 import xyz.matthewtgm.tgmlib.gui.GuiTGMLibBase;
 import xyz.matthewtgm.tgmlib.gui.GuiTransFadingImageButton;
-import xyz.matthewtgm.tgmlib.profiles.ProfileManager;
 import xyz.matthewtgm.tgmlib.util.ResourceHelper;
 
 import java.awt.*;
@@ -61,11 +60,6 @@ public class GuiTGMLibMain extends GuiTGMLibBase {
                     return false;
                 }
             });
-        }
-
-        if (ProfileManager.isLoaded() && TGMLib.getManager().getWebSocket().isOpen()) {
-            // TODO: 2021/07/02
-            // x: width / 2 - 25 | y: height / 2 + 33
         }
     }
 

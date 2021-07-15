@@ -29,7 +29,7 @@ public class GameOpenPacket extends BasePacket {
     private final JsonArray modList;
 
     public GameOpenPacket(String uuid, JsonArray modList) {
-        super("OPEN", "GAME", 8f);
+        super("OPEN", "GAME", 5f);
         this.uuid = uuid;
         this.modList = modList;
     }

@@ -193,6 +193,7 @@ public class CommandManager {
                     }
                 }
             }
+            Collections.sort(ret);
             return new ArrayList<>(ret);
         }
 
