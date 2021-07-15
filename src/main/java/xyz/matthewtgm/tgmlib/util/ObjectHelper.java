@@ -18,13 +18,21 @@
 
 package xyz.matthewtgm.tgmlib.util;
 
+import java.util.Objects;
+
 public class ObjectHelper {
+
+    public static String stringify(Object o) {
+        return o == null ? "" : Objects.toString(o);
+    }
 
     public static <T> T ensureNotNull(Object o) {
         T ret;
         try {
-            if (o == null) ret = (T) o.getClass().newInstance();
-            else ret = (T) o;
+            if (o == null)
+                ret = (T) o.getClass().newInstance();
+            else
+                ret = (T) o;
         } catch (Exception e) {
             e.printStackTrace();
             ret = ensureNotNull(o);

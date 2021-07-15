@@ -34,8 +34,10 @@ public class DataHandler {
     }
 
     public void start() {
-        if (!data.containsKey("prompt_received")) data.addAndSave(new ConfigEntry<>("prompt_received", false));
-        if (!data.containsKey("log_data")) data.addAndSave(new ConfigEntry<>("log_data", false));
+        if (!data.containsKey("prompt_received"))
+            data.addAndSave(new ConfigEntry<>("prompt_received", false));
+        if (!data.containsKey("log_data"))
+            data.addAndSave(new ConfigEntry<>("log_data", false));
         update();
     }
 

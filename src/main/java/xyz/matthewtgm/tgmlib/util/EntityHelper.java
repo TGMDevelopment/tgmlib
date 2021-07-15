@@ -23,13 +23,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EntityHelper {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     public static int getLoadedEntityCount() {
-        if (mc.theWorld == null) return 0;
-        if (mc.theWorld.loadedEntityList == null) return 0;
+        if (mc.theWorld == null)
+            return 0;
+        if (mc.theWorld.loadedEntityList == null)
+            return 0;
         return mc.theWorld.loadedEntityList.size();
     }
 
@@ -38,8 +43,13 @@ public class EntityHelper {
     }
 
     public static <T extends Entity> int getEntityCount(Class<? extends T> entityType, Predicate<? super T> filter) {
-        if (mc.theWorld == null) return 0;
-        return mc.theWorld.getEntities(entityType, filter).size();
+        return getEntities(entityType, filter).size();
+    }
+
+    public static <T extends Entity> List<T> getEntities(Class<? extends T> entityType, Predicate<? super T> filter) {
+        if (mc.theWorld == null)
+            return new ArrayList<>();
+        return mc.theWorld.getEntities(entityType, filter);
     }
 
     public static <R extends Render<Entity>, E extends Entity> R getEntityRendererFromClass(Class<R> renderClazz, Class<E> entityClazz) {

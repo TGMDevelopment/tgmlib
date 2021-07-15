@@ -18,18 +18,15 @@
 
 package xyz.matthewtgm.tgmlib;
 
-import net.minecraft.util.EnumChatFormatting;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.tgmlib.commands.advanced.Command;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibCosmetics;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibKeyBinds;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibMain;
+import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibSettings;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.announcer.AnnouncementPacket;
-import xyz.matthewtgm.tgmlib.util.ChatHelper;
-import xyz.matthewtgm.tgmlib.util.GuiHelper;
-import xyz.matthewtgm.tgmlib.util.HypixelHelper;
+import xyz.matthewtgm.tgmlib.util.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,10 +34,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Command(name = "tgmlib", tabCompleteOptions = {"cosmetics", "keybinds", "keybindings", "locraw"})
+@Command(name = "tgmlib", autoGenTabOptions = true)
 public class TGMLibCommand {
 
     private final Pattern announcementPattern = Pattern.compile("(\\\".+\\\") (\\\".+\\\") (\\\".+\\\")");
+    private final Logger logger = LogManager.getLogger("TGMLib (TGMLibCommand)");
 
     @Command.Process
     private void process() {
@@ -57,26 +55,32 @@ public class TGMLibCommand {
         GuiHelper.open(new GuiTGMLibKeyBinds(null));
     }
 
-    @Command.Argument(name = "locraw")
-    private void locraw() {
-        ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, HypixelHelper.getLocraw());
-    }
-
-    @Command.Argument(name = "test")
-    private void test() {
-        Logger logger = LogManager.getLogger("TGMLib (TGMLibCommand - Test)");
+    @Command.Argument(name = "settings", aliases = {"config", "options"})
+    private void settings() {
+        GuiHelper.open(new GuiTGMLibSettings(null));
     }
 
     @Command.Argument(name = "announce")
     private void announce(String[] args) {
         List<String> argsList = new ArrayList<>(Arrays.asList(args));
-        if (argsList.get(0).equalsIgnoreCase("announce")) argsList.remove(0);
-        String jointArgs = StringUtils.join(argsList, " ");
+        if (argsList.get(0).equalsIgnoreCase("announce"))
+            argsList.remove(0);
+        String jointArgs = StringHelper.join(argsList, " ");
         Matcher announcementMatcher = announcementPattern.matcher(jointArgs);
         if (announcementMatcher.find())
             TGMLib.getManager().getWebSocket().send(new AnnouncementPacket(announcementMatcher.group(1).replaceAll("\"", "").trim(), announcementMatcher.group(2).replaceAll("\"", "").trim(), announcementMatcher.group(3).replaceAll("\"", "").trim()));
         else
-            ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, EnumChatFormatting.RED + "Invalid format! (/tgmlib announce \"password\" \"title\" \"description\")");
+            ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, ChatColour.RED + "Invalid format! (/tgmlib announce \"password\" \"title\" \"description\")");
+    }
+
+    @Command.Argument(name = "locraw")
+    private void locraw() {
+        ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, HypixelHelper.getLocraw());
+    }
+
+    @Command.Argument(name = "debug")
+    private void debug(String[] args) {
+
     }
 
 }

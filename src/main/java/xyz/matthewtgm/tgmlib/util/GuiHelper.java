@@ -48,7 +48,8 @@ public class GuiHelper {
     private static final GuiScreen GUI_NULL = new GuiNull();
 
     public static void fixDisplayString(GuiButton button, String display) {
-        if (!button.displayString.equals(display)) button.displayString = display;
+        if (!button.displayString.equals(display))
+            button.displayString = display;
     }
 
     public static boolean isHoveringOverButton(List<GuiButton> buttonList) {
@@ -78,8 +79,10 @@ public class GuiHelper {
         ScreenHelper.updateOrtho(res);
         int scaledWidth = res.getScaledWidth();
         int scaledHeight = res.getScaledHeight();
-        if (screen.width != scaledWidth) screen.width = scaledWidth;
-        if (screen.height != scaledHeight) screen.height = scaledHeight;
+        if (screen.width != scaledWidth)
+            screen.width = scaledWidth;
+        if (screen.height != scaledHeight)
+            screen.height = scaledHeight;
     }
 
     public static void forceGuiScale(GuiScreen screen, GuiScale scale) {

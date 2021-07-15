@@ -26,6 +26,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import xyz.matthewtgm.tgmlib.events.TitleEvent;
 
 public class TitleHandler {
 
@@ -61,6 +62,9 @@ public class TitleHandler {
     private void renderTitles(ScaledResolution scaledResolution) {
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.theWorld == null || mc.thePlayer == null)
+            return;
+
+        if (ForgeHelper.postEvent(new TitleEvent(titleString, null)))
             return;
 
         int scaledWidth = scaledResolution.getScaledWidth();

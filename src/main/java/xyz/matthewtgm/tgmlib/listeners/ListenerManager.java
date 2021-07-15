@@ -34,8 +34,8 @@ public class ListenerManager {
         listeners.remove(type, runnable);
     }
 
-    public interface ListenerRunnable {
-        <R> void run(R object);
+    public interface ListenerRunnable<R> {
+        void run(R object);
     }
 
 }

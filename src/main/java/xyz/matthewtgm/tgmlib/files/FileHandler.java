@@ -32,7 +32,9 @@ public class FileHandler {
     @Getter private final List<File> directories = new ArrayList<>(Arrays.asList(mcDir, configDir, tgmDevelopmentDir, tgmLibDir));
 
     public void start() {
-        for (File directory : directories) if (!directory.exists() && !directory.mkdirs()) throw new IllegalStateException("Unable to create directories.");
+        for (File directory : directories)
+            if (!directory.exists() && !directory.mkdirs())
+                throw new IllegalStateException("Unable to create TGMLib directories.");
     }
 
 }

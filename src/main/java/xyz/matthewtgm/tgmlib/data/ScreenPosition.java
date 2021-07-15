@@ -79,16 +79,20 @@ public class ScreenPosition {
     private int calculateX(int x) {
         int width = GlobalMinecraft.getDisplayWidth();
         int ret = -(width - x);
-        if (ret < 0) ret = Math.max(x, 0);
-        if (ret > width) ret = width;
+        if (ret < 0)
+            ret = Math.max(x, 0);
+        if (ret > width)
+            ret = width;
         return ret;
     }
 
     private int calculateY(int y) {
         int height = GlobalMinecraft.getDisplayHeight();
         int ret = -(height - y);
-        if (ret < 0) ret = Math.max(y, 0);
-        if (ret > height) ret = height;
+        if (ret < 0)
+            ret = Math.max(y, 0);
+        if (ret > height)
+            ret = height;
         return ret;
     }
 

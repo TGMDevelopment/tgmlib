@@ -33,11 +33,11 @@ public class MathHelper {
     }
 
     public static int clamp_int(int num, int min, int max) {
-        return num < min ? min : (num > max ? max : num);
+        return num < min ? min : (Math.min(num, max));
     }
 
     public static long clamp_long(long num, long min, long max) {
-        return num < min ? min : (num > max ? max : num);
+        return num < min ? min : (Math.min(num, max));
     }
 
     public static float lerp(float start, float end, float interpolation) {

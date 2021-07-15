@@ -18,27 +18,19 @@
 
 package xyz.matthewtgm.tgmlib.util;
 
-import xyz.matthewtgm.tgmlib.data.ColourRGB;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.opengl.GL11;
+import xyz.matthewtgm.tgmlib.data.ColourRGB;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-/**
- * Adapted from XanderLib under GPLv3
- * https://github.com/isXander/XanderLib/blob/main/LICENSE
- */
 public class Notifications {
 
     private final Minecraft mc = Minecraft.getMinecraft();
@@ -48,128 +40,194 @@ public class Notifications {
     @Getter @Setter private static int paddingHeight = 3;
     @Getter @Setter private static int textDistance = 2;
 
-    private static final List<Notification> current = new ArrayList<>();
+    private static final List<Notification> notifications = new ArrayList<>();
+
+    public static void push(String title, String description, ColourRGB colour, int duration, Notification.NotificationClickRunnable clickRunnable) {
+        push(new Notification(title, description, colour, duration, clickRunnable));
+    }
+
+    public static void push(String title, String description, ColourRGB colour, Notification.NotificationClickRunnable clickRunnable) {
+        push(title, description, colour, -1, clickRunnable);
+    }
 
     public static void push(String title, String description) {
-        push(title, description, null);
+        push(title, description, null, null);
+    }
+
+    public static void push(String title, String description, int duration) {
+        push(title, description, null, duration, null);
     }
 
     public static void push(String title, String description, Runnable runnable) {
-        current.add(new Notification(title, description, runnable));
+        push(title, description, notification -> {
+            if (runnable != null) {
+                runnable.run();
+            }
+        });
+    }
+
+    public static void push(String title, String description, Notification.NotificationClickRunnable clickRunnable) {
+        push(title, description, null, clickRunnable);
+    }
+
+    public static void push(String title, String description, int duration, Notification.NotificationClickRunnable clickRunnable) {
+        push(title, description, null, duration, clickRunnable);
+    }
+
+    public static void push(String title, String description, ColourRGB colour) {
+        push(title, description, colour, null);
+    }
+
+    public static void push(String title, String description, ColourRGB colour, int duration) {
+        push(title, description, colour, duration, null);
+    }
+
+    public static void push(Notification notification) {
+        notifications.add(notification);
     }
 
     @SubscribeEvent
     protected void onRenderTick(TickEvent.RenderTickEvent event) {
         if (event.phase != TickEvent.Phase.END)
             return;
-        ScaledResolution res = new ScaledResolution(mc);
-        if (current.size() == 0)
+        if (notifications.isEmpty())
             return;
-        Notification notification = current.get(0);
-        float time = notification.time;
+
+        ScaledResolution resolution = ScreenHelper.getResolution();
+        Notification current = notifications.get(0);
+
+        float time = current.data.time;
         float opacity = 200;
+
         if (time <= 1 || time >= 10) {
             float easeTime = Math.min(time, 1);
             opacity = easeTime * 200;
         }
-        List<String> wrappedTitle = wrapTextLines(EnumChatFormatting.BOLD + notification.title, mc.fontRendererObj, width, " ");
-        List<String> wrappedText = wrapTextLines(notification.description, mc.fontRendererObj, width, " ");
-        int textLines = wrappedText.size() + wrappedTitle.size();
-        float rectWidth = notification.width = MathHelper.lerp(notification.width, width + (paddingWidth * 2), event.renderTickTime / 4f);
+
+        String boldedTitle = ChatColour.BOLD + current.title;
+        List<String> wrappedTitle = EnhancedFontRenderer.wrapTextLines(boldedTitle, mc.fontRendererObj, width, " ");
+        List<String> wrappedDescription = EnhancedFontRenderer.wrapTextLines(current.description, mc.fontRendererObj, width, " ");
+        int textLines = wrappedTitle.size() + wrappedDescription.size();
+
+        float rectWidth = current.data.width = MathHelper.lerp(current.data.width, width + (paddingWidth * 2), event.renderTickTime / 4);
+        if (current.data.closing && current.data.time <= 0.45f)
+            rectWidth = current.data.width = Math.max(MathHelper.lerp(current.data.width, -(width + (paddingWidth * 2)), event.renderTickTime / 2), 0);
         float rectHeight = (paddingHeight * 2) + (textLines * mc.fontRendererObj.FONT_HEIGHT) + ((textLines - 1) * textDistance);
-        float rectX = res.getScaledWidth() / 2f - (rectWidth / 2f);
-        float rectY = 5;
+        float rectX = resolution.getScaledWidth() - rectWidth + 5;
+        float rectY = 3;
+
         float mouseX = MouseHelper.getMouseX();
         float mouseY = MouseHelper.getMouseY();
         boolean mouseOver = mouseX >= rectX && mouseX <= rectX + rectWidth && mouseY >= rectY && mouseY <= rectY + rectHeight;
-        opacity += notification.mouseOverAdd = MathHelper.lerp(notification.mouseOverAdd, (mouseOver ? 40 : 0), event.renderTickTime / 4f);
+
+        opacity += current.data.mouseOverAdd = MathHelper.lerp(current.data.mouseOverAdd, (mouseOver ? 40 : 0), event.renderTickTime / 4);
+
         GlStateManager.pushMatrix();
-        GlStateManager.enableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableDepth();
-        GlHelper.drawRectangle(rectX, rectY, rectWidth, rectHeight, new ColourRGB(0, 0, 0, (int)MathHelper.clamp(opacity, 5, 255)));
-        if (notification.time > 0.1f) {
+
+        int clampedOpacity = (int) MathHelper.clamp(opacity, 5, 255);
+        ColourRGB colour = current.colour == null ? new ColourRGB(0, 0, 0, clampedOpacity) : current.colour;
+        if (colour.equals(current.colour))
+            colour.setA(clampedOpacity);
+        GlHelper.drawRectangle(rectX, rectY, rectWidth, rectHeight, colour);
+
+        if (current.data.time > 0.1f) {
+            ColourRGB textColour = new ColourRGB(255, 255, 255, clampedOpacity);
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
             GlHelper.totalScissor(rectX, rectY, rectWidth, rectHeight);
-            int color = new Color(255, 255, 255, (int)MathHelper.clamp(opacity, 2, 255)).getRGB();
             int i = 0;
             for (String line : wrappedTitle) {
-                mc.fontRendererObj.drawString(EnumChatFormatting.BOLD + line, res.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(line) / 2f), rectY + paddingHeight + (textDistance * i) + (mc.fontRendererObj.FONT_HEIGHT * i), color, true);
+                EnhancedFontRenderer.drawText(line, rectX + 2, rectY + paddingHeight + (textDistance * i) + (mc.fontRendererObj.FONT_HEIGHT * i), textColour.getRGBA(), true);
                 i++;
             }
-            for (String line : wrappedText) {
-                mc.fontRendererObj.drawString(line, res.getScaledWidth() / 2f - (mc.fontRendererObj.getStringWidth(line) / 2f), rectY + paddingHeight + (textDistance * i) + (mc.fontRendererObj.FONT_HEIGHT * i), color, false);
+            for (String line : wrappedDescription) {
+                EnhancedFontRenderer.drawText(line, rectX + 2, rectY + paddingHeight + (textDistance * i) + (mc.fontRendererObj.FONT_HEIGHT * i), textColour.getRGBA(), true);
                 i++;
             }
             GL11.glDisable(GL11.GL_SCISSOR_TEST);
         }
+
         GlStateManager.popMatrix();
-        if (notification.time >= 3f)
-            notification.closing = true;
-        if (!notification.clicked && mouseOver && MouseHelper.isMouseDown()) {
-            notification.clicked = true;
-            if (notification.runnable != null)
-                notification.runnable.run();
-            notification.closing = true;
-            if (notification.time > 1f)
-                notification.time = 1f;
+
+        if (current.data.time >= (current.duration == -1 ? 5 : current.duration))
+            current.data.closing = true;
+        if (!current.data.clicked && mouseOver && MouseHelper.isMouseDown()) {
+            current.data.clicked = true;
+            if (current.clickRunnable != null)
+                current.clickRunnable.click(current);
+            current.data.closing = true;
+            if (current.data.time > 1f)
+                current.data.time = 1;
         }
-        if (!((mouseOver && notification.clicked) && notification.time > 1f))
-            notification.time += (notification.closing ? -0.02f : 0.02f) * (event.renderTickTime * 3f);
-        if (notification.closing && notification.time <= 0)
-            current.remove(notification);
+        if (!mouseOver)
+            current.data.time += (current.data.closing ? -0.02 : 0.02) * (event.renderTickTime * 3);
+        if (current.data.closing && current.data.time <= 0)
+            notifications.remove(current);
     }
 
-    private List<String> wrapTextLines(String text, FontRenderer fontRenderer, int lineWidth, String split) {
-        String wrapped = wrapText(text, fontRenderer, lineWidth, split);
-        if (wrapped.equals(""))
-            return new ArrayList<>();
-        return Arrays.asList(wrapped.split("\n"));
-    }
+    public static class Notification {
+        public String title;
+        public String description;
+        public ColourRGB colour;
+        @Getter private final int duration;
+        @Getter private final NotificationClickRunnable clickRunnable;
 
-    private String wrapText(String text, FontRenderer fontRenderer, int lineWidth, String split) {
-        String[] words = text.split("(" + split + "|\n)");
-        int lineLength = 0;
-        StringBuilder output = new StringBuilder();
+        private final NotificationData data;
 
-        for (int i = 0; i < words.length; i++) {
-            String word = words[i];
-            if (i != words.length - 1)
-                word += split;
-            int wordLength = fontRenderer.getStringWidth(word);
-            if (lineLength + wordLength <= lineWidth) {
-                output.append(word);
-                lineLength += wordLength;
-            } else if (wordLength <= lineWidth) {
-                output.append("\n").append(word);
-                lineLength = wordLength;
-            } else
-                output.append(wrapText(word, fontRenderer, lineWidth, "")).append(split);
+        public Notification(String title, String description, ColourRGB colour, int duration, NotificationClickRunnable clickRunnable) {
+            this.title = title;
+            this.description = description;
+            this.colour = colour;
+            this.duration = duration;
+            this.clickRunnable = clickRunnable;
+
+            this.data = new NotificationData(0, 0, 0, false, false);
         }
-        return output.toString();
+
+        public Notification(String title, String description, ColourRGB colour, NotificationClickRunnable clickRunnable) {
+            this(title, description, colour, -1, clickRunnable);
+        }
+
+        public Notification(String title, String description, int duration) {
+            this(title, description, null, duration, null);
+        }
+
+        public Notification(String title, String description, NotificationClickRunnable clickRunnable) {
+            this(title, description, null, clickRunnable);
+        }
+
+        public Notification(String title, String description, int duration, NotificationClickRunnable clickRunnable) {
+            this(title, description, null, duration, clickRunnable);
+        }
+
+        public Notification(String title, String description, ColourRGB colour) {
+            this(title, description, colour, null);
+        }
+
+        public Notification(String title, String description, ColourRGB colour, int duration) {
+            this(title, description, colour, duration, null);
+        }
+
+        public Notification(String title, String description) {
+            this(title, description, null, null);
+        }
+
+        public interface NotificationClickRunnable {
+            void click(Notification notification);
+        }
     }
 
-    private static class Notification {
-        String title;
-        String description;
-        Runnable runnable;
-
+    private static class NotificationData {
         float time;
         float width;
         float mouseOverAdd;
         boolean closing;
         boolean clicked;
-
-        Notification(String title, String description, Runnable runnable) {
-            this.title = title;
-            this.description = description;
-            this.runnable = runnable;
-
-            this.time = 0;
-            this.width = 0;
-            this.mouseOverAdd = 0;
-            this.closing = false;
-            this.clicked = false;
+        NotificationData(float time, float width, float mouseOverAdd, boolean closing, boolean clicked) {
+            this.time = time;
+            this.width = width;
+            this.mouseOverAdd = mouseOverAdd;
+            this.closing = closing;
+            this.clicked = clicked;
         }
     }
 
