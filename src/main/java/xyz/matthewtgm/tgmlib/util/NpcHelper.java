@@ -24,11 +24,16 @@ import net.minecraft.entity.EntityLivingBase;
 
 public class NpcHelper {
 
+    /**
+     * @param entity The entity to check.
+     * @return Whether or not the entity is an NPC.
+     * @author Biscuit
+     */
     public static boolean isNPC(Entity entity) {
         if (!(entity instanceof EntityOtherPlayerMP))
             return false;
         EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
-        return entity.getUniqueID().version() == 2 && entityLivingBase.getHealth() == 20.0F && !entityLivingBase.isPlayerSleeping();
+        return entity.getUniqueID().version() == 2 && !entityLivingBase.isPlayerSleeping();
     }
 
 }

@@ -80,7 +80,10 @@ public class TGMLibCommand {
 
     @Command.Argument(name = "notification")
     private void notification() {
-        Notifications.push("Hello, World!", "I'm a cooler notification!");
+        Notifications.push("Hello, World!", "I'm a cooler, clickable  notification!", notification -> {
+            notification.title = "Click!";
+            notification.description = "I was clicked! Oh my!";
+        });
         Notifications.push("Hello, World 2!", "I'm an even cooler notification with text wrappinggg YOOOOOOOOOO!");
         Notifications.push("Hello, World 3!", "I'm a custom coloured notification!", new Notifications.Notification.NotificationColour(null, new ColourRGB(0, 0, 255)));
         Notifications.push("Hello, World 4!", "I'm a an even more custom coloured notification!", new Notifications.Notification.NotificationColour(new ColourRGB(255, 0, 0), new ColourRGB(0, 0, 255)));

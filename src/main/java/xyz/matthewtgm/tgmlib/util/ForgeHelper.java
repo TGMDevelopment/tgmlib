@@ -32,10 +32,19 @@ public class ForgeHelper {
 
     @Getter private static final List<Object> registeredListeners = new CopyOnWriteArrayList<>();
 
+    /**
+     * @param event The event to post.
+     * @return Whether or not the event was cancelled.
+     * @author MatthewTGM
+     */
     public static boolean postEvent(Event event) {
         return MinecraftForge.EVENT_BUS.post(event);
     }
 
+    /**
+     * @param listener The listener to register.
+     * @author MatthewTGM
+     */
     public static void registerEventListener(Object listener) {
         if (!registeredListeners.contains(listener)) {
             MinecraftForge.EVENT_BUS.register(listener);
@@ -43,6 +52,10 @@ public class ForgeHelper {
         }
     }
 
+    /**
+     * @param listener The listener to unregister.
+     * @author MatthewTGM
+     */
     public static void unregisterEventListener(Object listener) {
         if (registeredListeners.contains(listener)) {
             MinecraftForge.EVENT_BUS.unregister(listener);
@@ -58,14 +71,29 @@ public class ForgeHelper {
         for (Object listener : listeners) registerEventListener(listener);
     }
 
+    /**
+     * @param listeners All listeners to unregister.
+     * @author MatthewTGM
+     */
     public static void unregisterEventListeners(Object... listeners) {
         for (Object listener : listeners) unregisterEventListener(listener);
     }
 
+    /**
+     * @param id The mod id.
+     * @return Whether or not the mod is currently loaded.
+     * @author Biscuit
+     */
     public static boolean isModLoaded(String id) {
         return isModLoaded(id, null);
     }
 
+    /**
+     * @param id The mod id.
+     * @param version The mod version.
+     * @return Whether or not the mod is currently loaded.
+     * @author Biscuit
+     */
     public static boolean isModLoaded(String id, String version) {
         boolean loaded = Loader.isModLoaded(id);
         if (loaded && version != null) {
@@ -77,6 +105,10 @@ public class ForgeHelper {
         return loaded;
     }
 
+    /**
+     * @return Whether or not we are in the development environment.
+     * @author MatthewTGM
+     */
     public static boolean isDevelopmentEnvironment() {
         Object gotten = Launch.blackboard.get("fml.deobfuscatedEnvironment");
         return gotten != null && (boolean) gotten;

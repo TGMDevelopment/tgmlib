@@ -30,29 +30,52 @@ public class ScreenHelper {
    @Getter
    private static ScaledResolution resolution;
 
+    /**
+     * @return The scaled screen width.
+     * @author MatthewTGM
+     */
    public static int getScaledWidth() {
        makeNullChecks();
        return resolution.getScaledWidth();
    }
 
+    /**
+     * @return The scaled screen height.
+     * @author MatthewTGM
+     */
    public static int getScaledHeight() {
        makeNullChecks();
        return resolution.getScaledHeight();
    }
 
+    /**
+     * @return The current scale factor.
+     * @author MatthewTGM
+     */
    public static int getScaleFactor() {
        makeNullChecks();
        return resolution.getScaleFactor();
    }
 
+    /**
+     * @author MatthewTGM
+     */
    public static void updateOrtho() {
        updateOrtho(Minecraft.getMinecraft().gameSettings.guiScale);
    }
 
+    /**
+     * @param scaleFactor The new scale factor.
+     * @author MatthewTGM
+     */
     public static void updateOrtho(int scaleFactor) {
         updateOrtho(new CustomScaledResolution(Minecraft.getMinecraft(), scaleFactor));
     }
 
+    /**
+     * @param res The new scale.
+     * @author MatthewTGM
+     */
     public static void updateOrtho(CustomScaledResolution res) {
         GlStateManager.matrixMode(5889);
         GlStateManager.loadIdentity();
@@ -62,6 +85,9 @@ public class ScreenHelper {
         GlStateManager.translate(0.0f, 0.0f, -2000.0f);
     }
 
+    /**
+     * @author MatthewTGM
+     */
    private static void makeNullChecks() {
        if (resolution == null) resolution = new ScaledResolution(Minecraft.getMinecraft());
    }

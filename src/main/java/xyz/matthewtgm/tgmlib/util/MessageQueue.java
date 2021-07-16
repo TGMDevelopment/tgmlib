@@ -34,18 +34,38 @@ public class MessageQueue {
     protected static final long tickDelay = 25;
     protected static long tickCounter;
 
+    /**
+     * @param msg The message to queue
+     * @param runnable The command listener.
+     * @author MatthewTGM
+     */
     public static void queue(String msg, Runnable runnable) {
         queue.add(new QueueEntry(msg, runnable));
     }
 
+    /**
+     * @param msg The message to queue.
+     * @param runnable The message listener.
+     * @param delay The delay after the list message to run this one.
+     * @author MatthewTGM
+     */
     public static void queue(String msg, Runnable runnable, long delay) {
         queue.add(new QueueEntry(msg, runnable, delay));
     }
 
+    /**
+     * @param msg The message to queue.
+     * @author MatthewTGM
+     */
     public static void queue(String msg) {
         queue(msg, () -> {});
     }
 
+    /**
+     * @param msg The message to queue.
+     * @param delay The delay after the list message to run this one.
+     * @author MatthewTGM
+     */
     public static void queue(String msg, long delay) {
         queue(msg, () -> {}, delay);
     }

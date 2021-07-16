@@ -31,6 +31,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ApiHelper {
 
+    /**
+     * @param url The url of the page to fetch from.
+     * @return The page's content from the specified URL.
+     * @author MatthewTGM
+     */
     public static Object getPageContent(URL url) {
         try {
             return url.getContent();
@@ -82,18 +87,38 @@ public class ApiHelper {
         return json.get();
     }
 
+    /**
+     * @param url The url to fetch from.
+     * @return A parsed JSON element from online data.
+     * @author MatthewTGM
+     */
     public static JsonElement getParsedJsonOnline(URL url) {
         return JsonParser.parse(getJsonOnline(url));
     }
 
+    /**
+     * @param url The url to fetch from.
+     * @return A parsed JSON element from online data.
+     * @author MatthewTGM
+     */
     public static JsonElement getParsedJsonOnline(String url) {
         return JsonParser.parse(getJsonOnline(url));
     }
 
+    /**
+     * @param uri The uri to fetch from.
+     * @return A parsed JSON element from online data.
+     * @author MatthewTGM
+     */
     public static JsonElement getParsedJsonOnline(URI uri) {
         return JsonParser.parse(getJsonOnline(uri));
     }
 
+    /**
+     * @param username The username of the player to fetch
+     * @return The UUID of the player.
+     * @author Unknown
+     */
     public static String fetchUuid(String username) {
         JsonElement response = getParsedJsonOnline("https://api.mojang.com/users/profiles/minecraft/" + username);
         if (response == null)

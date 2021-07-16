@@ -621,6 +621,8 @@ public class EnhancedFontRenderer {
     /**
      * Adapted from XanderLib under GPL 3.0 license
      * https://github.com/isXander/XanderLib/blob/main/LICENSE
+     *
+     * @author isXander
      */
     public static List<String> wrapTextLines(String text, int lineWidth, String split) {
         String wrapped = wrapText(text, lineWidth, split);
@@ -632,6 +634,8 @@ public class EnhancedFontRenderer {
     /**
      * Adapted from XanderLib under GPL 3.0 license
      * https://github.com/isXander/XanderLib/blob/main/LICENSE
+     *
+     * @author isXander
      */
     public static String wrapText(String text, int lineWidth, String split) {
         String[] words = text.split("(" + split + "|\n)");

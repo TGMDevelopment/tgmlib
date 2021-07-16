@@ -42,6 +42,10 @@ public class ServerHelper {
     private static final List<String> SKYBLOCK_IN_ALL_LANGUAGES = new ArrayList<>(Arrays.asList("SKYBLOCK","\u7A7A\u5C9B\u751F\u5B58", "\u7A7A\u5CF6\u751F\u5B58"));
     private static final Pattern SERVER_BRAND_PATTERN = Pattern.compile("(.+) <- (?:.+)");
 
+    /**
+     * @return Whether or not the client is connected to Hypixel.
+     * @author Biscuit
+     */
     public static boolean hypixel() {
         String HYPIXEL_SERVER_BRAND = "Hypixel BungeeCord";
 
@@ -56,6 +60,10 @@ public class ServerHelper {
             return false;
     }
 
+    /**
+     * @return Whether or not the client is connected to Hypixel SkyBlock.
+     * @author MatthewTGM
+     */
     public static boolean hypixelSkyBlock() {
         if (mc != null && mc.theWorld != null && !mc.isSingleplayer() && hypixel()) {
             ScoreObjective sidebarObjective = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
@@ -71,6 +79,10 @@ public class ServerHelper {
         return false;
     }
 
+    /**
+     * @return Whether or not the client is connected to Hypixel BedWars.
+     * @author MatthewTGM
+     */
     public static boolean hypixelBedwars() {
         if (mc != null && mc.theWorld != null && !mc.isSingleplayer() && hypixel()) {
             ScoreObjective sidebarObjective = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
@@ -81,6 +93,8 @@ public class ServerHelper {
         }
         return false;
     }
+
+    // TODO: 2021/07/16 : Javadoc below!
 
     public static boolean isOnServer(String ip) {
         return !mc.isSingleplayer() && mc.getCurrentServerData() != null && mc.getCurrentServerData().serverIP.equalsIgnoreCase(ip);

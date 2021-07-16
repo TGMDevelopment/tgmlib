@@ -20,7 +20,6 @@ package xyz.matthewtgm.tgmlib.util;
 
 import xyz.matthewtgm.tgmlib.data.ColourRGB;
 import lombok.Getter;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -31,24 +30,45 @@ import java.util.List;
 
 public class Notifications {
 
-    private final Minecraft mc = Minecraft.getMinecraft();
-
-    private final float width = 225;
-
     private static final List<Notification> notifications = new ArrayList<>();
 
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @param colour The notification's colour.
+     * @param duration The duration that the notification will be rendered for in seconds.
+     * @param clickRunnable The click listener.
+     * @author MatthewTGM
+     */
     public static void push(String title, String description, Notification.NotificationColour colour, int duration, Notification.NotificationClickRunnable clickRunnable) {
         push(new Notification(title, description, colour, duration, clickRunnable));
     }
 
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @param colour The notification's colour.
+     * @param clickRunnable The click listener.
+     */
     public static void push(String title, String description, Notification.NotificationColour colour, Notification.NotificationClickRunnable clickRunnable) {
         push(title, description, colour, -1, clickRunnable);
     }
 
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @author MatthewTGM
+     */
     public static void push(String title, String description) {
         push(title, description, null, -1, null);
     }
 
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @param runnable The click listener.
+     * @author MatthewTGM
+     */
     public static void push(String title, String description, Runnable runnable) {
         push(title, description, notification -> {
             if (runnable != null) {
@@ -57,22 +77,52 @@ public class Notifications {
         });
     }
 
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @param clickRunnable The click listener.
+     * @author MatthewTGM
+     */
     public static void push(String title, String description, Notification.NotificationClickRunnable clickRunnable) {
         push(title, description, null, clickRunnable);
     }
 
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @param duration The duration that the notification will be rendered for in seconds.
+     * @param clickRunnable The click listener.
+     * @author MatthewTGM
+     */
     public static void push(String title, String description, int duration, Notification.NotificationClickRunnable clickRunnable) {
         push(title, description, null, duration, clickRunnable);
     }
 
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @param colour The notification's colour.
+     * @author MatthewTGM
+     */
     public static void push(String title, String description, Notification.NotificationColour colour) {
         push(title, description, colour, null);
     }
 
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @param colour The notification's colour.
+     * @param duration The duration that the notification will be rendered for in seconds.
+     * @author MatthewTGM
+     */
     public static void push(String title, String description, Notification.NotificationColour colour, int duration) {
         push(title, description, colour, duration, null);
     }
 
+    /**
+     * @param notification The notification to push.
+     * @author MatthewTGM
+     */
     public static void push(Notification notification) {
         notifications.add(notification);
     }
@@ -89,6 +139,7 @@ public class Notifications {
         for (Notification notification : notifications) {
             /* Text. */
             String title = ChatColour.BOLD + notification.title;
+            float width = 225;
             List<String> wrappedTitle = EnhancedFontRenderer.wrapTextLines(title, (int) (width), " ");
             List<String> wrappedDescription = EnhancedFontRenderer.wrapTextLines(notification.description, (int) (width), " ");
             int textLines = wrappedTitle.size() + wrappedDescription.size();

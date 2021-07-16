@@ -61,11 +61,23 @@ public class GlHelper {
         GL11.glPopMatrix();
     }
 
+    /**
+     * Adapted from XanderLib under GPL 3.0 license
+     * https://github.com/isXander/XanderLib/blob/main/LICENSE
+     *
+     * @author isXander
+     */
     public static void totalScissor(double xPosition, double yPosition, double width, double height) {
         ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
         GL11.glScissor((int) ((xPosition * Minecraft.getMinecraft().displayWidth) / scaledResolution.getScaledWidth()), (int) (((scaledResolution.getScaledHeight() - (yPosition + height)) * Minecraft.getMinecraft().displayHeight) / scaledResolution.getScaledHeight()), (int) (width * Minecraft.getMinecraft().displayWidth / scaledResolution.getScaledWidth()), (int) (height * Minecraft.getMinecraft().displayHeight / scaledResolution.getScaledHeight()));
     }
 
+    /**
+     * Adapted from XanderLib under GPL 3.0 license
+     * https://github.com/isXander/XanderLib/blob/main/LICENSE
+     *
+     * @author isXander
+     */
     public static void drawRectangle(float xPosition, float yPosition, float width, float height, ColourRGB colour) {
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
