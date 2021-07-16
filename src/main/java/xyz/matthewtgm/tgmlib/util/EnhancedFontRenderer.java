@@ -630,7 +630,7 @@ public class EnhancedFontRenderer {
             return new ArrayList<>();
         return Arrays.asList(wrapped.split("\n"));
     }
-
+  
     /**
      * Adapted from XanderLib under GPL 3.0 license
      * https://github.com/isXander/XanderLib/blob/main/LICENSE

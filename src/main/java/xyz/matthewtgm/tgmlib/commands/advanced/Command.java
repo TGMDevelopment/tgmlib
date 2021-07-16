@@ -29,6 +29,7 @@ public @interface Command {
 
     String name();
     boolean processIfNoArgs() default true;
+    boolean autoGenTabOptions() default false;
     String usage() default "";
     String[] aliases() default {};
     String[] tabCompleteOptions() default {};

@@ -26,7 +26,8 @@ public class CommandQueue extends MessageQueue {
      * @author MatthewTGM
      */
     public static void queue(String msg, Runnable runnable) {
-        if (!msg.startsWith("/")) msg = "/" + msg;
+        if (!msg.startsWith("/"))
+            msg = "/" + msg;
         queue.add(new QueueEntry(msg, runnable));
     }
 
@@ -37,7 +38,8 @@ public class CommandQueue extends MessageQueue {
      * @author MatthewTGM
      */
     public static void queue(String msg, Runnable runnable, long delay) {
-        if (!msg.startsWith("/")) msg = "/" + msg;
+        if (!msg.startsWith("/"))
+            msg = "/" + msg;
         queue.add(new QueueEntry(msg, runnable, delay));
     }
 
@@ -46,7 +48,8 @@ public class CommandQueue extends MessageQueue {
      * @author MatthewTGM
      */
     public static void queue(String msg) {
-        if (!msg.startsWith("/")) msg = "/" + msg;
+        if (!msg.startsWith("/"))
+            msg = "/" + msg;
         queue(msg, () -> {});
     }
 
@@ -56,7 +59,8 @@ public class CommandQueue extends MessageQueue {
      * @author MatthewTGM
      */
     public static void queue(String msg, long delay) {
-        if (!msg.startsWith("/")) msg = "/" + msg;
+        if (!msg.startsWith("/"))
+            msg = "/" + msg;
         queue(msg, () -> {}, delay);
     }
 

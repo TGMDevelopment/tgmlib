@@ -19,6 +19,7 @@
 package xyz.matthewtgm.tgmlib.data;
 
 import xyz.matthewtgm.json.entities.JsonObject;
+import xyz.matthewtgm.json.parser.JsonParser;
 
 import java.awt.*;
 
@@ -34,10 +35,15 @@ public class ColourRGB {
     }
 
     public ColourRGB(int r, int g, int b) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = 255;
+        this(r, g, b, 255);
+    }
+
+    public ColourRGB(JsonObject object) {
+        this(new Color(fromJson(object).getRGBA()));
+    }
+
+    public ColourRGB(String input) {
+        this(JsonParser.parse(input).getAsJsonObject());
     }
 
     public ColourRGB(Color color) {
@@ -45,11 +51,7 @@ public class ColourRGB {
     }
 
     public ColourRGB(int rgba) {
-        Color color = new Color(rgba);
-        this.r = color.getRed();
-        this.g = color.getGreen();
-        this.b = color.getBlue();
-        this.a = color.getAlpha();
+        this(new Color(rgba));
     }
 
     public ColourRGB clone() {
@@ -122,6 +124,26 @@ public class ColourRGB {
 
     public String toJson() {
         return new JsonObject().add("red", r).add("green", g).add("blue", b).add("alpha", a).getAsString();
+    }
+
+    public static ColourRGB fromJson(JsonObject object) {
+        int r = 255;
+        int g = 255;
+        int b = 255;
+        int a = 255;
+        r = getIntOrDefault("r", object, r);
+        r = getIntOrDefault("red", object, r);
+        g = getIntOrDefault("g", object, g);
+        g = getIntOrDefault("green", object, g);
+        b = getIntOrDefault("b", object, b);
+        b = getIntOrDefault("blue", object, b);
+        a = getIntOrDefault("a", object, a);
+        a = getIntOrDefault("alpha", object, a);
+        return new ColourRGB(r, g, b, a);
+    }
+
+    private static int getIntOrDefault(String key, JsonObject object, int defaultInt) {
+        return object.hasKey(key) ? object.get(key).getAsInt() : defaultInt;
     }
 
     @Override

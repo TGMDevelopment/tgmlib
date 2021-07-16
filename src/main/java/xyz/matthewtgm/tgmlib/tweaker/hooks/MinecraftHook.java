@@ -63,7 +63,7 @@ public class MinecraftHook {
         int key = Keyboard.getEventKey();
         boolean down = Keyboard.getEventKeyState();
         boolean repeated = Keyboard.isRepeatEvent();
-        if (mc.currentScreen == null && !keyBinds.isEmpty()) {
+        if (!keyBinds.isEmpty()) {
             TGMLib tgmLib = TGMLib.getInstance();
             for (KeyBind keyBind : keyBinds) {
                 if (!keyBind.worksInGuis() && mc.currentScreen == null || keyBind.worksInGuis()) {

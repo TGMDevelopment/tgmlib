@@ -32,7 +32,8 @@ public class AnimatedResourceLocation {
     public AnimatedResourceLocation(String folder, int frames, int fpt) {
         this.fpt = fpt;
         textures = new ResourceLocation[frames];
-        for(int i = 0; i < frames; i++) textures[i] = new ResourceLocation(folder + "/" + i + ".png");
+        for(int i = 0; i < frames; i++)
+            textures[i] = new ResourceLocation(folder + "/" + i + ".png");
     }
 
     public ResourceLocation getFrame() {

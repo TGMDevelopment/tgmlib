@@ -36,4 +36,22 @@ public class IntegerHelper {
         return random.nextInt(max - min) + min;
     }
 
+    /**
+     * @param integer The integer to check.
+     * @return Whether or not the integer is positive.
+     * @author MatthewTGM
+     */
+    public static boolean isPositive(Object integer) {
+        return Integer.parseInt(integer.toString()) >= 0;
+    }
+
+    /**
+     * @param integer The integer to check.
+     * @return Whether or not the integer is negative.
+     * @author MatthewTGM
+     */
+    public static boolean isNegative(Object integer) {
+        return Integer.parseInt(integer.toString()) < 0;
+    }
+
 }

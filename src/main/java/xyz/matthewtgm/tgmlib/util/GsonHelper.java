@@ -23,14 +23,16 @@ import com.google.gson.GsonBuilder;
 
 public class GsonHelper {
 
-    private static final Gson gson = new GsonBuilder().create();
-    private static final Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
+    private static Gson gson = new GsonBuilder().create();
+    private static Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
 
     /**
      * @return A gson instance.
      * @author MatthewTGM
      */
     public static Gson getGson() {
+        if (gson == null)
+            gson = new GsonBuilder().create();
         return gson;
     }
 
@@ -39,6 +41,8 @@ public class GsonHelper {
      * @author MatthewTGM
      */
     public static Gson getGsonPretty() {
+        if (gsonPretty == null)
+            gsonPretty = new GsonBuilder().setPrettyPrinting().create();
         return gsonPretty;
     }
 

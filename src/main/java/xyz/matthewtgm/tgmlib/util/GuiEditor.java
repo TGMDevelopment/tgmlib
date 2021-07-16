@@ -42,25 +42,33 @@ public class GuiEditor {
     private static final Map<Class<? extends GuiScreen>, List<GuiEditRunnable>> editMap = new ConcurrentHashMap<>();
 
     public static void addEdit(Class<? extends GuiScreen> screenClz, GuiEditRunnable edit) {
-        if (ForgeHelper.postEvent(new TGMLibEvent.GuiEditEvent.EditAddEvent.Pre(TGMLib.getInstance(), screenClz, edit))) return;
-        if (screenClz == null) return;
-        if (edit == null) return;
+        if (ForgeHelper.postEvent(new TGMLibEvent.GuiEditEvent.EditAddEvent.Pre(TGMLib.getInstance(), screenClz, edit)))
+            return;
+        if (screenClz == null)
+            return;
+        if (edit == null)
+            return;
         editMap.putIfAbsent(screenClz, new ArrayList<>());
         editMap.get(screenClz).add(edit);
         ForgeHelper.postEvent(new TGMLibEvent.GuiEditEvent.EditAddEvent.Post(TGMLib.getInstance(), screenClz, edit));
     }
 
     public static void addEdits(Class<? extends GuiScreen> screenClz, GuiEditRunnable... edits) {
-        if (screenClz == null) return;
-        if (edits == null) return;
+        if (screenClz == null)
+            return;
+        if (edits == null)
+            return;
         for (GuiEditRunnable runnable : edits)
             addEdit(screenClz, runnable);
     }
 
     public static void removeEdit(Class<? extends GuiScreen> screenClz, GuiEditRunnable edit) {
-        if (ForgeHelper.postEvent(new TGMLibEvent.GuiEditEvent.EditRemoveEvent.Pre(TGMLib.getInstance(), screenClz, edit))) return;
-        if (screenClz == null) return;
-        if (edit == null) return;
+        if (ForgeHelper.postEvent(new TGMLibEvent.GuiEditEvent.EditRemoveEvent.Pre(TGMLib.getInstance(), screenClz, edit)))
+            return;
+        if (screenClz == null)
+            return;
+        if (edit == null)
+            return;
         if (editMap.containsKey(screenClz)) {
             List<GuiEditRunnable> edits = editMap.get(screenClz);
             if (edits != null && !edits.isEmpty())
@@ -70,8 +78,10 @@ public class GuiEditor {
     }
 
     public static void removeEdits(Class<? extends GuiScreen> screenClz, GuiEditRunnable... edits) {
-        if (screenClz == null) return;
-        if (edits == null) return;
+        if (screenClz == null)
+            return;
+        if (edits == null)
+            return;
         for (GuiEditRunnable runnable : edits)
             removeEdit(screenClz, runnable);
     }

@@ -36,9 +36,12 @@ public class ConfigHandler {
     }
 
     public void start() {
-        if (!config.containsKey("light_mode")) config.addAndSave(new ConfigEntry<>("light_mode", false));
-        if (!config.containsKey("show_cosmetics")) config.addAndSave(new ConfigEntry<>("show_cosmetics", true));
-        if (!config.containsKey("override_capes")) config.addAndSave(new ConfigEntry<>("override_capes", true));
+        if (!config.containsKey("light_mode"))
+            config.addAndSave(new ConfigEntry<>("light_mode", false));
+        if (!config.containsKey("show_cosmetics"))
+            config.addAndSave(new ConfigEntry<>("show_cosmetics", true));
+        if (!config.containsKey("override_capes"))
+            config.addAndSave(new ConfigEntry<>("override_capes", true));
         update();
     }
 

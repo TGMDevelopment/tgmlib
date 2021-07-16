@@ -41,7 +41,7 @@ public class ApiHelper {
             return url.getContent();
         } catch (IOException e) {
             e.printStackTrace();
-            return "EMPTY";
+            return null;
         }
     }
 

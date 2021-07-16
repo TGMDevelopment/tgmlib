@@ -53,7 +53,8 @@ public class GuiHelper {
      * @author MatthewTGM
      */
     public static void fixDisplayString(GuiButton button, String display) {
-        if (!button.displayString.equals(display)) button.displayString = display;
+        if (!button.displayString.equals(display))
+            button.displayString = display;
     }
 
     /**
@@ -108,8 +109,10 @@ public class GuiHelper {
         ScreenHelper.updateOrtho(res);
         int scaledWidth = res.getScaledWidth();
         int scaledHeight = res.getScaledHeight();
-        if (screen.width != scaledWidth) screen.width = scaledWidth;
-        if (screen.height != scaledHeight) screen.height = scaledHeight;
+        if (screen.width != scaledWidth)
+            screen.width = scaledWidth;
+        if (screen.height != scaledHeight)
+            screen.height = scaledHeight;
     }
 
     /**

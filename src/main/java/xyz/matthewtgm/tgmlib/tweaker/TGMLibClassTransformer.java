@@ -75,7 +75,8 @@ public class TGMLibClassTransformer implements IClassTransformer {
     }
 
     public byte[] transform(String name, String transformedName, byte[] bytes) {
-        if (bytes == null) return null;
+        if (bytes == null)
+            return null;
         Collection<TGMLibTransformer> transformers = transformerMap.get(transformedName);
         if (transformers.isEmpty()) return bytes;
         logger.info("Found {} transformer(s) for {}", transformers.size(), transformedName);

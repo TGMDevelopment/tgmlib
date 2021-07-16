@@ -18,8 +18,6 @@
 
 package xyz.matthewtgm.tgmlib;
 
-import net.minecraft.util.EnumChatFormatting;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.tgmlib.commands.advanced.Command;
@@ -27,6 +25,7 @@ import xyz.matthewtgm.tgmlib.data.ColourRGB;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibCosmetics;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibKeyBinds;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibMain;
+import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibSettings;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.announcer.AnnouncementPacket;
 import xyz.matthewtgm.tgmlib.util.*;
 
@@ -40,6 +39,7 @@ import java.util.regex.Pattern;
 public class TGMLibCommand {
 
     private final Pattern announcementPattern = Pattern.compile("(\\\".+\\\") (\\\".+\\\") (\\\".+\\\")");
+    private final Logger logger = LogManager.getLogger("TGMLib (TGMLibCommand)");
 
     @Command.Process
     private void process() {
@@ -56,16 +56,17 @@ public class TGMLibCommand {
         GuiHelper.open(new GuiTGMLibKeyBinds(null));
     }
 
-    @Command.Argument(name = "test")
-    private void test() {
-        Logger logger = LogManager.getLogger("TGMLib (TGMLibCommand - Test)");
+    @Command.Argument(name = "settings", aliases = {"config", "options"})
+    private void settings() {
+        GuiHelper.open(new GuiTGMLibSettings(null));
     }
 
     @Command.Argument(name = "announce")
     private void announce(String[] args) {
         List<String> argsList = new ArrayList<>(Arrays.asList(args));
-        if (argsList.get(0).equalsIgnoreCase("announce")) argsList.remove(0);
-        String jointArgs = StringUtils.join(argsList, " ");
+        if (argsList.get(0).equalsIgnoreCase("announce"))
+            argsList.remove(0);
+        String jointArgs = StringHelper.join(argsList, " ");
         Matcher announcementMatcher = announcementPattern.matcher(jointArgs);
         if (announcementMatcher.find())
             TGMLib.getManager().getWebSocket().send(new AnnouncementPacket(announcementMatcher.group(1).replaceAll("\"", "").trim(), announcementMatcher.group(2).replaceAll("\"", "").trim(), announcementMatcher.group(3).replaceAll("\"", "").trim()));
@@ -87,11 +88,6 @@ public class TGMLibCommand {
         Notifications.push("Hello, World 2!", "I'm an even cooler notification with text wrappinggg YOOOOOOOOOO!");
         Notifications.push("Hello, World 3!", "I'm a custom coloured notification!", new Notifications.Notification.NotificationColour(null, new ColourRGB(0, 0, 255)));
         Notifications.push("Hello, World 4!", "I'm a an even more custom coloured notification!", new Notifications.Notification.NotificationColour(new ColourRGB(255, 0, 0), new ColourRGB(0, 0, 255)));
-    }
-
-    @Command.Argument(name = "debug")
-    private void debug(String[] args) {
-
     }
 
 }

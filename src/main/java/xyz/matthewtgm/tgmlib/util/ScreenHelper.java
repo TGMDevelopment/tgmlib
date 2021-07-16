@@ -18,7 +18,6 @@
 
 package xyz.matthewtgm.tgmlib.util;
 
-import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -27,7 +26,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ScreenHelper {
 
-   @Getter
    private static ScaledResolution resolution;
 
     /**
@@ -89,13 +87,18 @@ public class ScreenHelper {
      * @author MatthewTGM
      */
    private static void makeNullChecks() {
-       if (resolution == null) resolution = new ScaledResolution(Minecraft.getMinecraft());
+       if (resolution == null)
+           resolution = new ScaledResolution(Minecraft.getMinecraft());
    }
 
    @SubscribeEvent
     protected void onGameOverlayRendered(RenderGameOverlayEvent event) {
-       if (resolution == null)
-           resolution = event.resolution;
+       resolution = event.resolution;
    }
+
+    public static ScaledResolution getResolution() {
+       makeNullChecks();
+        return resolution;
+    }
 
 }
