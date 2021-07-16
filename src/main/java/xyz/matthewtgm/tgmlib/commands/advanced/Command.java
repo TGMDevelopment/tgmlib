@@ -33,6 +33,7 @@ public @interface Command {
     String[] aliases() default {};
     String[] tabCompleteOptions() default {};
     int permissionLevel() default -1;
+    boolean autoGenTabCompleteOptions() default false;
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)

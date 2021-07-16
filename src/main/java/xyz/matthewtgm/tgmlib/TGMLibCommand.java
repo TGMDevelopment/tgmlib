@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Command(name = "tgmlib", tabCompleteOptions = {"cosmetics", "keybinds", "keybindings", "locraw"})
+@Command(name = "tgmlib", autoGenTabCompleteOptions = true)
 public class TGMLibCommand {
 
     private final Pattern announcementPattern = Pattern.compile("(\\\".+\\\") (\\\".+\\\") (\\\".+\\\")");

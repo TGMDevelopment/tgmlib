@@ -88,7 +88,7 @@ public class Notifications {
 
         ScaledResolution resolution = ScreenHelper.getResolution();
 
-        float prevHeight = 0;
+        float padding = 0;
         int prevTextLines = 0;
         Notification awaitingRemoval = null;
         for (Notification notification : notifications) {
@@ -103,9 +103,8 @@ public class Notifications {
             /* Size and positon. */
             float height = 18 + (textLines * EnhancedFontRenderer.getFontHeight());
             float x = resolution.getScaledWidth() - width - 5;
-            float y = ((index > 0 ? prevHeight : 5) + 3) * index;
-
-            prevHeight = height;
+            float y = (padding + (prevTextLines * index)) * index;
+            padding = height + 3;
             prevTextLines = textLines;
 
             /* Opacity. */
