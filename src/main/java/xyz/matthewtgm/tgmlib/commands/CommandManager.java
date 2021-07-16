@@ -168,17 +168,15 @@ public class CommandManager {
         public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
             List<String> ret = new ArrayList<>();
             if (args.length == 1) {
-                if (!command.autoGenTabOptions()) {
+                if (command.autoGenTabCompleteOptions()) {
+                    for (ArgumentMethod argument : arguments) {
+                        ret.add(argument.argument.name());
+                        ret.addAll(Arrays.asList(argument.argument.aliases()));
+                    }
+                } else {
                     for (String option : command.tabCompleteOptions()) {
                         if (option.startsWith(args[args.length - 1])) {
                             ret.add(option);
-                        }
-                    }
-                } else {
-                    for (ArgumentMethod argument : arguments) {
-                        if (argument.argument.index() == 0) {
-                            ret.add(argument.argument.name());
-                            Collections.addAll(ret, argument.argument.aliases());
                         }
                     }
                 }

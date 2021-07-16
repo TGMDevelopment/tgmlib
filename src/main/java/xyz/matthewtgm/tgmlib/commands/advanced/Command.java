@@ -29,11 +29,11 @@ public @interface Command {
 
     String name();
     boolean processIfNoArgs() default true;
-    boolean autoGenTabOptions() default false;
     String usage() default "";
     String[] aliases() default {};
     String[] tabCompleteOptions() default {};
     int permissionLevel() default -1;
+    boolean autoGenTabCompleteOptions() default false;
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)

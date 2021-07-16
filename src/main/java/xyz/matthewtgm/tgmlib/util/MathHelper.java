@@ -20,6 +20,8 @@ package xyz.matthewtgm.tgmlib.util;
 
 public class MathHelper {
 
+    // TODO: 2021/07/16 : Javadoc!
+
     public static float clamp01(float value) {
         if ((double)value < 0.0)
             return 0.0f;

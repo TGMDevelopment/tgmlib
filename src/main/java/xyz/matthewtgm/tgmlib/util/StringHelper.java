@@ -23,6 +23,8 @@ import java.util.regex.Pattern;
 
 public class StringHelper {
 
+    // TODO: 2021/07/16 : Javadoc!
+
     private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("(?i)\\u00A7[0-9A-FK-OR]");
 
     public static String getLongestString(Object[] strings) {

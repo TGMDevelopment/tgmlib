@@ -18,6 +18,7 @@
 
 package xyz.matthewtgm.tgmlib.keybinds;
 
+import xyz.matthewtgm.json.entities.JsonElement;
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.tgmconfig.ConfigEntry;
 import xyz.matthewtgm.tgmconfig.TGMConfig;
@@ -36,7 +37,8 @@ public class KeyBindConfigHandler {
                 update(keyBind);
             if (!config.getAsJsonObject(keyBind.category()).hasKey(keyBind.name()))
                 update(keyBind);
-            keyBind.updateKey(config.getAsJsonObject(keyBind.category()).get(keyBind.name()).getAsInt());
+            JsonElement keyCodeElement = config.getAsJsonObject(keyBind.category()).get(keyBind.name());
+            keyBind.updateKey(keyCodeElement.isDouble() ? (int) keyCodeElement.getAsDouble() : keyCodeElement.getAsInt());
         }
     }
 

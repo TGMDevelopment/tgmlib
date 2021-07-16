@@ -26,6 +26,10 @@ import java.awt.datatransfer.Transferable;
 
 public class ComputerHelper {
 
+    /**
+     * @return The string currently copied to the clipboard.
+     * @author MatthewTGM
+     */
     public static String getClipboardString() {
         try {
             Transferable transferable = getClipboard().getContents(null);
@@ -38,6 +42,11 @@ public class ComputerHelper {
         }
     }
 
+    /**
+     * @param input The string to set the clipboard's content to.
+     * @return Whether or not the process was successful.
+     * @author MatthewTGM
+     */
     public static boolean setClipboardString(String input) {
         try {
             StringSelection selection = new StringSelection(input);
@@ -49,6 +58,10 @@ public class ComputerHelper {
         }
     }
 
+    /**
+     * @return The system clipboard.
+     * @author MatthewTGM
+     */
     public static Clipboard getClipboard() {
         return Toolkit.getDefaultToolkit().getSystemClipboard();
     }

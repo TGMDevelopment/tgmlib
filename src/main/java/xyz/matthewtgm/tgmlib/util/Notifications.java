@@ -18,46 +18,57 @@
 
 package xyz.matthewtgm.tgmlib.util;
 
+import xyz.matthewtgm.tgmlib.data.ColourRGB;
 import lombok.Getter;
-import lombok.Setter;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.lwjgl.opengl.GL11;
-import xyz.matthewtgm.tgmlib.data.ColourRGB;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Notifications {
 
-    private final Minecraft mc = Minecraft.getMinecraft();
-
-    @Getter @Setter private static int width = 200;
-    @Getter @Setter private static int paddingWidth = 5;
-    @Getter @Setter private static int paddingHeight = 3;
-    @Getter @Setter private static int textDistance = 2;
-
     private static final List<Notification> notifications = new ArrayList<>();
 
-    public static void push(String title, String description, ColourRGB colour, int duration, Notification.NotificationClickRunnable clickRunnable) {
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @param colour The notification's colour.
+     * @param duration The duration that the notification will be rendered for in seconds.
+     * @param clickRunnable The click listener.
+     * @author MatthewTGM
+     */
+    public static void push(String title, String description, Notification.NotificationColour colour, int duration, Notification.NotificationClickRunnable clickRunnable) {
         push(new Notification(title, description, colour, duration, clickRunnable));
     }
 
-    public static void push(String title, String description, ColourRGB colour, Notification.NotificationClickRunnable clickRunnable) {
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @param colour The notification's colour.
+     * @param clickRunnable The click listener.
+     */
+    public static void push(String title, String description, Notification.NotificationColour colour, Notification.NotificationClickRunnable clickRunnable) {
         push(title, description, colour, -1, clickRunnable);
     }
 
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @author MatthewTGM
+     */
     public static void push(String title, String description) {
-        push(title, description, null, null);
+        push(title, description, null, -1, null);
     }
 
-    public static void push(String title, String description, int duration) {
-        push(title, description, null, duration, null);
-    }
-
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @param runnable The click listener.
+     * @author MatthewTGM
+     */
     public static void push(String title, String description, Runnable runnable) {
         push(title, description, notification -> {
             if (runnable != null) {
@@ -66,22 +77,52 @@ public class Notifications {
         });
     }
 
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @param clickRunnable The click listener.
+     * @author MatthewTGM
+     */
     public static void push(String title, String description, Notification.NotificationClickRunnable clickRunnable) {
         push(title, description, null, clickRunnable);
     }
 
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @param duration The duration that the notification will be rendered for in seconds.
+     * @param clickRunnable The click listener.
+     * @author MatthewTGM
+     */
     public static void push(String title, String description, int duration, Notification.NotificationClickRunnable clickRunnable) {
         push(title, description, null, duration, clickRunnable);
     }
 
-    public static void push(String title, String description, ColourRGB colour) {
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @param colour The notification's colour.
+     * @author MatthewTGM
+     */
+    public static void push(String title, String description, Notification.NotificationColour colour) {
         push(title, description, colour, null);
     }
 
-    public static void push(String title, String description, ColourRGB colour, int duration) {
+    /**
+     * @param title The notification title, automatically bolded.
+     * @param description The description of the notification.
+     * @param colour The notification's colour.
+     * @param duration The duration that the notification will be rendered for in seconds.
+     * @author MatthewTGM
+     */
+    public static void push(String title, String description, Notification.NotificationColour colour, int duration) {
         push(title, description, colour, duration, null);
     }
 
+    /**
+     * @param notification The notification to push.
+     * @author MatthewTGM
+     */
     public static void push(Notification notification) {
         notifications.add(notification);
     }
@@ -90,100 +131,96 @@ public class Notifications {
     protected void onRenderTick(TickEvent.RenderTickEvent event) {
         if (event.phase != TickEvent.Phase.END)
             return;
-        if (notifications.isEmpty())
-            return;
 
         ScaledResolution resolution = ScreenHelper.getResolution();
-        Notification current = notifications.get(0);
 
-        float time = current.data.time;
-        float opacity = 200;
+        float y = 0;
+        Notification awaitingRemoval = null;
+        for (Notification notification : notifications) {
+            /* Text. */
+            String title = ChatColour.BOLD + notification.title;
+            float width = 225;
+            List<String> wrappedTitle = EnhancedFontRenderer.wrapTextLines(title, (int) (width), " ");
+            List<String> wrappedDescription = EnhancedFontRenderer.wrapTextLines(notification.description, (int) (width), " ");
+            int textLines = wrappedTitle.size() + wrappedDescription.size();
 
-        if (time <= 1 || time >= 10) {
-            float easeTime = Math.min(time, 1);
-            opacity = easeTime * 200;
-        }
+            /* Size and positon. */
+            float height = 18 + (textLines * EnhancedFontRenderer.getFontHeight());
+            float x = resolution.getScaledWidth() - width - 5;
 
-        String boldedTitle = ChatColour.BOLD + current.title;
-        List<String> wrappedTitle = EnhancedFontRenderer.wrapTextLines(boldedTitle, mc.fontRendererObj, width, " ");
-        List<String> wrappedDescription = EnhancedFontRenderer.wrapTextLines(current.description, mc.fontRendererObj, width, " ");
-        int textLines = wrappedTitle.size() + wrappedDescription.size();
+            /* Opacity. */
+            float opacity = 200;
+            if (notification.data.time <= 1 || notification.data.time >= 10)
+                opacity = Math.min(notification.data.time, 1) * 200;
+            int clampedOpacity = MathHelper.clamp_int((int) opacity, 5, 255);
 
-        float rectWidth = current.data.width = MathHelper.lerp(current.data.width, width + (paddingWidth * 2), event.renderTickTime / 4);
-        if (current.data.closing && current.data.time <= 0.45f)
-            rectWidth = current.data.width = Math.max(MathHelper.lerp(current.data.width, -(width + (paddingWidth * 2)), event.renderTickTime / 2), 0);
-        float rectHeight = (paddingHeight * 2) + (textLines * mc.fontRendererObj.FONT_HEIGHT) + ((textLines - 1) * textDistance);
-        float rectX = resolution.getScaledWidth() - rectWidth + 5;
-        float rectY = 3;
-
-        float mouseX = MouseHelper.getMouseX();
-        float mouseY = MouseHelper.getMouseY();
-        boolean mouseOver = mouseX >= rectX && mouseX <= rectX + rectWidth && mouseY >= rectY && mouseY <= rectY + rectHeight;
-
-        opacity += current.data.mouseOverAdd = MathHelper.lerp(current.data.mouseOverAdd, (mouseOver ? 40 : 0), event.renderTickTime / 4);
-
-        GlStateManager.pushMatrix();
-
-        int clampedOpacity = (int) MathHelper.clamp(opacity, 5, 255);
-        ColourRGB colour = current.colour == null ? new ColourRGB(0, 0, 0, clampedOpacity) : current.colour;
-        if (colour.equals(current.colour))
-            colour.setA(clampedOpacity);
-        GlHelper.drawRectangle(rectX, rectY, rectWidth, rectHeight, colour);
-
-        if (current.data.time > 0.1f) {
-            ColourRGB textColour = new ColourRGB(255, 255, 255, clampedOpacity);
-            GL11.glEnable(GL11.GL_SCISSOR_TEST);
-            GlHelper.totalScissor(rectX, rectY, rectWidth, rectHeight);
-            int i = 0;
-            for (String line : wrappedTitle) {
-                EnhancedFontRenderer.drawText(line, rectX + 2, rectY + paddingHeight + (textDistance * i) + (mc.fontRendererObj.FONT_HEIGHT * i), textColour.getRGBA(), true);
-                i++;
+            /* Mouse handling. */
+            float mouseX = MouseHelper.getMouseX();
+            float mouseY = MouseHelper.getMouseY();
+            boolean hovered = mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
+            if (hovered && !notification.data.clicked && MouseHelper.isMouseDown()) {
+                notification.data.clicked = true;
+                if (notification.clickRunnable != null)
+                    notification.clickRunnable.click(notification);
+                notification.data.closing = true;
             }
-            for (String line : wrappedDescription) {
-                EnhancedFontRenderer.drawText(line, rectX + 2, rectY + paddingHeight + (textDistance * i) + (mc.fontRendererObj.FONT_HEIGHT * i), textColour.getRGBA(), true);
-                i++;
+
+            /* Rendering. */
+            GlStateManager.pushMatrix();
+            ColourRGB backgroundColour = notification.colour == null || notification.colour.backgroundColour == null ? new ColourRGB(0, 0, 0, clampedOpacity) : notification.colour.backgroundColour.setA_builder(clampedOpacity);
+            RenderHelper.drawRectEnhanced((int) x, (int) y, (int) width, (int) height, backgroundColour.getRGBA());
+            ColourRGB foregroundColour = notification.colour == null || notification.colour.foregroundColour == null ? new ColourRGB(255, 175, 0, clampedOpacity) : notification.colour.foregroundColour.setA_builder(clampedOpacity);
+            RenderHelper.drawHollowRect((int) x + 4, (int) y + 4, (int) width - 8, (int) height - 8, foregroundColour.getRGBA());
+            if (notification.data.time > 0.1f) {
+                ColourRGB textColour = new ColourRGB(255, 255, 255, clampedOpacity);
+                GlHelper.startScissorBox(x, y, width, height);
+                int i = 0;
+                for (String line : wrappedTitle) {
+                    EnhancedFontRenderer.drawText(line, x + 8, y + 8 + (i * 2) + (i * EnhancedFontRenderer.getFontHeight()), textColour.getRGBA(), true);
+                    i++;
+                }
+                for (String line : wrappedDescription) {
+                    EnhancedFontRenderer.drawText(line, x + 8, y + 8 + (i * 2) + (i * EnhancedFontRenderer.getFontHeight()), textColour.getRGBA(), true);
+                    i++;
+                }
+                GlHelper.endScissorBox();
             }
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
-        }
+            GlStateManager.popMatrix();
 
-        GlStateManager.popMatrix();
+            y += height + 5;
 
-        if (current.data.time >= (current.duration == -1 ? 5 : current.duration))
-            current.data.closing = true;
-        if (!current.data.clicked && mouseOver && MouseHelper.isMouseDown()) {
-            current.data.clicked = true;
-            if (current.clickRunnable != null)
-                current.clickRunnable.click(current);
-            current.data.closing = true;
-            if (current.data.time > 1f)
-                current.data.time = 1;
+            /* Other handling things. */
+            if (notification.data.time >= (notification.duration == -1 ? 3 : notification.duration))
+                notification.data.closing = true;
+            if (!hovered)
+                notification.data.time += (notification.data.closing ? -0.02 : 0.02) * (event.renderTickTime * 3);
+            if (notification.data.closing && notification.data.time <= 0)
+                awaitingRemoval = notification;
         }
-        if (!mouseOver)
-            current.data.time += (current.data.closing ? -0.02 : 0.02) * (event.renderTickTime * 3);
-        if (current.data.closing && current.data.time <= 0)
-            notifications.remove(current);
+        if (awaitingRemoval != null)
+            notifications.remove(awaitingRemoval);
     }
 
     public static class Notification {
         public String title;
         public String description;
-        public ColourRGB colour;
+        public NotificationColour colour;
         @Getter private final int duration;
         @Getter private final NotificationClickRunnable clickRunnable;
 
         private final NotificationData data;
 
-        public Notification(String title, String description, ColourRGB colour, int duration, NotificationClickRunnable clickRunnable) {
+        public Notification(String title, String description, NotificationColour colour, int duration, NotificationClickRunnable clickRunnable) {
             this.title = title;
             this.description = description;
             this.colour = colour;
             this.duration = duration;
             this.clickRunnable = clickRunnable;
 
-            this.data = new NotificationData(0, 0, 0, false, false);
+            this.data = new NotificationData(0, false, false);
         }
 
-        public Notification(String title, String description, ColourRGB colour, NotificationClickRunnable clickRunnable) {
+        public Notification(String title, String description, NotificationColour colour, NotificationClickRunnable clickRunnable) {
             this(title, description, colour, -1, clickRunnable);
         }
 
@@ -199,11 +236,11 @@ public class Notifications {
             this(title, description, null, duration, clickRunnable);
         }
 
-        public Notification(String title, String description, ColourRGB colour) {
+        public Notification(String title, String description, NotificationColour colour) {
             this(title, description, colour, null);
         }
 
-        public Notification(String title, String description, ColourRGB colour, int duration) {
+        public Notification(String title, String description, NotificationColour colour, int duration) {
             this(title, description, colour, duration, null);
         }
 
@@ -214,18 +251,23 @@ public class Notifications {
         public interface NotificationClickRunnable {
             void click(Notification notification);
         }
+
+        public static class NotificationColour {
+            public final ColourRGB backgroundColour;
+            public final ColourRGB foregroundColour;
+            public NotificationColour(ColourRGB backgroundColour, ColourRGB foregroundColour) {
+                this.backgroundColour = backgroundColour;
+                this.foregroundColour = foregroundColour;
+            }
+        }
     }
 
     private static class NotificationData {
-        float time;
-        float width;
-        float mouseOverAdd;
-        boolean closing;
-        boolean clicked;
-        NotificationData(float time, float width, float mouseOverAdd, boolean closing, boolean clicked) {
+        private float time;
+        private boolean closing;
+        private boolean clicked;
+        NotificationData(float time, boolean closing, boolean clicked) {
             this.time = time;
-            this.width = width;
-            this.mouseOverAdd = mouseOverAdd;
             this.closing = closing;
             this.clicked = clicked;
         }

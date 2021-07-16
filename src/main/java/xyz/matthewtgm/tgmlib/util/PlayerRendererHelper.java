@@ -31,6 +31,7 @@ public class PlayerRendererHelper {
      * Adds a new layer to the player class.
      *
      * @param layer the layer to be added.
+     * @author MatthewTGM
      */
     public static void addLayer(LayerRenderer<?> layer) {
         try {

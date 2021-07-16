@@ -24,6 +24,10 @@ import static org.objectweb.asm.Opcodes.*;
 
 public class AsmHelper {
 
+    /**
+     * @param abstractInsnNode The node to debug.
+     * @author Unknown
+     */
     public static void debug(AbstractInsnNode abstractInsnNode) {
         String print = ": ";
         if (abstractInsnNode instanceof FieldInsnNode) {
@@ -77,6 +81,11 @@ public class AsmHelper {
         System.out.println(print);
     }
 
+    /**
+     * @param runnable The list runnable.
+     * @return The created list.
+     * @author MatthewTGM
+     */
     public static InsnList createQuickInsnList(InsnListRunnable runnable) {
         InsnList list = new InsnList();
         runnable.create(list);

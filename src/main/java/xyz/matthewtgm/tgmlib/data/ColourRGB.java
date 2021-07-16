@@ -66,12 +66,22 @@ public class ColourRGB {
         this.r = r;
     }
 
+    public ColourRGB setR_builder(int ar) {
+        setR(r);
+        return this;
+    }
+
     public int getG() {
         return g;
     }
 
     public void setG(int g) {
         this.g = g;
+    }
+
+    public ColourRGB setG_builder(int g) {
+        setG(g);
+        return this;
     }
 
     public int getB() {
@@ -82,12 +92,22 @@ public class ColourRGB {
         this.b = b;
     }
 
+    public ColourRGB setB_builder(int b) {
+        setB(b);
+        return this;
+    }
+
     public int getA() {
         return a;
     }
 
     public void setA(int a) {
         this.a = a;
+    }
+
+    public ColourRGB setA_builder(int a) {
+        setA(a);
+        return this;
     }
 
     public int getRGB() {

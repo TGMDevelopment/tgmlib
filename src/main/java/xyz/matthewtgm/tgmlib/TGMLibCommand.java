@@ -21,6 +21,7 @@ package xyz.matthewtgm.tgmlib;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.tgmlib.commands.advanced.Command;
+import xyz.matthewtgm.tgmlib.data.ColourRGB;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibCosmetics;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibKeyBinds;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibMain;
@@ -34,7 +35,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Command(name = "tgmlib", autoGenTabOptions = true)
+@Command(name = "tgmlib", autoGenTabCompleteOptions = true)
 public class TGMLibCommand {
 
     private final Pattern announcementPattern = Pattern.compile("(\\\".+\\\") (\\\".+\\\") (\\\".+\\\")");
@@ -78,9 +79,15 @@ public class TGMLibCommand {
         ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, HypixelHelper.getLocraw());
     }
 
-    @Command.Argument(name = "debug")
-    private void debug(String[] args) {
-
+    @Command.Argument(name = "notification")
+    private void notification() {
+        Notifications.push("Hello, World!", "I'm a cooler, clickable  notification!", notification -> {
+            notification.title = "Click!";
+            notification.description = "I was clicked! Oh my!";
+        });
+        Notifications.push("Hello, World 2!", "I'm an even cooler notification with text wrappinggg YOOOOOOOOOO!");
+        Notifications.push("Hello, World 3!", "I'm a custom coloured notification!", new Notifications.Notification.NotificationColour(null, new ColourRGB(0, 0, 255)));
+        Notifications.push("Hello, World 4!", "I'm a an even more custom coloured notification!", new Notifications.Notification.NotificationColour(new ColourRGB(255, 0, 0), new ColourRGB(0, 0, 255)));
     }
 
 }

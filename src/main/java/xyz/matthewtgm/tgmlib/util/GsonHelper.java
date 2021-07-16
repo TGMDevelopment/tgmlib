@@ -26,12 +26,20 @@ public class GsonHelper {
     private static Gson gson = new GsonBuilder().create();
     private static Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
 
+    /**
+     * @return A gson instance.
+     * @author MatthewTGM
+     */
     public static Gson getGson() {
         if (gson == null)
             gson = new GsonBuilder().create();
         return gson;
     }
 
+    /**
+     * @return A pretty gson instance.
+     * @author MatthewTGM
+     */
     public static Gson getGsonPretty() {
         if (gsonPretty == null)
             gsonPretty = new GsonBuilder().setPrettyPrinting().create();

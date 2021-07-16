@@ -42,6 +42,8 @@ import java.util.Map;
 
 public class ImageHelper {
 
+    // TODO: 2021/07/16 : Javadoc!
+
     public static ByteArrayOutputStream toByteArrayOutputStream(RenderedImage image) throws IOException {
         ByteArrayOutputStream ret = new ByteArrayOutputStream();
         ret.write(toByteArray(image));

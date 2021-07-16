@@ -37,10 +37,9 @@ public class GlHelper {
      * @author MatthewTGM
      */
     public static void startScissorBox(int x, int y, int width, int height) {
-        ScaledResolution resolution = ScreenHelper.getResolution();
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor(((x * Minecraft.getMinecraft().displayWidth) / resolution.getScaledWidth()), (((resolution.getScaledHeight() - (y + height)) * Minecraft.getMinecraft().displayHeight) / resolution.getScaledHeight()), (width * Minecraft.getMinecraft().displayWidth / resolution.getScaledWidth()), (height * Minecraft.getMinecraft().displayHeight / resolution.getScaledHeight()));
+        totalScissor(x, y, width, height);
     }
 
     /**
@@ -62,11 +61,23 @@ public class GlHelper {
         GL11.glPopMatrix();
     }
 
+    /**
+     * Adapted from XanderLib under GPL 3.0 license
+     * https://github.com/isXander/XanderLib/blob/main/LICENSE
+     *
+     * @author isXander
+     */
     public static void totalScissor(double xPosition, double yPosition, double width, double height) {
         ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
         GL11.glScissor((int) ((xPosition * Minecraft.getMinecraft().displayWidth) / scaledResolution.getScaledWidth()), (int) (((scaledResolution.getScaledHeight() - (yPosition + height)) * Minecraft.getMinecraft().displayHeight) / scaledResolution.getScaledHeight()), (int) (width * Minecraft.getMinecraft().displayWidth / scaledResolution.getScaledWidth()), (int) (height * Minecraft.getMinecraft().displayHeight / scaledResolution.getScaledHeight()));
     }
 
+    /**
+     * Adapted from XanderLib under GPL 3.0 license
+     * https://github.com/isXander/XanderLib/blob/main/LICENSE
+     *
+     * @author isXander
+     */
     public static void drawRectangle(float xPosition, float yPosition, float width, float height, ColourRGB colour) {
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();

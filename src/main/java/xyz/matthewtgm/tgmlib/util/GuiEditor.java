@@ -36,6 +36,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GuiEditor {
 
+    // TODO: 2021/07/16 : Javadoc! 
+
     @Getter
     private static final Map<Class<? extends GuiScreen>, List<GuiEditRunnable>> editMap = new ConcurrentHashMap<>();
 

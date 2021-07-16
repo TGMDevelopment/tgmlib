@@ -26,16 +26,28 @@ public class MouseHelper {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
 
+    /**
+     * @return The current mouse x postion.
+     * @author MatthewTGM
+     */
     public static int getMouseX() {
         ScaledResolution res = new ScaledResolution(mc);
         return Mouse.getX() * res.getScaledWidth() / mc.displayWidth;
     }
 
+    /**
+     * @return The current mouse y position.
+     * @author MatthewTGM
+     */
     public static int getMouseY() {
         ScaledResolution res = new ScaledResolution(mc);
         return res.getScaledHeight() - Mouse.getY() * res.getScaledHeight() / mc.displayHeight - 1;
     }
 
+    /**
+     * @return Whether or not any mouse button is currently down.
+     * @author MatthewTGM
+     */
     public static boolean isMouseDown() {
         return Mouse.getEventButtonState();
     }

@@ -27,10 +27,18 @@ import java.util.List;
 
 public class CustomClientRegistry {
 
+    /**
+     * @param key The keybinding to register.
+     * @author MatthewTGM
+     */
     public static void registerKeyBinding(KeyBinding key) {
         Minecraft.getMinecraft().gameSettings.keyBindings = ArrayUtils.add(Minecraft.getMinecraft().gameSettings.keyBindings, key);
     }
 
+    /**
+     * @param key The keybinding to unregister.
+     * @author MatthewTGM
+     */
     public static void unregisterKeyBinding(KeyBinding key) {
         List<KeyBinding> keyBindingList = Arrays.asList(Minecraft.getMinecraft().gameSettings.keyBindings);
         if (keyBindingList.contains(key))

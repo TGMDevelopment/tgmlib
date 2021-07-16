@@ -618,14 +618,26 @@ public class EnhancedFontRenderer {
         GlStateManager.popMatrix();
     }
 
-    public static List<String> wrapTextLines(String text, FontRenderer fontRenderer, int lineWidth, String split) {
-        String wrapped = wrapText(text, fontRenderer, lineWidth, split);
-        if (wrapped.equals(""))
+    /**
+     * Adapted from XanderLib under GPL 3.0 license
+     * https://github.com/isXander/XanderLib/blob/main/LICENSE
+     *
+     * @author isXander
+     */
+    public static List<String> wrapTextLines(String text, int lineWidth, String split) {
+        String wrapped = wrapText(text, lineWidth, split);
+        if (wrapped.isEmpty())
             return new ArrayList<>();
         return Arrays.asList(wrapped.split("\n"));
     }
-
-    public static String wrapText(String text, FontRenderer fontRenderer, int lineWidth, String split) {
+  
+    /**
+     * Adapted from XanderLib under GPL 3.0 license
+     * https://github.com/isXander/XanderLib/blob/main/LICENSE
+     *
+     * @author isXander
+     */
+    public static String wrapText(String text, int lineWidth, String split) {
         String[] words = text.split("(" + split + "|\n)");
         int lineLength = 0;
         StringBuilder output = new StringBuilder();
@@ -634,7 +646,7 @@ public class EnhancedFontRenderer {
             String word = words[i];
             if (i != words.length - 1)
                 word += split;
-            int wordLength = fontRenderer.getStringWidth(word);
+            int wordLength = getWidth(word);
             if (lineLength + wordLength <= lineWidth) {
                 output.append(word);
                 lineLength += wordLength;
@@ -642,7 +654,7 @@ public class EnhancedFontRenderer {
                 output.append("\n").append(word);
                 lineLength = wordLength;
             } else
-                output.append(wrapText(word, fontRenderer, lineWidth, "")).append(split);
+                output.append(wrapText(word, lineWidth, "")).append(split);
         }
         return output.toString();
     }

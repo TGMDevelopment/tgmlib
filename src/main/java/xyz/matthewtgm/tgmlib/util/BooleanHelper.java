@@ -20,13 +20,27 @@ package xyz.matthewtgm.tgmlib.util;
 
 public class BooleanHelper {
 
+    /**
+     * @param booleans All of the booleans to check.
+     * @return Whether or not any of the booleans are true.
+     * @author MatthewTGM
+     */
     public static boolean anyTrue(boolean... booleans) {
-        for (boolean bool : booleans) if (bool) return true;
+        for (boolean bool : booleans)
+            if (bool)
+                return true;
         return false;
     }
 
+    /**
+     * @param booleans All of the booleans to check.
+     * @return Whether or not any of the booleans are false.
+     * @author MatthewTGM
+     */
     public static boolean anyFalse(boolean... booleans) {
-        for (boolean bool : booleans) if (!bool) return true;
+        for (boolean bool : booleans)
+            if (!bool)
+                return true;
         return false;
     }
 
