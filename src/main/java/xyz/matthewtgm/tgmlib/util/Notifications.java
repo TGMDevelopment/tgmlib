@@ -29,10 +29,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Adapted from XanderLib under GPLv3
- * https://github.com/isXander/XanderLib/blob/main/LICENSE
- */
 public class Notifications {
 
     private final Minecraft mc = Minecraft.getMinecraft();
@@ -91,8 +87,6 @@ public class Notifications {
         float y = 0;
         Notification awaitingRemoval = null;
         for (Notification notification : notifications) {
-            int index = notifications.indexOf(notification);
-
             /* Text. */
             String title = ChatColour.BOLD + notification.title;
             List<String> wrappedTitle = EnhancedFontRenderer.wrapTextLines(title, (int) (width), " ");
