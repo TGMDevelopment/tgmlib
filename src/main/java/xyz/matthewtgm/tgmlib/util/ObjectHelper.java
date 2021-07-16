@@ -18,7 +18,13 @@
 
 package xyz.matthewtgm.tgmlib.util;
 
+import java.util.Objects;
+
 public class ObjectHelper {
+
+    public static String stringify(Object o) {
+        return o == null ? "" : Objects.toString(o);
+    }
 
     public static <T> T ensureNotNull(Object o) {
         T ret;

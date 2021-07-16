@@ -39,9 +39,6 @@ import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsRetrievePack
 import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsTogglePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.other.GameClosePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.other.GameOpenPacket;
-import xyz.matthewtgm.tgmlib.socket.packets.impl.profiles.OnlineStatusUpdatePacket;
-import xyz.matthewtgm.tgmlib.socket.packets.impl.profiles.PrivateMessagePacket;
-import xyz.matthewtgm.tgmlib.socket.packets.impl.profiles.RetrieveProfilePacket;
 import xyz.matthewtgm.tgmlib.util.ChatHelper;
 import xyz.matthewtgm.tgmlib.util.Multithreading;
 
@@ -149,15 +146,9 @@ public class TGMLibSocket extends WebSocketClient {
         /* Announcer. */
         packets.put(AnnouncementPacket.class, 2f);
 
-        /* Profiles. */
-        /* IDs 3 and 4 are occupied on the server. */
-        packets.put(RetrieveProfilePacket.class, 5f);
-        packets.put(PrivateMessagePacket.class, 6f);
-        packets.put(OnlineStatusUpdatePacket.class, 7f);
-
         /* Game. */
-        packets.put(GameOpenPacket.class, 8f);
-        packets.put(GameClosePacket.class, 9f);
+        packets.put(GameOpenPacket.class, 5f);
+        packets.put(GameClosePacket.class, 6f);
     }
 
     public interface OpenRunnable {

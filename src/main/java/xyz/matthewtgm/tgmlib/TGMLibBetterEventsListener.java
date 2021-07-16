@@ -34,7 +34,7 @@ public class TGMLibBetterEventsListener {
             event.setCanceled(chatMessageReceivedEvent.isCanceled());
         }
 
-        if (event.type == 1) {
+        if (event.type == 2) {
             ActionBarEvent actionBarEvent = new ActionBarEvent(event.message);
             event.message = actionBarEvent.component;
             event.setCanceled(actionBarEvent.isCanceled());

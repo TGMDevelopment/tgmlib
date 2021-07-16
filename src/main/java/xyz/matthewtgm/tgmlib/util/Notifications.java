@@ -88,8 +88,7 @@ public class Notifications {
 
         ScaledResolution resolution = ScreenHelper.getResolution();
 
-        float padding = 0;
-        int prevTextLines = 0;
+        float y = 0;
         Notification awaitingRemoval = null;
         for (Notification notification : notifications) {
             int index = notifications.indexOf(notification);
@@ -103,9 +102,6 @@ public class Notifications {
             /* Size and positon. */
             float height = 18 + (textLines * EnhancedFontRenderer.getFontHeight());
             float x = resolution.getScaledWidth() - width - 5;
-            float y = (padding + (prevTextLines * index)) * index;
-            padding = height + 3;
-            prevTextLines = textLines;
 
             /* Opacity. */
             float opacity = 200;
@@ -145,6 +141,8 @@ public class Notifications {
                 GlHelper.endScissorBox();
             }
             GlStateManager.popMatrix();
+
+            y += height + 5;
 
             /* Other handling things. */
             if (notification.data.time >= (notification.duration == -1 ? 3 : notification.duration))

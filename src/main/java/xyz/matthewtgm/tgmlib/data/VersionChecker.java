@@ -20,21 +20,46 @@ package xyz.matthewtgm.tgmlib.data;
 
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.util.JsonApiHelper;
+import xyz.matthewtgm.tgmlib.util.Multithreading;
 
-public class StandardVersionChecker {
+import java.util.concurrent.TimeUnit;
 
-    private final JsonObject versionObject;
+public class VersionChecker {
 
-    public StandardVersionChecker(String url) {
+    private final String url;
+    private FetchRunnable fetchListener;
+    private JsonObject versionObject;
+
+    public VersionChecker(String url, boolean periodicallyFetch) {
+        this.url = url;
+        if (periodicallyFetch)
+            Multithreading.schedule(this::fetch, 0, 10, TimeUnit.MINUTES);
+    }
+
+    public VersionChecker(String url) {
+        this(url, false);
+    }
+
+    public VersionChecker fetch() {
         versionObject = JsonApiHelper.getJsonObject(url);
+        fetchListener.run(this, versionObject);
+        return this;
+    }
+
+    public String getLatestVersion(String name) {
+        return versionObject.get(name).toString();
     }
 
     public String getLatestVersion() {
-        return versionObject.get("version").toString();
+        return getLatestVersion("version");
+    }
+
+    public String getLatestBeta(String name) {
+        return versionObject.get(name).toString();
     }
 
     public String getLatestBeta() {
-        return versionObject.get("beta").toString();
+        return getLatestBeta("beta");
     }
 
     public String getDownloadUrl() {
@@ -45,12 +70,29 @@ public class StandardVersionChecker {
         return versionObject.get("beta_download").toString();
     }
 
+    public boolean isLatestVersion(String name, String version) {
+        return getLatestVersion(name).matches(version);
+    }
+
     public boolean isLatestVersion(String version) {
         return getLatestVersion().matches(version);
     }
 
+    public boolean isLatestBeta(String name, String version) {
+        return getLatestBeta(name).matches(version);
+    }
+
     public boolean isLatestBeta(String version) {
         return getLatestBeta().matches(version);
+    }
+
+    public VersionChecker setFetchListener(FetchRunnable fetchListener) {
+        this.fetchListener = fetchListener;
+        return this;
+    }
+
+    public interface FetchRunnable {
+        void run(VersionChecker versionChecker, JsonObject versionObject);
     }
 
 }
