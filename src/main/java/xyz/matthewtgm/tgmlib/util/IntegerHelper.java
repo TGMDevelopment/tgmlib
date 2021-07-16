@@ -41,8 +41,8 @@ public class IntegerHelper {
      * @return Whether or not the integer is positive.
      * @author MatthewTGM
      */
-    public static boolean isPositive(Object integer) {
-        return Integer.parseInt(integer.toString()) >= 0;
+    public static boolean isPositive(int integer) {
+        return integer >= 0;
     }
 
     /**
@@ -50,8 +50,8 @@ public class IntegerHelper {
      * @return Whether or not the integer is negative.
      * @author MatthewTGM
      */
-    public static boolean isNegative(Object integer) {
-        return Integer.parseInt(integer.toString()) < 0;
+    public static boolean isNegative(int integer) {
+        return integer < 0;
     }
 
 }

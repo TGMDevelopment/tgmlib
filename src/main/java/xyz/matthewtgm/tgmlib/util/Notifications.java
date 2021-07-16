@@ -140,6 +140,11 @@ public class Notifications {
             if (notifications.indexOf(notification) > 2)
                 continue;
 
+            if (notification.data.xPosition < 1)
+                notification.data.xPosition = resolution.getScaledWidth();
+
+            int duration = (notification.duration == -1 ? 4 : notification.duration);
+
             /* Text. */
             String title = ChatColour.BOLD + notification.title;
             float width = 225;
@@ -149,7 +154,7 @@ public class Notifications {
 
             /* Size and positon. */
             float height = 18 + (textLines * EnhancedFontRenderer.getFontHeight());
-            float x = notification.data.xPosition = MathHelper.lerp(notification.data.xPosition <= 0 ? resolution.getScaledWidth() : notification.data.xPosition, resolution.getScaledWidth() - width - 5, event.renderTickTime / 4);
+            float x = notification.data.xPosition = MathHelper.lerp(notification.data.xPosition, resolution.getScaledWidth() - width - 5, event.renderTickTime / 4);
             if (notification.data.closing && notification.data.time < 0.75f)
                 x = notification.data.xPosition = MathHelper.lerp(notification.data.xPosition, resolution.getScaledWidth() + width, event.renderTickTime / 4);
 
@@ -162,8 +167,6 @@ public class Notifications {
                 if (notification.clickRunnable != null)
                     notification.clickRunnable.click(notification);
                 notification.data.closing = true;
-                if (notification.data.time > 1)
-                    notification.data.time = 1;
             }
 
             /* Rendering. */
@@ -172,6 +175,8 @@ public class Notifications {
             RenderHelper.drawRectEnhanced((int) x, (int) y, (int) width, (int) height, backgroundColour.getRGBA());
             ColourRGB foregroundColour = notification.colour == null || notification.colour.foregroundColour == null ? new ColourRGB(255, 175, 0, 200) : notification.colour.foregroundColour.setA_builder(200);
             RenderHelper.drawHollowRect((int) x + 4, (int) y + 4, (int) width - 8, (int) height - 8, foregroundColour.getRGBA());
+
+            /* Text. */
             if (notification.data.time > 0.1f) {
                 ColourRGB textColour = new ColourRGB(255, 255, 255, 200);
                 GlHelper.startScissorBox(x, y, width, height);
@@ -188,10 +193,11 @@ public class Notifications {
             }
             GlStateManager.popMatrix();
 
+            /* Positioning. */
             y += height + 5;
 
             /* Other handling things. */
-            if (notification.data.time >= (notification.duration == -1 ? 4 : notification.duration))
+            if (notification.data.time >= duration)
                 notification.data.closing = true;
             if (!hovered)
                 notification.data.time += (notification.data.closing ? -0.02 : 0.02) * (event.renderTickTime * 3);
