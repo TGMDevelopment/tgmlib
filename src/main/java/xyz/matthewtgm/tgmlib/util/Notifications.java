@@ -134,7 +134,7 @@ public class Notifications {
 
         ScaledResolution resolution = ScreenHelper.getResolution();
 
-        float y = 0;
+        float y = 5;
         Notification awaitingRemoval = null;
         for (Notification notification : notifications) {
             if (notifications.indexOf(notification) > 2)
@@ -149,13 +149,9 @@ public class Notifications {
 
             /* Size and positon. */
             float height = 18 + (textLines * EnhancedFontRenderer.getFontHeight());
-            float x = resolution.getScaledWidth() - width - 5;
-
-            /* Opacity. */
-            float opacity = 200;
-            if (notification.data.time <= 1 || notification.data.time >= 10)
-                opacity = Math.min(notification.data.time, 1) * 200;
-            int clampedOpacity = MathHelper.clamp_int((int) opacity, 5, 255);
+            float x = notification.data.xPosition = MathHelper.lerp(notification.data.xPosition <= 0 ? resolution.getScaledWidth() : notification.data.xPosition, resolution.getScaledWidth() - width - 5, event.renderTickTime / 4);
+            if (notification.data.closing && notification.data.time < 0.75f)
+                x = notification.data.xPosition = MathHelper.lerp(notification.data.xPosition, resolution.getScaledWidth() + width, event.renderTickTime / 4);
 
             /* Mouse handling. */
             float mouseX = MouseHelper.getMouseX();
@@ -166,16 +162,18 @@ public class Notifications {
                 if (notification.clickRunnable != null)
                     notification.clickRunnable.click(notification);
                 notification.data.closing = true;
+                if (notification.data.time > 1)
+                    notification.data.time = 1;
             }
 
             /* Rendering. */
             GlStateManager.pushMatrix();
-            ColourRGB backgroundColour = notification.colour == null || notification.colour.backgroundColour == null ? new ColourRGB(0, 0, 0, clampedOpacity) : notification.colour.backgroundColour.setA_builder(clampedOpacity);
+            ColourRGB backgroundColour = notification.colour == null || notification.colour.backgroundColour == null ? new ColourRGB(0, 0, 0, 200) : notification.colour.backgroundColour.setA_builder(200);
             RenderHelper.drawRectEnhanced((int) x, (int) y, (int) width, (int) height, backgroundColour.getRGBA());
-            ColourRGB foregroundColour = notification.colour == null || notification.colour.foregroundColour == null ? new ColourRGB(255, 175, 0, clampedOpacity) : notification.colour.foregroundColour.setA_builder(clampedOpacity);
+            ColourRGB foregroundColour = notification.colour == null || notification.colour.foregroundColour == null ? new ColourRGB(255, 175, 0, 200) : notification.colour.foregroundColour.setA_builder(200);
             RenderHelper.drawHollowRect((int) x + 4, (int) y + 4, (int) width - 8, (int) height - 8, foregroundColour.getRGBA());
             if (notification.data.time > 0.1f) {
-                ColourRGB textColour = new ColourRGB(255, 255, 255, clampedOpacity);
+                ColourRGB textColour = new ColourRGB(255, 255, 255, 200);
                 GlHelper.startScissorBox(x, y, width, height);
                 int i = 0;
                 for (String line : wrappedTitle) {
@@ -193,7 +191,7 @@ public class Notifications {
             y += height + 5;
 
             /* Other handling things. */
-            if (notification.data.time >= (notification.duration == -1 ? 3 : notification.duration))
+            if (notification.data.time >= (notification.duration == -1 ? 4 : notification.duration))
                 notification.data.closing = true;
             if (!hovered)
                 notification.data.time += (notification.data.closing ? -0.02 : 0.02) * (event.renderTickTime * 3);
@@ -267,6 +265,7 @@ public class Notifications {
 
     private static class NotificationData {
         private float time;
+        private float xPosition;
         private boolean closing;
         private boolean clicked;
         NotificationData(float time, boolean closing, boolean clicked) {
