@@ -137,6 +137,9 @@ public class Notifications {
         float y = 0;
         Notification awaitingRemoval = null;
         for (Notification notification : notifications) {
+            if (notifications.indexOf(notification) > 2)
+                continue;
+
             /* Text. */
             String title = ChatColour.BOLD + notification.title;
             float width = 225;
