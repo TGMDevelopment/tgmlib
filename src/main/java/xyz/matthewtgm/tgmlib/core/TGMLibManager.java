@@ -43,6 +43,7 @@ import xyz.matthewtgm.tgmlib.socket.packets.impl.other.GameOpenPacket;
 import xyz.matthewtgm.tgmlib.util.ChatHelper;
 import xyz.matthewtgm.tgmlib.util.ForgeHelper;
 import xyz.matthewtgm.tgmlib.util.Multithreading;
+import xyz.matthewtgm.tgmlib.util.Notifications;
 import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 
 import java.io.File;
@@ -150,6 +151,19 @@ public class TGMLibManager {
     public void fixSocket() {
         try {
             (webSocket = createWebSocket(new TGMLibSocket(websocketUri()))).connectBlocking(15, TimeUnit.SECONDS);
+            if (!webSocket.isOpen())
+                Notifications.push("Failed to connect to TGMLib WebSocket!", "Click me to attempt a reconnect.", notification -> {
+                    try {
+                        notification.title = "Reconnecting...";
+                        notification.description = "";
+                        if (!webSocket.reconnectBlocking())
+                            notification.title = "Failed to reconnect! D:";
+                        else
+                            notification.title = "Reconnected successfully!";
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
         } catch (Exception e) {
             e.printStackTrace();
         }

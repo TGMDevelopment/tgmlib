@@ -164,8 +164,7 @@ public class Notifications {
             boolean hovered = mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
             if (hovered && !notification.data.clicked && MouseHelper.isMouseDown()) {
                 notification.data.clicked = true;
-                if (notification.clickRunnable != null)
-                    notification.clickRunnable.click(notification);
+                notification.click();
                 notification.data.closing = true;
             }
 
@@ -253,6 +252,15 @@ public class Notifications {
 
         public Notification(String title, String description) {
             this(title, description, null, null);
+        }
+
+        public void close() {
+            data.closing = true;
+        }
+
+        public void click() {
+            if (clickRunnable != null)
+                clickRunnable.click(this);
         }
 
         public interface NotificationClickRunnable {

@@ -23,6 +23,8 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 
 public class ScreenHelper {
 
@@ -92,8 +94,8 @@ public class ScreenHelper {
    }
 
    @SubscribeEvent
-    protected void onGameOverlayRendered(RenderGameOverlayEvent event) {
-       resolution = event.resolution;
+    protected void onGameOverlayRendered(TickEvent.RenderTickEvent event) {
+       resolution = new ScaledResolution(GlobalMinecraft.getInstance());
    }
 
     public static ScaledResolution getResolution() {
