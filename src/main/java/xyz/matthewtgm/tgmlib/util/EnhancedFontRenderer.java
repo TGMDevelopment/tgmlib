@@ -618,13 +618,21 @@ public class EnhancedFontRenderer {
         GlStateManager.popMatrix();
     }
 
+    /**
+     * Adapted from XanderLib under GPL 3.0 license
+     * https://github.com/isXander/XanderLib/blob/main/LICENSE
+     */
     public static List<String> wrapTextLines(String text, int lineWidth, String split) {
         String wrapped = wrapText(text, lineWidth, split);
-        if (wrapped.equals(""))
+        if (wrapped.isEmpty())
             return new ArrayList<>();
         return Arrays.asList(wrapped.split("\n"));
     }
 
+    /**
+     * Adapted from XanderLib under GPL 3.0 license
+     * https://github.com/isXander/XanderLib/blob/main/LICENSE
+     */
     public static String wrapText(String text, int lineWidth, String split) {
         String[] words = text.split("(" + split + "|\n)");
         int lineLength = 0;
