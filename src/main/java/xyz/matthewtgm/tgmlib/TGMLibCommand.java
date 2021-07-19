@@ -37,7 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Command(name = "tgmlib", autoGenTabCompleteOptions = true)
-public class TGMLibCommand {
+public final class TGMLibCommand {
 
     private final Pattern announcementPattern = Pattern.compile("(\\\".+\\\") (\\\".+\\\") (\\\".+\\\")");
     private final Logger logger = LogManager.getLogger("TGMLib (TGMLibCommand)");

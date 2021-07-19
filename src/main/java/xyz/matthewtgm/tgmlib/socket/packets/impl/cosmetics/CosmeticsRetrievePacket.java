@@ -18,13 +18,13 @@
 
 package xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics;
 
-import xyz.matthewtgm.json.entities.JsonArray;
 import xyz.matthewtgm.json.entities.JsonElement;
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.tgmlib.TGMLib;
-import xyz.matthewtgm.tgmlib.cosmetics.BaseCosmetic;
-import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
-import xyz.matthewtgm.tgmlib.cosmetics.PlayerCosmeticsHolder;
+import xyz.matthewtgm.tgmlib.players.PlayerCosmeticData;
+import xyz.matthewtgm.tgmlib.players.PlayerData;
+import xyz.matthewtgm.tgmlib.players.cosmetics.BaseCosmetic;
+import xyz.matthewtgm.tgmlib.players.cosmetics.CosmeticManager;
 import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
 import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
 
@@ -57,7 +57,9 @@ public class CosmeticsRetrievePacket extends BasePacket {
         for (JsonElement element : jsonData.get("enabled_cosmetics").getAsJsonArray()) enabledCosmetics.add(cosmeticManager.getCosmeticFromId(element.toString()));
         ownedCosmetics.removeIf(cosmetic -> cosmetic == null);
         enabledCosmetics.removeIf(cosmetic -> cosmetic == null);
-        cosmeticManager.getCosmeticMap().put(jsonData.get("uuid").toString(), new PlayerCosmeticsHolder(jsonData.get("uuid").toString(), ownedCosmetics, enabledCosmetics));
+        if (!TGMLib.getManager().getDataManager().getDataMap().containsKey(jsonData.get("uuid").toString()))
+            TGMLib.getManager().getDataManager().getDataMap().put(jsonData.get("uuid").toString(), new PlayerData());
+        TGMLib.getManager().getDataManager().getDataMap().get(jsonData.get("uuid").toString()).setCosmeticData(new PlayerCosmeticData(jsonData.get("uuid").toString(), ownedCosmetics, enabledCosmetics));
     }
 
     public void handle(TGMLibSocket socket) {}

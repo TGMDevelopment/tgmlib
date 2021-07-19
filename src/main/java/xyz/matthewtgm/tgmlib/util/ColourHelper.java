@@ -35,7 +35,7 @@ public class ColourHelper {
     }
 
     /**
-     * @author Wyvest
+     * @author Unknown
      */
     public static Color getChroma(double x, double y) {
         float v = 2000.0f;
@@ -43,7 +43,7 @@ public class ColourHelper {
     }
 
     /**
-     * @author Wyvest
+     * @author Unknown
      */
     public static int getAlpha(int colour) {
         return (colour >> 24 & 255);

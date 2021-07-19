@@ -16,31 +16,24 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.socket.packets.impl.other;
+package xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks;
 
-import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
-import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
+import xyz.matthewtgm.tgmlib.players.cosmetics.BaseAnimatedCloakCosmetic;
+import xyz.matthewtgm.tgmlib.data.GifResourceLocation;
+import xyz.matthewtgm.tgmlib.util.ResourceHelper;
 
-public class GameClosePacket extends BasePacket {
+public class EnchanterCloakCosmetic extends BaseAnimatedCloakCosmetic {
 
-    private final String uuid;
-
-    public GameClosePacket(String uuid) {
-        super("CLOSE", "GAME", 6f);
-        this.uuid = uuid;
+    public EnchanterCloakCosmetic() {
+        super("Enchanter Cloak", "ENCHANTER_CLOAK");
     }
 
-    public GameClosePacket() {
-        this(null);
+    public GifResourceLocation gif() {
+        return new GifResourceLocation(ResourceHelper.get("tgmlib", "cosmetics/cloaks/enchanter_cloak.gif"));
     }
 
-    public void write(TGMLibSocket socket) {
-        data.add("uuid", uuid);
+    public int fps() {
+        return 1;
     }
-
-    public void read(TGMLibSocket socket, JsonObject json) {}
-
-    public void handle(TGMLibSocket socket) {}
 
 }

@@ -38,7 +38,7 @@ import xyz.matthewtgm.tgmlib.util.*;
 import java.io.File;
 import java.util.List;
 
-public class TGMLib {
+public final class TGMLib {
 
     public static final String NAME = "@NAME@", ID = "@ID@", VER = "@VER@", TRANSFORMER = TGMLibClassTransformer.class.getName();
     private static TGMLib instance;

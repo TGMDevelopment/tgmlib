@@ -16,31 +16,30 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.socket.packets.impl.other;
+package xyz.matthewtgm.tgmlib.players;
 
-import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
-import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
+import lombok.Getter;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import xyz.matthewtgm.tgmlib.util.ForgeHelper;
 
-public class GameClosePacket extends BasePacket {
+import java.util.HashMap;
+import java.util.Map;
 
-    private final String uuid;
+public class PlayerDataManager extends Thread {
 
-    public GameClosePacket(String uuid) {
-        super("CLOSE", "GAME", 6f);
-        this.uuid = uuid;
+    @Getter private final Map<String, PlayerData> dataMap = new HashMap<>();
+
+    public synchronized void start() {
+        ForgeHelper.registerEventListener(this);
     }
 
-    public GameClosePacket() {
-        this(null);
+    @SubscribeEvent
+    public void tick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.START)
+            return;
+        if (dataMap.size() > 500)
+            dataMap.clear();
     }
-
-    public void write(TGMLibSocket socket) {
-        data.add("uuid", uuid);
-    }
-
-    public void read(TGMLibSocket socket, JsonObject json) {}
-
-    public void handle(TGMLibSocket socket) {}
 
 }

@@ -62,9 +62,7 @@ public class GuiTGMLibSettings extends GuiTGMLibBase {
         });
     }
 
-    public void draw(int mouseX, int mouseY, float partialTicks) {
-
-    }
+    public void draw(int mouseX, int mouseY, float partialTicks) {}
 
     public boolean allowRefreshing() {
         return true;

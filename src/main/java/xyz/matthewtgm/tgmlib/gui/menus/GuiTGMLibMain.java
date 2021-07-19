@@ -21,7 +21,7 @@ package xyz.matthewtgm.tgmlib.gui.menus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import xyz.matthewtgm.tgmlib.TGMLib;
-import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
+import xyz.matthewtgm.tgmlib.players.cosmetics.CosmeticManager;
 import xyz.matthewtgm.tgmlib.gui.GuiTGMLibBase;
 import xyz.matthewtgm.tgmlib.gui.GuiTransFadingImageButton;
 import xyz.matthewtgm.tgmlib.util.ResourceHelper;

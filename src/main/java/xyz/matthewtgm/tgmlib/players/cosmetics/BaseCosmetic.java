@@ -16,31 +16,29 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.socket.packets.impl.other;
+package xyz.matthewtgm.tgmlib.players.cosmetics;
 
-import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
-import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
+import lombok.Getter;
+import net.minecraft.client.entity.AbstractClientPlayer;
 
-public class GameClosePacket extends BasePacket {
+public abstract class BaseCosmetic {
 
-    private final String uuid;
+    @Getter
+    private final String name, id;
+    @Getter
+    private final CosmeticType type;
 
-    public GameClosePacket(String uuid) {
-        super("CLOSE", "GAME", 6f);
-        this.uuid = uuid;
+    public BaseCosmetic(String name, String id, CosmeticType type) {
+        this.name = name;
+        this.id = id;
+        this.type = type;
     }
 
-    public GameClosePacket() {
-        this(null);
+    public BaseCosmetic(String name, String id, int typeId) {
+        this(name, id, CosmeticType.fromId(typeId));
     }
 
-    public void write(TGMLibSocket socket) {
-        data.add("uuid", uuid);
-    }
-
-    public void read(TGMLibSocket socket, JsonObject json) {}
-
-    public void handle(TGMLibSocket socket) {}
+    public abstract void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale);
+    public abstract void tick();
 
 }

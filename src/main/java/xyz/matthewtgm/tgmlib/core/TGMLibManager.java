@@ -30,13 +30,15 @@ import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.util.JsonApiHelper;
 import xyz.matthewtgm.tgmconfig.TGMConfig;
 import xyz.matthewtgm.tgmlib.TGMLib;
-import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
+import xyz.matthewtgm.tgmlib.players.PlayerDataManager;
+import xyz.matthewtgm.tgmlib.players.cosmetics.CosmeticManager;
 import xyz.matthewtgm.tgmlib.data.VersionChecker;
 import xyz.matthewtgm.tgmlib.files.ConfigHandler;
 import xyz.matthewtgm.tgmlib.files.DataHandler;
 import xyz.matthewtgm.tgmlib.files.FileHandler;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibLogging;
 import xyz.matthewtgm.tgmlib.keybinds.KeyBindConfigHandler;
+import xyz.matthewtgm.tgmlib.players.indicators.IndicatorManager;
 import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.other.GameClosePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.other.GameOpenPacket;
@@ -53,7 +55,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TGMLibManager {
 
-    private static final boolean webSocketTest = false;
+    private static final boolean webSocketTest = true;
     @Getter
     private static boolean initialized;
     @Getter
@@ -78,7 +80,11 @@ public class TGMLibManager {
     @Getter
     private TGMLibSocket webSocket;
     @Getter
+    private PlayerDataManager dataManager;
+    @Getter
     private CosmeticManager cosmeticManager;
+    @Getter
+    private IndicatorManager indicatorManager;
 
     public void initialize(File mcDir) {
         if (initialized)
@@ -106,16 +112,13 @@ public class TGMLibManager {
             fixSocket();
             if (!webSocket.isOpen())
                 scheduleSocketReconnect();
+            if (dataHandler.isMayLogData())
+                webSocket.send(new GameOpenPacket(GlobalMinecraft.getSession().getProfile().getId().toString()));
+            (dataManager = new PlayerDataManager()).start();
             (cosmeticManager = new CosmeticManager()).start();
+            (indicatorManager = new IndicatorManager()).start();
 
             ForgeHelper.registerEventListeners(this);
-
-            if (dataHandler.isMayLogData()) {
-                JsonArray modList = new JsonArray();
-                for (ModContainer modContainer : Loader.instance().getActiveModList())
-                    modList.add(modContainer.getName() == null || modContainer.getName().isEmpty() ? modContainer.getModId() : modContainer.getName());
-                webSocket.send(new GameOpenPacket(GlobalMinecraft.getSession().getProfile().getId().toString(), modList));
-            }
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 if (dataHandler.isMayLogData())
                     webSocket.send(new GameClosePacket(GlobalMinecraft.getSession().getProfile().getId().toString()));
@@ -134,7 +137,7 @@ public class TGMLibManager {
 
     private URI websocketUri() {
         if (webSocketTest)
-            return URI.create("ws://localhost:INSERT-PORT");
+            return URI.create("ws://localhost:2298");
         JsonObject object = JsonApiHelper.getJsonObject("https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/websocket.json", true);
         String uri = object.get("uri").toString();
         for (int i = 0; i < object.get("loop").getAsInt(); i++)
@@ -150,15 +153,21 @@ public class TGMLibManager {
 
     public void fixSocket() {
         try {
-            (webSocket = createWebSocket(new TGMLibSocket(websocketUri()))).connectBlocking(15, TimeUnit.SECONDS);
-            if (!webSocket.isOpen())
+            if (!createSocket())
                 Notifications.push("Failed to connect to TGMLib WebSocket!", "Click me to attempt a reconnect.", notification -> {
                     try {
+                        String originalTitle = notification.title;
+                        String originalDescription = notification.description;
                         notification.title = "Reconnecting...";
                         notification.description = "";
-                        if (!webSocket.reconnectBlocking())
+                        if (!webSocket.reconnectBlocking()) {
                             notification.title = "Failed to reconnect! D:";
-                        else
+
+                            Notifications.Notification resubmitted = notification.clone();
+                            resubmitted.title = originalTitle;
+                            resubmitted.description = originalDescription;
+                            Notifications.push(resubmitted);
+                        } else
                             notification.title = "Reconnected successfully!";
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -167,6 +176,10 @@ public class TGMLibManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean createSocket() throws Exception {
+        return (webSocket = createWebSocket(new TGMLibSocket(websocketUri()))).connectBlocking(15, TimeUnit.SECONDS);
     }
 
     public void scheduleSocketReconnect() {

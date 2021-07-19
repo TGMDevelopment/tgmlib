@@ -37,6 +37,7 @@ import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.announcer.AnnouncementPacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsTogglePacket;
+import xyz.matthewtgm.tgmlib.socket.packets.impl.indication.RetrieveIndicationsPacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.other.GameClosePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.other.GameOpenPacket;
 import xyz.matthewtgm.tgmlib.util.ChatHelper;
@@ -149,6 +150,9 @@ public class TGMLibSocket extends WebSocketClient {
         /* Game. */
         packets.put(GameOpenPacket.class, 5f);
         packets.put(GameClosePacket.class, 6f);
+
+        /* Indications. */
+        packets.put(RetrieveIndicationsPacket.class, 7f);
     }
 
     public interface OpenRunnable {

@@ -16,31 +16,13 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.socket.packets.impl.other;
+package xyz.matthewtgm.tgmlib.players;
 
-import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
-import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
+import lombok.Getter;
+import lombok.Setter;
 
-public class GameClosePacket extends BasePacket {
+public class PlayerData {
 
-    private final String uuid;
-
-    public GameClosePacket(String uuid) {
-        super("CLOSE", "GAME", 6f);
-        this.uuid = uuid;
-    }
-
-    public GameClosePacket() {
-        this(null);
-    }
-
-    public void write(TGMLibSocket socket) {
-        data.add("uuid", uuid);
-    }
-
-    public void read(TGMLibSocket socket, JsonObject json) {}
-
-    public void handle(TGMLibSocket socket) {}
+    @Getter @Setter private PlayerCosmeticData cosmeticData;
 
 }

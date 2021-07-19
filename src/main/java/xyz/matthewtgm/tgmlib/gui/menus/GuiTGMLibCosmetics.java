@@ -26,19 +26,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.json.util.JsonHelper;
 import xyz.matthewtgm.tgmconfig.ConfigEntry;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.core.TGMLibManager;
-import xyz.matthewtgm.tgmlib.cosmetics.BaseCosmetic;
-import xyz.matthewtgm.tgmlib.cosmetics.CosmeticManager;
-import xyz.matthewtgm.tgmlib.cosmetics.CosmeticType;
-import xyz.matthewtgm.tgmlib.cosmetics.PlayerCosmeticsHolder;
+import xyz.matthewtgm.tgmlib.players.PlayerCosmeticData;
+import xyz.matthewtgm.tgmlib.players.cosmetics.BaseCosmetic;
+import xyz.matthewtgm.tgmlib.players.cosmetics.CosmeticManager;
+import xyz.matthewtgm.tgmlib.players.cosmetics.CosmeticType;
 import xyz.matthewtgm.tgmlib.gui.GuiTGMLibBase;
 import xyz.matthewtgm.tgmlib.gui.GuiTransFadingButton;
 import xyz.matthewtgm.tgmlib.gui.GuiTransFadingImageButton;
-import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsTogglePacket;
 import xyz.matthewtgm.tgmlib.util.*;
 import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
@@ -67,12 +64,14 @@ public class GuiTGMLibCosmetics extends GuiTGMLibBase {
     }
 
     public void initialize() {
+        cachedOwnedCosmetics.clear();
+        cachedEnabledCosmetics.clear();
         cosmeticButtonList.clear();
 
         buttonList.add(new GuiTransFadingImageButton(1, backgroundHitBox.getIntWidth() - 32, backgroundHitBox.getIntY() + 2, 30, 30, ResourceHelper.get("tgmlib", "gui/icons/refresh_icon.png")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY)) {
-                    TGMLib.getManager().getCosmeticManager().getCosmeticMap().clear();
+                    TGMLib.getManager().getDataManager().getDataMap().clear();
                     List<String> cachedRequests = new ArrayList<>(CosmeticManager.getMadeRequestsFor());
                     CosmeticManager.getMadeRequestsFor().clear();
                     if (GlobalMinecraft.getWorld() != null) {
@@ -131,10 +130,14 @@ public class GuiTGMLibCosmetics extends GuiTGMLibBase {
         }
         lastButtonId = buttonId.get();
 
-        CosmeticManager cosmeticManager = TGMLib.getManager().getCosmeticManager();
-        PlayerCosmeticsHolder ownCosmeticsHolder = cosmeticManager.getCosmeticMap().get(mc.getSession().getProfile().getId().toString());
-        if (cachedOwnedCosmetics.isEmpty()) cachedOwnedCosmetics.addAll(ownCosmeticsHolder.getOwnedCosmetics());
-        if (cachedEnabledCosmetics.isEmpty()) cachedEnabledCosmetics.addAll(ownCosmeticsHolder.getEnabledCosmetics());
+        PlayerCosmeticData ownCosmeticsHolder = TGMLib.getManager().getDataManager().getDataMap().get(mc.getSession().getProfile().getId().toString()).getCosmeticData();
+        if (ownCosmeticsHolder == null) {
+            GuiHelper.open(getParent());
+            return;
+        }
+
+        cachedOwnedCosmetics.addAll(ownCosmeticsHolder.getOwnedCosmetics());
+        cachedEnabledCosmetics.addAll(ownCosmeticsHolder.getEnabledCosmetics());
         cachedOwnedCosmetics.sort(Comparator.comparing(BaseCosmetic::getName));
         cachedEnabledCosmetics.sort(Comparator.comparing(BaseCosmetic::getName));
     }

@@ -18,7 +18,6 @@
 
 package xyz.matthewtgm.tgmlib.socket.packets.impl.other;
 
-import xyz.matthewtgm.json.entities.JsonArray;
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
 import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
@@ -26,26 +25,21 @@ import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
 public class GameOpenPacket extends BasePacket {
 
     private final String uuid;
-    private final JsonArray modList;
 
-    public GameOpenPacket(String uuid, JsonArray modList) {
+    public GameOpenPacket(String uuid) {
         super("OPEN", "GAME", 5f);
         this.uuid = uuid;
-        this.modList = modList;
     }
 
     public GameOpenPacket() {
-        this(null, null);
+        this(null);
     }
 
     public void write(TGMLibSocket socket) {
         data.add("uuid", uuid);
-        data.add("mod_list", modList);
     }
 
-    public void read(TGMLibSocket socket, JsonObject json) {
-
-    }
+    public void read(TGMLibSocket socket, JsonObject json) {}
 
     public void handle(TGMLibSocket socket) {}
 

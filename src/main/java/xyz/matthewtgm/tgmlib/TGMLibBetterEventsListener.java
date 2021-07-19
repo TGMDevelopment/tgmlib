@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.matthewtgm.tgmlib.events.ActionBarEvent;
 import xyz.matthewtgm.tgmlib.events.ChatMessageReceivedEvent;
 
-public class TGMLibBetterEventsListener {
+public final class TGMLibBetterEventsListener {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatReceived(ClientChatReceivedEvent event) {

@@ -16,31 +16,29 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.socket.packets.impl.other;
+package xyz.matthewtgm.tgmlib.players.cosmetics;
 
-import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
-import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
+import lombok.Getter;
 
-public class GameClosePacket extends BasePacket {
+public enum CosmeticType {
+    CLOAK("Cloaks", 0),
+    WINGS("Wings", 1),
+    HAT("Hats", 2),
+    TAIL("Tails", 3),
+    EARS("Ears", 4);
 
-    private final String uuid;
-
-    public GameClosePacket(String uuid) {
-        super("CLOSE", "GAME", 6f);
-        this.uuid = uuid;
+    @Getter
+    private final String name;
+    @Getter
+    private final int id;
+    CosmeticType(String name, int id) {
+        this.name = name;
+        this.id = id;
     }
 
-    public GameClosePacket() {
-        this(null);
+    public static CosmeticType fromId(int id) {
+        for (CosmeticType type : values()) if (type.getId() == id) return type;
+        return null;
     }
-
-    public void write(TGMLibSocket socket) {
-        data.add("uuid", uuid);
-    }
-
-    public void read(TGMLibSocket socket, JsonObject json) {}
-
-    public void handle(TGMLibSocket socket) {}
 
 }

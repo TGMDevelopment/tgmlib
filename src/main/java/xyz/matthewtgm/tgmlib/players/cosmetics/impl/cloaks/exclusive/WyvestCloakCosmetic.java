@@ -16,31 +16,22 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.socket.packets.impl.other;
+package xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.exclusive;
 
-import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
-import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
+import net.minecraft.util.ResourceLocation;
+import xyz.matthewtgm.tgmlib.players.cosmetics.BaseCloakCosmetic;
+import xyz.matthewtgm.tgmlib.util.ResourceHelper;
 
-public class GameClosePacket extends BasePacket {
+public class WyvestCloakCosmetic extends BaseCloakCosmetic {
 
-    private final String uuid;
-
-    public GameClosePacket(String uuid) {
-        super("CLOSE", "GAME", 6f);
-        this.uuid = uuid;
+    public WyvestCloakCosmetic() {
+        super("Wyvest Cloak", "WYVEST_CLOAK");
     }
 
-    public GameClosePacket() {
-        this(null);
+    public ResourceLocation texture() {
+        return ResourceHelper.get("tgmlib", "cosmetics/cloaks/exclusive/wyvest_cloak.png");
     }
 
-    public void write(TGMLibSocket socket) {
-        data.add("uuid", uuid);
-    }
-
-    public void read(TGMLibSocket socket, JsonObject json) {}
-
-    public void handle(TGMLibSocket socket) {}
+    public void tick() {}
 
 }

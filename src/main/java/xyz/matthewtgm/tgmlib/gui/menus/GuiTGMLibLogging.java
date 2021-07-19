@@ -69,12 +69,8 @@ public class GuiTGMLibLogging extends GuiTGMLibBase {
         TGMLib.getManager().getData().add(new ConfigEntry<>("log_data", value));
         TGMLib.getManager().getData().save();
         TGMLib.getManager().getDataHandler().update();
-        if (value) {
-            JsonArray modList = new JsonArray();
-            for (ModContainer modContainer : Loader.instance().getActiveModList())
-                modList.add(modContainer.getName() == null || modContainer.getName().isEmpty() ? modContainer.getModId() : modContainer.getName());
-            TGMLib.getManager().getWebSocket().send(new GameOpenPacket(GlobalMinecraft.getSession().getProfile().getId().toString(), modList));
-        }
+        if (value)
+            TGMLib.getManager().getWebSocket().send(new GameOpenPacket(GlobalMinecraft.getSession().getProfile().getId().toString()));
         mc.displayGuiScreen(getParent());
     }
 

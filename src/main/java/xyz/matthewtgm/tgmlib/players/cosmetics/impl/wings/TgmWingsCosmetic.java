@@ -16,31 +16,26 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.socket.packets.impl.other;
+package xyz.matthewtgm.tgmlib.players.cosmetics.impl.wings;
 
-import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
-import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
+import net.minecraft.util.ResourceLocation;
+import xyz.matthewtgm.tgmlib.players.cosmetics.BaseWingsCosmetic;
+import xyz.matthewtgm.tgmlib.data.ColourRGB;
+import xyz.matthewtgm.tgmlib.util.ResourceHelper;
 
-public class GameClosePacket extends BasePacket {
+public class TgmWingsCosmetic extends BaseWingsCosmetic {
 
-    private final String uuid;
-
-    public GameClosePacket(String uuid) {
-        super("CLOSE", "GAME", 6f);
-        this.uuid = uuid;
+    public TgmWingsCosmetic() {
+        super("TGM Wings", "TGM_WINGS");
     }
 
-    public GameClosePacket() {
-        this(null);
+    public ResourceLocation texture() {
+        return ResourceHelper.get("tgmlib", "cosmetics/wings/tgm_wings.png");
     }
 
-    public void write(TGMLibSocket socket) {
-        data.add("uuid", uuid);
+    public void tick() {}
+
+    public ColourRGB colour() {
+        return new ColourRGB(255, 255, 255);
     }
-
-    public void read(TGMLibSocket socket, JsonObject json) {}
-
-    public void handle(TGMLibSocket socket) {}
-
 }

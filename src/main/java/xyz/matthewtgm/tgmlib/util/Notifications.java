@@ -25,12 +25,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Notifications {
 
-    private static final List<Notification> notifications = new ArrayList<>();
+    private static final List<Notification> notifications = new CopyOnWriteArrayList<>();
 
     /**
      * @param title The notification title, automatically bolded.
@@ -135,7 +135,6 @@ public class Notifications {
         ScaledResolution resolution = ScreenHelper.getResolution();
 
         float y = 5;
-        Notification awaitingRemoval = null;
         for (Notification notification : notifications) {
             if (notifications.indexOf(notification) > 2)
                 continue;
@@ -148,8 +147,8 @@ public class Notifications {
             /* Text. */
             String title = ChatColour.BOLD + notification.title;
             float width = 225;
-            List<String> wrappedTitle = EnhancedFontRenderer.wrapTextLines(title, (int) (width), " ");
-            List<String> wrappedDescription = EnhancedFontRenderer.wrapTextLines(notification.description, (int) (width), " ");
+            List<String> wrappedTitle = EnhancedFontRenderer.wrapTextLines(title, (int) (width - 10), " ");
+            List<String> wrappedDescription = EnhancedFontRenderer.wrapTextLines(notification.description, (int) (width - 10), " ");
             int textLines = wrappedTitle.size() + wrappedDescription.size();
 
             /* Size and positon. */
@@ -201,10 +200,8 @@ public class Notifications {
             if (!hovered)
                 notification.data.time += (notification.data.closing ? -0.02 : 0.02) * (event.renderTickTime * 3);
             if (notification.data.closing && notification.data.time <= 0)
-                awaitingRemoval = notification;
+                notifications.remove(notification);
         }
-        if (awaitingRemoval != null)
-            notifications.remove(awaitingRemoval);
     }
 
     public static class Notification {
@@ -252,6 +249,10 @@ public class Notifications {
 
         public Notification(String title, String description) {
             this(title, description, null, null);
+        }
+
+        public Notification clone() {
+            return new Notification(title, description, colour, duration, clickRunnable);
         }
 
         public void close() {
