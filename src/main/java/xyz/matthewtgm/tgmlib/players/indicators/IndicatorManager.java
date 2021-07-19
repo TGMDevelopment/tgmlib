@@ -61,14 +61,12 @@ public class IndicatorManager extends Thread {
         ForgeHelper.registerEventListener(this);
         updateIndicator();
         fetch();
-        Multithreading.schedule(this::fetch, 1, TimeUnit.MINUTES);
+        Multithreading.schedule(this::fetch, 45, TimeUnit.SECONDS);
         logger.info("Indicators initialized.");
     }
 
     public synchronized void fetch() {
-        indicatorArray.clear();
-        TGMLibSocket webSocket = TGMLib.getManager().getWebSocket();
-        webSocket.send(new RetrieveIndicationsPacket());
+        TGMLib.getManager().getWebSocket().send(new RetrieveIndicationsPacket());
     }
 
     public synchronized void updateIndicator() {
@@ -81,7 +79,7 @@ public class IndicatorManager extends Thread {
 
     @SubscribeEvent
     public void onPlayerRendered(RenderLivingEvent.Post<EntityPlayer> event) {
-        if (renderable(event.entity)) {
+        if (TGMLib.getManager().getConfigHandler().isShowIndicators() && renderable(event.entity)) {
             EntityPlayer player = (EntityPlayer) event.entity;
             if (indicatorArray.has(player.getUniqueID().toString()))
                 render((float) event.x, (float) event.y, (float) event.z, player);

@@ -22,7 +22,6 @@ import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
 import xyz.matthewtgm.tgmlib.socket.packets.BasePacket;
-import xyz.matthewtgm.tgmlib.util.Notifications;
 
 public class RetrieveIndicationsPacket extends BasePacket {
 
@@ -33,8 +32,8 @@ public class RetrieveIndicationsPacket extends BasePacket {
     public void write(TGMLibSocket socket) {}
 
     public void read(TGMLibSocket socket, JsonObject json) {
+        TGMLib.getManager().getIndicatorManager().getIndicatorArray().clear();
         TGMLib.getManager().getIndicatorManager().getIndicatorArray().addAll(json.getObject("data").getArray("indications"));
-        Notifications.push("Indications successful!", json.getObject("data").getArray("indications").toString());
     }
 
     public void handle(TGMLibSocket socket) {

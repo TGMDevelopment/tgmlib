@@ -31,6 +31,8 @@ public class ConfigHandler {
     @Getter private boolean showCosmetics = true;
     @Getter private boolean overrideCapes = true;
 
+    @Getter private boolean showIndicators = true;
+
     public ConfigHandler(TGMConfig config) {
         this.config = config;
     }
@@ -42,6 +44,8 @@ public class ConfigHandler {
             config.addAndSave(new ConfigEntry<>("show_cosmetics", true));
         if (!config.containsKey("override_capes"))
             config.addAndSave(new ConfigEntry<>("override_capes", true));
+        if (!config.containsKey("show_indicators"))
+            config.addAndSave(new ConfigEntry<>("show_indicators", true));
         update();
     }
 
@@ -49,6 +53,7 @@ public class ConfigHandler {
         lightMode = config.getAsBoolean("light_mode");
         showCosmetics = config.getAsBoolean("show_cosmetics");
         overrideCapes = config.getAsBoolean("override_capes");
+        showIndicators = config.getAsBoolean("show_indicators");
     }
 
 }
