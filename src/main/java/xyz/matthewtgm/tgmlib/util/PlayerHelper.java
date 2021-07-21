@@ -30,7 +30,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.IChatComponent;
-import xyz.matthewtgm.tgmlib.tweaker.hooks.EntityPlayerAccessor;
+import xyz.matthewtgm.tgmlib.tweaker.hooks.TGMLibEntityPlayerAccessor;
 import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 
 public class PlayerHelper {
@@ -96,7 +96,7 @@ public class PlayerHelper {
     }
 
     public static boolean isInBed() {
-        return ((EntityPlayerAccessor) GlobalMinecraft.getPlayer()).isIsInBed();
+        return ((TGMLibEntityPlayerAccessor) GlobalMinecraft.getPlayer()).isIsInBed();
     }
 
     public static boolean isSleeping() {

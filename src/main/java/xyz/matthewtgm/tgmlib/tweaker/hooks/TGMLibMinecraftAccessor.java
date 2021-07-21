@@ -20,6 +20,6 @@ package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
 import net.minecraft.util.Timer;
 
-public interface MinecraftAccessor {
+public interface TGMLibMinecraftAccessor {
     Timer getTimer();
 }

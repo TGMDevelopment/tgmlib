@@ -18,9 +18,10 @@
 
 package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
-public interface GuiContainerAccessor {
-    int getXSize();
-    int getYSize();
-    int getGuiTop();
-    int getGuiLeft();
+import net.minecraft.nbt.NBTBase;
+
+import java.util.Map;
+
+public interface TGMLibNBTTagCompoundAccessor {
+    Map<String, NBTBase> getTagMap();
 }

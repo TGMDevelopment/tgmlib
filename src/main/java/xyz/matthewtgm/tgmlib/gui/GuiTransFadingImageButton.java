@@ -24,7 +24,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import xyz.matthewtgm.tgmlib.tweaker.hooks.MinecraftAccessor;
+import xyz.matthewtgm.tgmlib.tweaker.hooks.TGMLibMinecraftAccessor;
 import xyz.matthewtgm.tgmlib.util.EasingHelper;
 import xyz.matthewtgm.tgmlib.util.MathHelper;
 import xyz.matthewtgm.tgmlib.util.RenderHelper;
@@ -46,7 +46,7 @@ public class GuiTransFadingImageButton extends GuiTransFadingButton {
     }
 
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        float partialTicks = ((MinecraftAccessor) mc).getTimer().renderPartialTicks;
+        float partialTicks = ((TGMLibMinecraftAccessor) mc).getTimer().renderPartialTicks;
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         boolean hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
 

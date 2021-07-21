@@ -18,10 +18,9 @@
 
 package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
-import net.minecraft.nbt.NBTBase;
-
-import java.util.Map;
-
-public interface NBTTagCompoundAccessor {
-    Map<String, NBTBase> getTagMap();
+public interface TGMLibGuiContainerAccessor {
+    int getXSize();
+    int getYSize();
+    int getGuiTop();
+    int getGuiLeft();
 }

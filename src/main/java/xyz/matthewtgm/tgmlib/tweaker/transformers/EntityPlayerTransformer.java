@@ -22,7 +22,7 @@ import org.objectweb.asm.tree.*;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
-import xyz.matthewtgm.tgmlib.tweaker.hooks.EntityPlayerAccessor;
+import xyz.matthewtgm.tgmlib.tweaker.hooks.TGMLibEntityPlayerAccessor;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -33,7 +33,7 @@ public class EntityPlayerTransformer implements TGMLibTransformer {
     }
 
     public void transform(ClassNode classNode, String name) {
-        classNode.interfaces.add(EntityPlayerAccessor.class.getName().replaceAll("\\.", "/"));
+        classNode.interfaces.add(TGMLibEntityPlayerAccessor.class.getName().replaceAll("\\.", "/"));
         createAccessorGetter(classNode, "isIsInBed", "()Z", new MethodInsnNode(INVOKEVIRTUAL, EnumTransformerClasses.EntityPlayer.getNameRaw(), EnumTransformerMethods.isInBed.getName(), "()Z", false), IRETURN);
     }
 

@@ -18,6 +18,6 @@
 
 package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
-public interface EntityPlayerAccessor {
+public interface TGMLibEntityPlayerAccessor {
     boolean isIsInBed();
 }

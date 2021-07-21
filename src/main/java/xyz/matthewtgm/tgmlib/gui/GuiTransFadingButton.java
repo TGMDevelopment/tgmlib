@@ -20,16 +20,13 @@ package xyz.matthewtgm.tgmlib.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.Timer;
-import xyz.matthewtgm.tgmlib.TGMLib;
-import xyz.matthewtgm.tgmlib.tweaker.hooks.MinecraftAccessor;
+import xyz.matthewtgm.tgmlib.tweaker.hooks.TGMLibMinecraftAccessor;
 import xyz.matthewtgm.tgmlib.util.EasingHelper;
 import xyz.matthewtgm.tgmlib.util.EnhancedFontRenderer;
 import xyz.matthewtgm.tgmlib.util.MathHelper;
 import xyz.matthewtgm.tgmlib.util.RenderHelper;
 
 import java.awt.*;
-import java.lang.reflect.Field;
 
 /**
  * @author Basilicous
@@ -48,7 +45,7 @@ public class GuiTransFadingButton extends GuiTransButton {
     }
 
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        float partialTicks = ((MinecraftAccessor) mc).getTimer().renderPartialTicks;
+        float partialTicks = ((TGMLibMinecraftAccessor) mc).getTimer().renderPartialTicks;
         GlStateManager.pushMatrix();
         GlStateManager.color(1f, 1f, 1f, 1f);
         boolean hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;

@@ -22,7 +22,7 @@ import org.objectweb.asm.tree.ClassNode;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
-import xyz.matthewtgm.tgmlib.tweaker.hooks.GuiContainerAccessor;
+import xyz.matthewtgm.tgmlib.tweaker.hooks.TGMLibGuiContainerAccessor;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -33,7 +33,7 @@ public class GuiContainerTransformer implements TGMLibTransformer {
     }
 
     public void transform(ClassNode classNode, String name) {
-        classNode.interfaces.add(GuiContainerAccessor.class.getName().replaceAll("\\.", "/"));
+        classNode.interfaces.add(TGMLibGuiContainerAccessor.class.getName().replaceAll("\\.", "/"));
         createAccessorGetter(classNode, "getXSize", "()I", EnumTransformerFields.xSize.getField(EnumTransformerClasses.GuiContainer), IRETURN);
         createAccessorGetter(classNode, "getYSize", "()I", EnumTransformerFields.ySize.getField(EnumTransformerClasses.GuiContainer), IRETURN);
         createAccessorGetter(classNode, "getGuiTop", "()I;", EnumTransformerFields.guiTop.getField(EnumTransformerClasses.GuiContainer), IRETURN);
