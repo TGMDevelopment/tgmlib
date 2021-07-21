@@ -19,9 +19,6 @@
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
@@ -37,7 +34,7 @@ public class PositionedSoundTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         classNode.interfaces.add(PositionedSoundAccessor.class.getName().replaceAll("\\.", "/"));
-        classNode.methods.add(createAccessorSetter("setVolume", "(F)V", FLOAD, 1, EnumTransformerFields.PositionedSound_volume.putField(EnumTransformerClasses.PositionedSound), RETURN));
+        createAccessorSetter(classNode, "setVolume", "(F)V", FLOAD, 1, EnumTransformerFields.PositionedSound_volume.putField(EnumTransformerClasses.PositionedSound));
     }
 
 }

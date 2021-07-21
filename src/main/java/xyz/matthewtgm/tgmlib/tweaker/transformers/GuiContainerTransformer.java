@@ -34,10 +34,10 @@ public class GuiContainerTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         classNode.interfaces.add(GuiContainerAccessor.class.getName().replaceAll("\\.", "/"));
-        classNode.methods.add(createAccessorGetter("getXSize", "()I", EnumTransformerFields.xSize.getField(EnumTransformerClasses.GuiContainer), IRETURN));
-        classNode.methods.add(createAccessorGetter("getYSize", "()I", EnumTransformerFields.ySize.getField(EnumTransformerClasses.GuiContainer), IRETURN));
-        classNode.methods.add(createAccessorGetter("getGuiTop", "()I;", EnumTransformerFields.guiTop.getField(EnumTransformerClasses.GuiContainer), IRETURN));
-        classNode.methods.add(createAccessorGetter("getGuiLeft", "()I;", EnumTransformerFields.guiLeft.getField(EnumTransformerClasses.GuiContainer), IRETURN));
+        createAccessorGetter(classNode, "getXSize", "()I", EnumTransformerFields.xSize.getField(EnumTransformerClasses.GuiContainer), IRETURN);
+        createAccessorGetter(classNode, "getYSize", "()I", EnumTransformerFields.ySize.getField(EnumTransformerClasses.GuiContainer), IRETURN);
+        createAccessorGetter(classNode, "getGuiTop", "()I;", EnumTransformerFields.guiTop.getField(EnumTransformerClasses.GuiContainer), IRETURN);
+        createAccessorGetter(classNode, "getGuiLeft", "()I;", EnumTransformerFields.guiLeft.getField(EnumTransformerClasses.GuiContainer), IRETURN);
     }
 
 }

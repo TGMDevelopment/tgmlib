@@ -50,20 +50,30 @@ public interface TGMLibTransformer {
         list.add(new InsnNode(cancellation.returnOp));
         list.add(labelNode);
     }
-    default MethodNode createAccessorGetter(String methodName, String methodDesc, AbstractInsnNode insnNode, int returnCode) {
-        MethodNode node = new MethodNode(ACC_PUBLIC, methodName, methodDesc, null, null);
-        node.instructions.add(new VarInsnNode(ALOAD, 0));
-        node.instructions.add(insnNode);
-        node.instructions.add(new InsnNode(returnCode));
-        return node;
+    default void createAccessorGetter(ClassNode node, String methodName, String methodDesc, AbstractInsnNode insnNode, int returnCode) {
+        MethodNode method = new MethodNode(ACC_PUBLIC, methodName, methodDesc, null, null);
+        method.instructions.add(new VarInsnNode(ALOAD, 0));
+        method.instructions.add(insnNode);
+        method.instructions.add(new InsnNode(returnCode));
+
+        boolean found = false;
+        for (MethodNode methodNode : node.methods)
+            found = methodNode.name.equals(methodName);
+        if (!found)
+            node.methods.add(method);
     }
-    default MethodNode createAccessorSetter(String methodName, String methodDesc, int loadCode, int loadVar, FieldInsnNode fieldInsnNode, int returnCode) {
-        MethodNode node = new MethodNode(ACC_PUBLIC, methodName, methodDesc, null, null);
-        node.instructions.add(new VarInsnNode(ALOAD, 0));
-        node.instructions.add(new VarInsnNode(loadCode, loadVar));
-        node.instructions.add(fieldInsnNode);
-        node.instructions.add(new InsnNode(RETURN));
-        return node;
+    default void createAccessorSetter(ClassNode node, String methodName, String methodDesc, int loadCode, int loadVar, FieldInsnNode fieldInsnNode) {
+        MethodNode method = new MethodNode(ACC_PUBLIC, methodName, methodDesc, null, null);
+        method.instructions.add(new VarInsnNode(ALOAD, 0));
+        method.instructions.add(new VarInsnNode(loadCode, loadVar));
+        method.instructions.add(fieldInsnNode);
+        method.instructions.add(new InsnNode(RETURN));
+
+        boolean found = false;
+        for (MethodNode methodNode : node.methods)
+            found = methodNode.name.equals(methodName);
+        if (!found)
+            node.methods.add(method);
     }
     default String hooksPackage() {
         return "xyz/matthewtgm/tgmlib/tweaker/hooks/";
