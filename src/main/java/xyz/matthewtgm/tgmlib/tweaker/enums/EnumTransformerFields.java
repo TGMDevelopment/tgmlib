@@ -26,13 +26,20 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
 public enum EnumTransformerFields {
 
     timer("timer", "field_71428_T", "Y", "Lnet/minecraft/util/Timer;"),
+    tagMap("tagMap", "field_74784_a", "b", "Ljava/util/Map;"),
     displayedTitle("displayedTitle", "field_175201_x", "x", "Ljava/lang/String;"),
     displayedSubTitle("displayedSubTitle", "field_175200_y", "y", "Ljava/lang/String;"),
+    recordPlaying("recordPlaying", "field_73838_g", "o", "Ljava/lang/String;"),
     renderPartialTicks("renderPartialTicks", "field_74281_c", "c", "F"),
     drawnChatLines("drawnChatLines", "field_146253_i", "i", "Ljava/util/List;"),
     netManager("netManager", "field_147302_e", "c", "Lnet/minecraft/network/NetworkManager;"),
     chatLines("chatLines", "field_146252_h", "h", "Ljava/util/List;"),
-    sentMessages("sentMessages", "field_146248_g", "g", "Ljava/util/List;");
+    sentMessages("sentMessages", "field_146248_g", "g", "Ljava/util/List;"),
+    xSize("xSize", "field_146999_f", "f", "I"),
+    ySize("ySize", "field_147000_g", "g", "I"),
+    guiTop("guiTop", "field_147009_r", "r", "I"),
+    guiLeft("guiLeft", "field_147003_i", "i", "I"),
+    PositionedSound_volume("volume", "field_147662_b", "b", "F");
 
     @Getter private String name;
     @Getter private String type;

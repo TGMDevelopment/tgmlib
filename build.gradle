@@ -59,11 +59,16 @@ configurations {
 
 /* Define dependencies. */
 dependencies {
+    /* TGMLib dependencies. */
     shade('xyz.matthewtgm:JsonTGM:2.6.3')
     shade('xyz.matthewtgm:TGMConfig:2.2')
     shade('org.java-websocket:Java-WebSocket:1.5.1')
     implementation('org.projectlombok:lombok:1.18.16')
     annotationProcessor('org.projectlombok:lombok:1.18.16')
+
+    /* Dependencies for cutting other mods' file sizes. */
+    shade('org.spongepowered:mixin:0.7.11-SNAPSHOT')
+    shade('com.github.marcoacierno:pastebin-java-api:v0.2.1')
 }
 
 /* Set the duplicatesStrategy and define configs. */

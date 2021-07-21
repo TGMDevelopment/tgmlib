@@ -35,6 +35,7 @@ import xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.*;
 import xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.contentcreators.TwitchCloakCosmetic;
 import xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.contentcreators.YouTubCloakCosmetic;
 import xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.exclusive.MatthewTgmCloakCosmetic;
+import xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.exclusive.StrebCloakCosmetic;
 import xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.exclusive.WyvestCloakCosmetic;
 import xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.partners.DarkCheeseIglooCloakCosmetic;
 import xyz.matthewtgm.tgmlib.players.cosmetics.impl.wings.ChromaDragonWingsCosmetic;
@@ -84,6 +85,7 @@ public class CosmeticManager extends Thread {
         cosmetics.add(new MinecoinCloakCosmetic());
         cosmetics.add(new ModderCloakCosmetic());
         cosmetics.add(new PartnerCloakCosmetic());
+        cosmetics.add(new StrebCloakCosmetic());
         cosmetics.add(new SunsetSkyCloakCosmetic());
         cosmetics.add(new TwitchCloakCosmetic());
         cosmetics.add(new UwUCloakCosmetic());

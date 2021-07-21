@@ -16,16 +16,22 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.tweaker.hooks;
+package xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.exclusive;
 
-import xyz.matthewtgm.tgmlib.gui.GuiTransFadingButton;
-import xyz.matthewtgm.tgmlib.gui.GuiTransFadingImageButton;
+import net.minecraft.util.ResourceLocation;
+import xyz.matthewtgm.tgmlib.players.cosmetics.BaseCloakCosmetic;
+import xyz.matthewtgm.tgmlib.util.ResourceHelper;
 
-public class TimerHook {
+public class StrebCloakCosmetic extends BaseCloakCosmetic {
 
-    public static void updatePartialTicks(float partialTicks) {
-        GuiTransFadingButton.partialTicks = partialTicks;
-        GuiTransFadingImageButton.partialTicks = partialTicks;
+    public StrebCloakCosmetic() {
+        super("Streb Cloak", "STREB_CLOAK");
     }
+
+    public ResourceLocation texture() {
+        return ResourceHelper.get("tgmlib", "cosmetics/cloaks/exclusive/streb_cloak.png");
+    }
+
+    public void tick() {}
 
 }

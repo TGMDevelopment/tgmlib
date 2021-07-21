@@ -20,7 +20,7 @@ package xyz.matthewtgm.tgmlib.util;
 
 import org.objectweb.asm.tree.*;
 
-import static org.objectweb.asm.Opcodes.*;
+import java.util.function.Consumer;
 
 public class AsmHelper {
 
@@ -86,14 +86,10 @@ public class AsmHelper {
      * @return The created list.
      * @author MatthewTGM
      */
-    public static InsnList createQuickInsnList(InsnListRunnable runnable) {
+    public static InsnList createQuickInsnList(Consumer<InsnList> runnable) {
         InsnList list = new InsnList();
-        runnable.create(list);
+        runnable.accept(list);
         return list;
-    }
-
-    public interface InsnListRunnable {
-        void create(InsnList list);
     }
 
 }

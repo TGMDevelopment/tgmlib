@@ -24,18 +24,24 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
 public enum EnumTransformerClasses {
 
     Minecraft("net/minecraft/client/Minecraft", "ave"),
+    NBTTagCompound("net/minecraft/nbt/NBTTagCompound", "dn"),
+    BossStatus("net/minecraft/entity/boss/BossStatus", "bfc"),
+    IBossDisplayData("net/minecraft/entity/boss/IBossDisplayData", "uc"),
     FontRenderer("net/minecraft/client/gui/FontRenderer", "avn"),
+    PositionedSound("net/minecraft/client/audio/PositionedSound", "bpa"),
     Timer("net/minecraft/util/Timer", "avl"),
     NetHandlerPlayClient("net/minecraft/client/network/NetHandlerPlayClient", "bcy"),
     NetworkManager("net/minecraft/network/NetworkManager", "ek"),
     Packet("net/minecraft/network/Packet", "ff"),
     PotionEffect("net/minecraft/potion/PotionEffect", "pf"),
     EntityLivingBase("net/minecraft/entity/EntityLivingBase", "pr"),
+    EntityPlayer("net/minecraft/entity/player/EntityPlayer", "wn"),
     EntityPlayerSP("net/minecraft/client/entity/EntityPlayerSP", "bew"),
     AbstractClientPlayer("net/minecraft/client/entity/AbstractClientPlayer", "bet"),
     Render("net/minecraft/client/renderer/entity/Render", "biv"),
     GuiNewChat("net/minecraft/client/gui/GuiNewChat", "avt"),
     GuiIngameForge("net/minecraftforge/client/GuiIngameForge", "net/minecraftforge/client/GuiIngameForge"),
+    GuiContainer("net/minecraft/client/gui/inventory/GuiContainer", "ayl"),
     IChatComponent("net/minecraft/util/IChatComponent", "eu");
 
     private String name;

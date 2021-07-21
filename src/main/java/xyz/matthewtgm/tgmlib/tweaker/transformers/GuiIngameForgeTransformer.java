@@ -22,6 +22,7 @@ import org.objectweb.asm.tree.*;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
+import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -33,7 +34,48 @@ public class GuiIngameForgeTransformer implements TGMLibTransformer {
     }
 
     public void transform(ClassNode classNode, String name) {
-        for (MethodNode method : classNode.methods)
+        for (MethodNode method : classNode.methods) {
+            if (EnumTransformerMethods.renderBossHealth.matches(method)) {
+                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+                    list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/BossBarEvent$RenderEvent"));
+                    list.add(new InsnNode(DUP));
+                    list.add(new MethodInsnNode(INVOKESPECIAL, "xyz/matthewtgm/tgmlib/events/BossBarEvent$RenderEvent", "<init>", "()V", false));
+                    list.add(new VarInsnNode(ASTORE, 1));
+
+                    list.add(new VarInsnNode(ALOAD, 1));
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/util/ForgeHelper", "postEvent", "(Lnet/minecraftforge/fml/common/eventhandler/Event;)Z", false));
+                    LabelNode labelNode = new LabelNode();
+                    list.add(new JumpInsnNode(IFEQ, labelNode));
+                    list.add(new InsnNode(RETURN));
+                    list.add(labelNode);
+                }));
+            }
+            if (method.name.equals("renderRecordOverlay")) {
+                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+                    list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/ActionBarEvent$RenderEvent"));
+                    list.add(new InsnNode(DUP));
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(EnumTransformerFields.recordPlaying.getField(EnumTransformerClasses.GuiIngameForge));
+                    list.add(new VarInsnNode(ILOAD, 1));
+                    list.add(new VarInsnNode(ILOAD, 2));
+                    list.add(new VarInsnNode(FLOAD, 3));
+                    list.add(new MethodInsnNode(INVOKESPECIAL, "xyz/matthewtgm/tgmlib/events/ActionBarEvent$RenderEvent", "<init>", "(Ljava/lang/String;IIF)V", false));
+                    list.add(new VarInsnNode(ASTORE, 4));
+
+                    list.add(new VarInsnNode(ALOAD, 4));
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/util/ForgeHelper", "postEvent", "(Lnet/minecraftforge/fml/common/eventhandler/Event;)Z", false));
+                    LabelNode labelNode = new LabelNode();
+                    list.add(new JumpInsnNode(IFEQ, labelNode));
+                    list.add(new InsnNode(RETURN));
+                    list.add(labelNode);
+
+
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(new VarInsnNode(ALOAD, 4));
+                    list.add(new FieldInsnNode(GETFIELD, "xyz/matthewtgm/tgmlib/events/ActionBarEvent$RenderEvent", "text", "Ljava/lang/String;"));
+                    list.add(EnumTransformerFields.recordPlaying.putField(EnumTransformerClasses.GuiIngameForge));
+                }));
+            }
             if (method.name.equals("renderTitle")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     /*
@@ -65,8 +107,6 @@ public class GuiIngameForgeTransformer implements TGMLibTransformer {
                     list.add(new InsnNode(RETURN));
                     list.add(labelNode);
 
-                    // TODO: 2021/07/11 : Set displayedTitle and displayedSubTitle fields from the event.
-
 
                     list.add(new VarInsnNode(ALOAD, 0));
                     list.add(new VarInsnNode(ALOAD, 4));
@@ -79,6 +119,7 @@ public class GuiIngameForgeTransformer implements TGMLibTransformer {
                     list.add(EnumTransformerFields.displayedSubTitle.putField(EnumTransformerClasses.GuiIngameForge));
                 }));
             }
+        }
     }
 
 }

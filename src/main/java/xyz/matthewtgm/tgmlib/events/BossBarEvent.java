@@ -18,29 +18,12 @@
 
 package xyz.matthewtgm.tgmlib.events;
 
-import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class ActionBarEvent extends Event {
+public class BossBarEvent extends Event {
     @Cancelable
-    public static class RenderEvent extends ActionBarEvent {
-        public String text;
-        public final int width;
-        public final int height;
-        public final float partialTicks;
-        public RenderEvent(String text, int width, int height, float partialTicks) {
-            this.text = text;
-            this.width = width;
-            this.height = height;
-            this.partialTicks = partialTicks;
-        }
-    }
+    public static class SetEvent extends BossBarEvent {}
     @Cancelable
-    public static class ReceiveEvent extends ActionBarEvent {
-        public IChatComponent component;
-        public ReceiveEvent(IChatComponent component) {
-            this.component = component;
-        }
-    }
+    public static class RenderEvent extends BossBarEvent {}
 }

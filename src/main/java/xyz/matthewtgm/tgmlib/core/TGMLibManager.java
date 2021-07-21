@@ -25,6 +25,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.java_websocket.framing.CloseFrame;
 import xyz.matthewtgm.json.entities.JsonArray;
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.util.JsonApiHelper;
@@ -122,7 +123,7 @@ public class TGMLibManager {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 if (dataHandler.isMayLogData())
                     webSocket.send(new GameClosePacket(GlobalMinecraft.getSession().getProfile().getId().toString()));
-                webSocket.close(5, "Game shutdown");
+                webSocket.close(CloseFrame.NOCODE, "Game shutdown");
             }, "TGMLib Shutdown"));
         } catch (Exception e) {
             e.printStackTrace();

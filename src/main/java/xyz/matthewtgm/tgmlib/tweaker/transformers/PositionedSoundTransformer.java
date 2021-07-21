@@ -18,31 +18,26 @@
 
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
-import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
-import xyz.matthewtgm.tgmlib.util.AsmHelper;
+import xyz.matthewtgm.tgmlib.tweaker.hooks.PositionedSoundAccessor;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class TimerTransformer implements TGMLibTransformer {
+public class PositionedSoundTransformer implements TGMLibTransformer {
 
     public String[] getClassNames() {
-        return new String[]{EnumTransformerClasses.Timer.getTransformerName()};
+        return new String[]{EnumTransformerClasses.PositionedSound.getTransformerName()};
     }
 
     public void transform(ClassNode classNode, String name) {
-        for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.updateTimer.matches(method)) {
-                method.instructions.insertBefore(method.instructions.getLast(), AsmHelper.createQuickInsnList(list -> {
-                    list.add(new VarInsnNode(ALOAD, 0));
-                    list.add(EnumTransformerFields.renderPartialTicks.getField(EnumTransformerClasses.Timer));
-                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "TimerHook", "updatePartialTicks", "(F;)V", false));
-                }));
-            }
-        }
+        classNode.interfaces.add(PositionedSoundAccessor.class.getName().replaceAll("\\.", "/"));
+        classNode.methods.add(createAccessorSetter("setVolume", "(F)V", FLOAD, 1, EnumTransformerFields.PositionedSound_volume.putField(EnumTransformerClasses.PositionedSound), RETURN));
     }
 
 }

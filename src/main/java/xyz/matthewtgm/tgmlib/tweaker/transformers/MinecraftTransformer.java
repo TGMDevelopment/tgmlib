@@ -21,6 +21,7 @@ package xyz.matthewtgm.tgmlib.tweaker.transformers;
 import org.objectweb.asm.tree.*;
 import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
+import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
@@ -35,6 +36,7 @@ public class MinecraftTransformer implements TGMLibTransformer {
     }
 
     public void transform(ClassNode classNode, String name) {
+        classNode.methods.add(createAccessorGetter("getTimer", "()Lnet/minecraft/util/Timer;", EnumTransformerFields.timer.getField(EnumTransformerClasses.Minecraft), ARETURN));
         for (MethodNode method : classNode.methods) {
             if (EnumTransformerMethods.dispatchKeypresses.matches(method)) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {

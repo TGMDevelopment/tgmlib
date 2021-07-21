@@ -23,6 +23,7 @@ import com.google.common.collect.Multimap;
 import lombok.Getter;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +35,7 @@ import xyz.matthewtgm.tgmlib.tweaker.transformers.*;
 
 import java.util.Collection;
 
+@IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
 @IFMLLoadingPlugin.SortingIndex(1001)
 public class TGMLibClassTransformer implements IClassTransformer {
 
@@ -43,7 +45,7 @@ public class TGMLibClassTransformer implements IClassTransformer {
     private static Multimap<String, TGMLibTransformer> transformerMap;
 
     @Getter private static boolean deobfuscated;
-    @Getter private static boolean usingNotchMappings;
+    @Getter private static final boolean usingNotchMappings;
 
     public TGMLibClassTransformer() {
         logger = LogManager.getLogger(TGMLib.NAME + " (TGMLibClassTransformer)");
@@ -56,16 +58,20 @@ public class TGMLibClassTransformer implements IClassTransformer {
         created = true;
         transformerMap = ArrayListMultimap.create();
         registerTransformer(new AbstractClientPlayerTransformer());
+        registerTransformer(new BossStatusTransformer());
         registerTransformer(new EntityLivingBaseTransformer());
         registerTransformer(new EntityPlayerSPTransformer());
+        registerTransformer(new EntityPlayerTransformer());
         registerTransformer(new FontRendererTransformer());
+        registerTransformer(new GuiContainerTransformer());
         registerTransformer(new GuiIngameForgeTransformer());
         registerTransformer(new GuiNewChatTransformer());
         registerTransformer(new MinecraftTransformer());
+        registerTransformer(new NBTTagCompoundTransformer());
         registerTransformer(new NetHandlerPlayClientTransformer());
         registerTransformer(new NetworkManagerTransformer());
+        registerTransformer(new PositionedSoundTransformer());
         registerTransformer(new RenderTransformer());
-        registerTransformer(new TimerTransformer());
         registeredTransformers = true;
     }
 
@@ -82,7 +88,7 @@ public class TGMLibClassTransformer implements IClassTransformer {
         logger.info("Found {} transformer(s) for {}", transformers.size(), transformedName);
         ClassReader reader = new ClassReader(bytes);
         ClassNode node = new ClassNode();
-        reader.accept(node, 8);
+        reader.accept(node, ClassReader.EXPAND_FRAMES);
         for (TGMLibTransformer transformer : transformers) {
             logger.info("Applying transformer {} to {}", transformer.getClass().getName(), transformedName);
             transformer.transform(node, transformedName);

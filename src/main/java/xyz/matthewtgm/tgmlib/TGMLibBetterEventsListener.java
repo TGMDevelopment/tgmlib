@@ -35,7 +35,7 @@ public final class TGMLibBetterEventsListener {
         }
 
         if (event.type == 2) {
-            ActionBarEvent actionBarEvent = new ActionBarEvent(event.message);
+            ActionBarEvent.ReceiveEvent actionBarEvent = new ActionBarEvent.ReceiveEvent(event.message);
             event.message = actionBarEvent.component;
             event.setCanceled(actionBarEvent.isCanceled());
         }

@@ -34,6 +34,7 @@ import xyz.matthewtgm.json.serialization.annotations.JsonSerializeName;
 import xyz.matthewtgm.json.util.JsonApiHelper;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 public class HypixelHelper {
 
@@ -43,6 +44,8 @@ public class HypixelHelper {
     private static boolean allowLocrawCancel;
     private static final AtomicInteger limboLoop = new AtomicInteger(0);
     private static boolean checked;
+
+    @Getter private static final Pattern rankAndUsernamePattern = Pattern.compile("(?<rank>\\[.+\\]) (?<username>\b\\w{3,16}\b)");
 
     @SubscribeEvent
     protected void onClientTick(TickEvent.ClientTickEvent event) {

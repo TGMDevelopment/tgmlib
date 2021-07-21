@@ -18,7 +18,6 @@
 
 package xyz.matthewtgm.tgmlib;
 
-import lombok.var;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.tgmlib.commands.advanced.Command;
@@ -30,6 +29,8 @@ import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibSettings;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.announcer.AnnouncementPacket;
 import xyz.matthewtgm.tgmlib.util.*;
 
+import java.awt.*;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -94,6 +95,12 @@ public final class TGMLibCommand {
         });
         Notifications.push("Hello, World 3!", "I'm a custom coloured notification!", new Notifications.Notification.NotificationColour(null, new ColourRGB(0, 0, 255)));
         Notifications.push("Hello, World 4!", "I'm a an even more custom coloured notification!", new Notifications.Notification.NotificationColour(new ColourRGB(255, 0, 0), new ColourRGB(0, 0, 255)));
+    }
+
+    @Command.Argument(name = "debug")
+    private void debug() throws Exception {
+        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE))
+            Desktop.getDesktop().browse(URI.create("https://youtu.be/dQw4w9WgXcQ"));
     }
 
 }

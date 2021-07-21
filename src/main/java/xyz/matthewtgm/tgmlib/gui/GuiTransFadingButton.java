@@ -22,6 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.Timer;
 import xyz.matthewtgm.tgmlib.TGMLib;
+import xyz.matthewtgm.tgmlib.tweaker.hooks.MinecraftAccessor;
 import xyz.matthewtgm.tgmlib.util.EasingHelper;
 import xyz.matthewtgm.tgmlib.util.EnhancedFontRenderer;
 import xyz.matthewtgm.tgmlib.util.MathHelper;
@@ -35,8 +36,6 @@ import java.lang.reflect.Field;
  */
 public class GuiTransFadingButton extends GuiTransButton {
 
-    public static float partialTicks;
-
     protected int fade = 0;
     protected int size = 0;
     protected int frame = 0;
@@ -49,6 +48,7 @@ public class GuiTransFadingButton extends GuiTransButton {
     }
 
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+        float partialTicks = ((MinecraftAccessor) mc).getTimer().renderPartialTicks;
         GlStateManager.pushMatrix();
         GlStateManager.color(1f, 1f, 1f, 1f);
         boolean hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;

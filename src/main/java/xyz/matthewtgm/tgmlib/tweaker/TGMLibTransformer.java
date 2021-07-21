@@ -19,6 +19,9 @@
 package xyz.matthewtgm.tgmlib.tweaker;
 
 import org.objectweb.asm.tree.*;
+import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
+import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
+import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -46,6 +49,21 @@ public interface TGMLibTransformer {
         }
         list.add(new InsnNode(cancellation.returnOp));
         list.add(labelNode);
+    }
+    default MethodNode createAccessorGetter(String methodName, String methodDesc, AbstractInsnNode insnNode, int returnCode) {
+        MethodNode node = new MethodNode(ACC_PUBLIC, methodName, methodDesc, null, null);
+        node.instructions.add(new VarInsnNode(ALOAD, 0));
+        node.instructions.add(insnNode);
+        node.instructions.add(new InsnNode(returnCode));
+        return node;
+    }
+    default MethodNode createAccessorSetter(String methodName, String methodDesc, int loadCode, int loadVar, FieldInsnNode fieldInsnNode, int returnCode) {
+        MethodNode node = new MethodNode(ACC_PUBLIC, methodName, methodDesc, null, null);
+        node.instructions.add(new VarInsnNode(ALOAD, 0));
+        node.instructions.add(new VarInsnNode(loadCode, loadVar));
+        node.instructions.add(fieldInsnNode);
+        node.instructions.add(new InsnNode(RETURN));
+        return node;
     }
     default String hooksPackage() {
         return "xyz/matthewtgm/tgmlib/tweaker/hooks/";
