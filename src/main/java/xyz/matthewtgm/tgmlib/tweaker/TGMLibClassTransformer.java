@@ -40,23 +40,18 @@ import java.util.Collection;
 public class TGMLibClassTransformer implements IClassTransformer {
 
     private static boolean created;
-    private static boolean registeredTransformers;
-    private static Logger logger;
-    private static Multimap<String, TGMLibTransformer> transformerMap;
+    private Logger logger = LogManager.getLogger(TGMLib.NAME + " (TGMLibClassTransformer)");
+    private Multimap<String, TGMLibTransformer> transformerMap = ArrayListMultimap.create();
 
     @Getter private static boolean deobfuscated;
     @Getter private static final boolean usingNotchMappings;
 
     public TGMLibClassTransformer() {
-        logger = LogManager.getLogger(TGMLib.NAME + " (TGMLibClassTransformer)");
-        if (!registeredTransformers && transformerMap != null && !transformerMap.isEmpty())
-            transformerMap.clear();
         if (created) {
-            System.out.println("TGMLibClassTransformer was already created, returning.");
+            logger.warn("TGMLibClassTransformer was already created, returning.");
             return;
         }
         created = true;
-        transformerMap = ArrayListMultimap.create();
         registerTransformer(new AbstractClientPlayerTransformer());
         registerTransformer(new BossStatusTransformer());
         registerTransformer(new EntityLivingBaseTransformer());
@@ -72,7 +67,6 @@ public class TGMLibClassTransformer implements IClassTransformer {
         registerTransformer(new NetworkManagerTransformer());
         registerTransformer(new PositionedSoundTransformer());
         registerTransformer(new RenderTransformer());
-        registeredTransformers = true;
     }
 
     private void registerTransformer(TGMLibTransformer transformer) {
