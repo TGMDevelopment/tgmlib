@@ -131,19 +131,15 @@ public class ColourRGB {
         int g = 255;
         int b = 255;
         int a = 255;
-        r = getIntOrDefault("r", object, r);
-        r = getIntOrDefault("red", object, r);
-        g = getIntOrDefault("g", object, g);
-        g = getIntOrDefault("green", object, g);
-        b = getIntOrDefault("b", object, b);
-        b = getIntOrDefault("blue", object, b);
-        a = getIntOrDefault("a", object, a);
-        a = getIntOrDefault("alpha", object, a);
+        r = object.getOrDefault("r", r).getAsInt();
+        r = object.getOrDefault("red", r).getAsInt();
+        g = object.getOrDefault("g", g).getAsInt();
+        g = object.getOrDefault("green", g).getAsInt();
+        b = object.getOrDefault("b", b).getAsInt();
+        b = object.getOrDefault("blue", b).getAsInt();
+        a = object.getOrDefault("a", a).getAsInt();
+        a = object.getOrDefault("alpha", a).getAsInt();
         return new ColourRGB(r, g, b, a);
-    }
-
-    private static int getIntOrDefault(String key, JsonObject object, int defaultInt) {
-        return object.hasKey(key) ? object.get(key).getAsInt() : defaultInt;
     }
 
     @Override

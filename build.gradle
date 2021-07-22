@@ -60,7 +60,7 @@ configurations {
 /* Define dependencies. */
 dependencies {
     /* TGMLib dependencies. */
-    shade('xyz.matthewtgm:JsonTGM:2.6.3')
+    shade('xyz.matthewtgm:JsonTGM:2.7.0')
     shade('xyz.matthewtgm:TGMConfig:2.2')
     shade('org.java-websocket:Java-WebSocket:1.5.1')
     implementation('org.projectlombok:lombok:1.18.16')
@@ -68,6 +68,7 @@ dependencies {
 
     /* Dependencies for cutting other mods' file sizes. */
     shade('org.spongepowered:mixin:0.7.11-SNAPSHOT')
+    shade('com.squareup.okhttp3:okhttp:3.9.1')
     shade('com.github.marcoacierno:pastebin-java-api:v0.2.1')
 }
 
@@ -89,6 +90,17 @@ jar {
 shadowJar {
     configurations = [project.configurations.shade]
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    relocate('org.spongepowered', 'tgmlib.org.spongepowered')
+    relocate('org.slf4j', 'tgmlib.org.slf4j')
+    relocate('org.java_websocket', 'tgmlib.org.websocket')
+    relocate('org.apache', 'tgmlib.org.apache')
+
+    relocate('okio', 'tgmlib.okio')
+    relocate('okhttp3', 'tgmlib.okhttp3')
+
+    relocate('com.google', 'tgmlib.com.google')
+    relocate('com.besaba', 'tgmlib.com.besaba')
 
     archiveClassifier.set('')
 }

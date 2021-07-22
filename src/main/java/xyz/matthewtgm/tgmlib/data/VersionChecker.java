@@ -23,11 +23,14 @@ import xyz.matthewtgm.json.util.JsonApiHelper;
 import xyz.matthewtgm.tgmlib.util.Multithreading;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 public class VersionChecker {
 
     private final String url;
-    private FetchRunnable fetchListener;
+    private BiConsumer<VersionChecker, JsonObject> fetchListener;
     private JsonObject versionObject;
 
     public VersionChecker(String url, boolean periodicallyFetch) {
@@ -42,7 +45,7 @@ public class VersionChecker {
 
     public VersionChecker fetch() {
         versionObject = JsonApiHelper.getJsonObject(url);
-        fetchListener.run(this, versionObject);
+        fetchListener.accept(this, versionObject);
         return this;
     }
 
@@ -86,13 +89,9 @@ public class VersionChecker {
         return getLatestBeta().matches(version);
     }
 
-    public VersionChecker setFetchListener(FetchRunnable fetchListener) {
+    public VersionChecker setFetchListener(BiConsumer<VersionChecker, JsonObject> fetchListener) {
         this.fetchListener = fetchListener;
         return this;
-    }
-
-    public interface FetchRunnable {
-        void run(VersionChecker versionChecker, JsonObject versionObject);
     }
 
 }

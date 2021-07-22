@@ -26,8 +26,6 @@ import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 import xyz.matthewtgm.tgmlib.tweaker.hooks.TGMLibMinecraftAccessor;
 import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
-import java.util.Iterator;
-
 import static org.objectweb.asm.Opcodes.*;
 
 public class MinecraftTransformer implements TGMLibTransformer {
@@ -37,7 +35,7 @@ public class MinecraftTransformer implements TGMLibTransformer {
     }
 
     public void transform(ClassNode classNode, String name) {
-        convertAccessor(classNode, TGMLibMinecraftAccessor.class);
+        convertAccessorOrInvoker(classNode, TGMLibMinecraftAccessor.class);
         createAccessorGetter(classNode, "getTimer", "()Lnet/minecraft/util/Timer;", EnumTransformerFields.timer.getField(EnumTransformerClasses.Minecraft), ARETURN);
         for (MethodNode method : classNode.methods) {
             if (EnumTransformerMethods.dispatchKeypresses.matches(method)) {

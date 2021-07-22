@@ -33,8 +33,8 @@ public class PositionedSoundTransformer implements TGMLibTransformer {
     }
 
     public void transform(ClassNode classNode, String name) {
-        convertAccessor(classNode, TGMLibPositionedSoundAccessor.class);
-        createAccessorSetter(classNode, "setVolume", "(F)V", FLOAD, 1, EnumTransformerFields.PositionedSound_volume.putField(EnumTransformerClasses.PositionedSound));
+        convertAccessorOrInvoker(classNode, TGMLibPositionedSoundAccessor.class);
+        createAccessorSetter(classNode, "setVolume", "(F)V", FLOAD, EnumTransformerFields.PositionedSound_volume.putField(EnumTransformerClasses.PositionedSound));
     }
 
 }

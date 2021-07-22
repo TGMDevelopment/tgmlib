@@ -33,7 +33,7 @@ public class NBTTagCompoundTransformer implements TGMLibTransformer {
     }
 
     public void transform(ClassNode classNode, String name) {
-        convertAccessor(classNode, TGMLibNBTTagCompoundAccessor.class);
+        convertAccessorOrInvoker(classNode, TGMLibNBTTagCompoundAccessor.class);
         createAccessorGetter(classNode, "getTagMap", "()Ljava/util/Map;", EnumTransformerFields.tagMap.getField(EnumTransformerClasses.NBTTagCompound), ARETURN);
     }
 

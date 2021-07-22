@@ -16,22 +16,11 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.exclusive;
+package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
-import net.minecraft.util.ResourceLocation;
-import xyz.matthewtgm.tgmlib.players.cosmetics.BaseCloakCosmetic;
-import xyz.matthewtgm.tgmlib.util.ResourceHelper;
+import net.minecraft.client.gui.GuiOverlayDebug;
 
-public class StrebCloakCosmetic extends BaseCloakCosmetic {
-
-    public StrebCloakCosmetic() {
-        super("Strebbypatty Cloak", "STREB_CLOAK");
-    }
-
-    public ResourceLocation texture() {
-        return ResourceHelper.get("tgmlib", "cosmetics/cloaks/exclusive/streb_cloak.png");
-    }
-
-    public void tick() {}
-
+public interface TGMLibGuiIngameForgeAccessor {
+    GuiOverlayDebug getDebugOverlay();
+    void setDebugOverlay(GuiOverlayDebug debugOverlay);
 }

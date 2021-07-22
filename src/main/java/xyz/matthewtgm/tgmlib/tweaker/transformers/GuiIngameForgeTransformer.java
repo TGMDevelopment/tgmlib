@@ -23,6 +23,7 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
+import xyz.matthewtgm.tgmlib.tweaker.hooks.TGMLibGuiIngameForgeAccessor;
 import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -34,6 +35,10 @@ public class GuiIngameForgeTransformer implements TGMLibTransformer {
     }
 
     public void transform(ClassNode classNode, String name) {
+        convertAccessorOrInvoker(classNode, TGMLibGuiIngameForgeAccessor.class);
+        createAccessorGetter(classNode, "getDebugOverlay", "()Lnet/minecraft/client/gui/GuiOverlayDebug;", new FieldInsnNode(GETFIELD, "net/minecraftforge/client/GuiIngameForge", "debugOverlay", "Lnet/minecraft/client/gui/GuiOverlayDebug;"), ARETURN);
+        createAccessorSetter(classNode, "setDebugOverlay", "(Lnet/minecraft/client/gui/GuiOverlayDebug;)V", ALOAD, new FieldInsnNode(PUTFIELD, "net/minecraftforge/client/GuiIngameForge", "debugOverlay", "Lnet/minecraft/client/gui/GuiOverlayDebug;"));
+
         for (MethodNode method : classNode.methods) {
             if (EnumTransformerMethods.renderBossHealth.matches(method)) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {

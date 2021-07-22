@@ -21,60 +21,46 @@ package xyz.matthewtgm.tgmlib.tweaker.enums;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
+import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformationChecks;
 
+/**
+ * Adapted from SkyBlockAddons under MIT license.
+ * https://github.com/BiscuitDevelopment/SkyblockAddons/blob/master/LICENSE
+ *
+ * @author Biscuit
+ */
 public enum EnumTransformerMethods {
 
-    runTick("runTick", "func_71407_l", "s", "()V"),
-    dispatchKeypresses("dispatchKeypresses", "func_152348_aa", "Z", "()V"),
-    setBossStatus("setBossStatus", "func_82824_a", "a", "(Lnet/minecraft/entity/boss/IBossDisplayData;Z)V", "(Luc;Z)V"),
-    renderBossHealth("renderBossHealth", "func_73828_d", "j", "()V"),
-    renderString("renderString", "func_180455_b", "b", "(Ljava/lang/String;FFIZ)I"),
-    updateTimer("updateTimer", "func_74275_a", "a", "()V"),
-    addPotionEffect("addPotionEffect", "func_70690_d", "c", "(Lnet/minecraft/potion/PotionEffect;)V", "(" + EnumTransformerClasses.PotionEffect.getName() +")V"),
-    dropOneItem("dropOneItem", "func_71040_bB", "a", "(Z)Lnet/minecraft/entity/item/EntityItem;", "(Z)Luz;"),
-    sendChatMessage("sendChatMessage", "func_71165_d", "e", "(Ljava/lang/String;)V"),
-    isInBed("isInBed", "func_175143_p", "p", "()Z"),
-    addToSendQueue("addToSendQueue", "func_147297_a", "a", "(Lnet/minecraft/network/Packet;)V"),
-    handleJoinGame("handleJoinGame", "func_147282_a", "a", "(Lnet/minecraft/network/play/server/S01PacketJoinGame;)V", "(Lgt;)V"),
-    channelRead0("channelRead0", "channelRead0", "a", "(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V"),
-    shouldRender("shouldRender", "func_177071_a", "a", "(Lnet/minecraft/entity/Entity;Lnet/minecraft/client/renderer/culling/ICamera;DDD)Z", "(Lpk;Lbia;DDD)Z"),
-    getLocationCape("getLocationCape", "func_110303_q", "k", "()Lnet/minecraft/util/ResourceLocation;", "()Ljy;"),
-    printChatMessage("printChatMessage", "func_146227_a", "a", "(Lnet/minecraft/util/IChatComponent;)V", "(Leu;)V"),
-    clearChatMessages("clearChatMessages", "func_146231_a", "a", "()V"),
+    dispatchKeypresses("dispatchKeypresses", "func_152348_aa", "()V"),
+    setBossStatus("setBossStatus", "func_82824_a", "(Lnet/minecraft/entity/boss/IBossDisplayData;Z)V"),
+    renderBossHealth("renderBossHealth", "func_73828_d", "()V"),
+    renderString("renderString", "func_180455_b", "(Ljava/lang/String;FFIZ)I"),
+    addPotionEffect("addPotionEffect", "func_70690_d", "(" + EnumTransformerClasses.PotionEffect.getName() +")V"),
+    dropOneItem("dropOneItem", "func_71040_bB", "(Z)Lnet/minecraft/entity/item/EntityItem;"),
+    sendChatMessage("sendChatMessage", "func_71165_d", "(Ljava/lang/String;)V"),
+    isInBed("isInBed", "func_175143_p", "()Z"),
+    addToSendQueue("addToSendQueue", "func_147297_a", "(Lnet/minecraft/network/Packet;)V"),
+    handleJoinGame("handleJoinGame", "func_147282_a", "(Lnet/minecraft/network/play/server/S01PacketJoinGame;)V"),
+    channelRead0("channelRead0", "channelRead0", "(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V"),
+    shouldRender("shouldRender", "func_177071_a", "(Lnet/minecraft/entity/Entity;Lnet/minecraft/client/renderer/culling/ICamera;DDD)Z"),
+    getLocationCape("getLocationCape", "func_110303_q", "()Lnet/minecraft/util/ResourceLocation;"),
+    printChatMessage("printChatMessage", "func_146227_a", "(Lnet/minecraft/util/IChatComponent;)V"),
+    clearChatMessages("clearChatMessages", "func_146231_a", "()V"),
 
-    init("<init>", "<init>", "<init>", "()V");
+    init("<init>", "<init>", "()V");
 
-    private String name;
-    private String description;
+    private final String name;
+    private final String description;
     private String[] exceptions = null;
 
-    EnumTransformerMethods(String deobfMethod, String seargeMethod, String notchMethod18, String seargeDescription) {
-        this(deobfMethod, seargeMethod, notchMethod18, seargeDescription, seargeDescription, false);
-    }
 
-    EnumTransformerMethods(String deobfMethod, String seargeMethod, String notchMethod18, String seargeDescription, String notchDescription) {
-        this(deobfMethod, seargeMethod, notchMethod18, seargeDescription, notchDescription, false);
-    }
-
-    EnumTransformerMethods(String deobfMethod, String seargeMethod, String notchMethod18, String seargeDescription, boolean ioException) {
-        this(deobfMethod, seargeMethod, notchMethod18, seargeDescription, seargeDescription, ioException);
-    }
-
-    EnumTransformerMethods(String deobfMethod, String seargeMethod, String notchMethod18, String seargeDescription, String notchDescription, boolean ioException) {
-        if (TGMLibClassTransformer.isDeobfuscated()) {
+    EnumTransformerMethods(String deobfMethod, String seargeMethod, String seargeDescription) {
+        if (TGMLibTransformationChecks.getDeobfuscated())
             name = deobfMethod;
-            description = seargeDescription;
-        } else {
-            if (TGMLibClassTransformer.isUsingNotchMappings()) {
-                name = notchMethod18;
-                description = notchDescription;
-            } else {
-                name = seargeMethod;
-                description = seargeDescription;
-            }
-        }
-        if (ioException) exceptions = new String[] {"java/io/IOException"};
+        else
+            name = seargeMethod;
+
+        description = seargeDescription;
     }
 
     public String getName() {

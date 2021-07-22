@@ -18,52 +18,49 @@
 
 package xyz.matthewtgm.tgmlib.tweaker.enums;
 
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibClassTransformer;
+import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformationChecks;
 
-@SuppressWarnings("all")
+/**
+ * Adapted from SkyBlockAddons under MIT license.
+ * https://github.com/BiscuitDevelopment/SkyblockAddons/blob/master/LICENSE
+ *
+ * @author Biscuit
+ */
 public enum EnumTransformerClasses {
 
-    Minecraft("net/minecraft/client/Minecraft", "ave"),
-    NBTTagCompound("net/minecraft/nbt/NBTTagCompound", "dn"),
-    BossStatus("net/minecraft/entity/boss/BossStatus", "bfc"),
-    IBossDisplayData("net/minecraft/entity/boss/IBossDisplayData", "uc"),
-    FontRenderer("net/minecraft/client/gui/FontRenderer", "avn"),
-    PositionedSound("net/minecraft/client/audio/PositionedSound", "bpa"),
-    Timer("net/minecraft/util/Timer", "avl"),
-    NetHandlerPlayClient("net/minecraft/client/network/NetHandlerPlayClient", "bcy"),
-    NetworkManager("net/minecraft/network/NetworkManager", "ek"),
-    Packet("net/minecraft/network/Packet", "ff"),
-    PotionEffect("net/minecraft/potion/PotionEffect", "pf"),
-    EntityLivingBase("net/minecraft/entity/EntityLivingBase", "pr"),
-    EntityPlayer("net/minecraft/entity/player/EntityPlayer", "wn"),
-    EntityPlayerSP("net/minecraft/client/entity/EntityPlayerSP", "bew"),
-    AbstractClientPlayer("net/minecraft/client/entity/AbstractClientPlayer", "bet"),
-    Render("net/minecraft/client/renderer/entity/Render", "biv"),
-    GuiNewChat("net/minecraft/client/gui/GuiNewChat", "avt"),
-    GuiIngameForge("net/minecraftforge/client/GuiIngameForge", "net/minecraftforge/client/GuiIngameForge"),
-    GuiContainer("net/minecraft/client/gui/inventory/GuiContainer", "ayl"),
-    IChatComponent("net/minecraft/util/IChatComponent", "eu");
+    Minecraft("net/minecraft/client/Minecraft"),
+    NBTTagCompound("net/minecraft/nbt/NBTTagCompound"),
+    BossStatus("net/minecraft/entity/boss/BossStatus"),
+    FontRenderer("net/minecraft/client/gui/FontRenderer"),
+    PositionedSound("net/minecraft/client/audio/PositionedSound"),
+    NetHandlerPlayClient("net/minecraft/client/network/NetHandlerPlayClient"),
+    NetworkManager("net/minecraft/network/NetworkManager"),
+    Packet("net/minecraft/network/Packet"),
+    PotionEffect("net/minecraft/potion/PotionEffect"),
+    EntityLivingBase("net/minecraft/entity/EntityLivingBase"),
+    EntityPlayer("net/minecraft/entity/player/EntityPlayer"),
+    EntityPlayerSP("net/minecraft/client/entity/EntityPlayerSP"),
+    AbstractClientPlayer("net/minecraft/client/entity/AbstractClientPlayer"),
+    Render("net/minecraft/client/renderer/entity/Render"),
+    GuiScreen("net/minecraft/client/gui/GuiScreen"),
+    GuiNewChat("net/minecraft/client/gui/GuiNewChat"),
+    GuiIngameForge("net/minecraftforge/client/GuiIngameForge"),
+    GuiIngame("net/minecraft/client/gui/GuiIngame"),
+    GuiContainer("net/minecraft/client/gui/inventory/GuiContainer"),
+    IChatComponent("net/minecraft/util/IChatComponent");
 
-    private String name;
-    private String seargeClass;
-    private String notchClass18;
+    private final String seargeClass;
 
-    EnumTransformerClasses(String seargeClass, String notchClass18) {
+    EnumTransformerClasses(String seargeClass) {
         this.seargeClass = seargeClass;
-        this.notchClass18 = notchClass18;
-
-        if (TGMLibClassTransformer.isDeobfuscated() || !TGMLibClassTransformer.isUsingNotchMappings())
-            name = seargeClass;
-        else
-            name = notchClass18;
     }
 
     public String getNameRaw() {
-        return name;
+        return seargeClass;
     }
 
     public String getName() {
-        return "L" + name + ";";
+        return "L" + seargeClass + ";";
     }
 
     public String getTransformerName() {

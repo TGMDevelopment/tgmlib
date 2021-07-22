@@ -19,8 +19,9 @@
 package xyz.matthewtgm.tgmlib.tweaker.util;
 
 /**
- * Adapted from SkyblockAddons under MIT License
+ * Adapted from SkyBlockAddons under MIT license.
  * https://github.com/BiscuitDevelopment/SkyblockAddons/blob/master/LICENSE
+ *
  * @author Biscuit
  */
 public class ReturnValue<R> {

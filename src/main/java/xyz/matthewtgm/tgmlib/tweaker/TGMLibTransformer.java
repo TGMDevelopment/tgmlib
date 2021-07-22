@@ -19,9 +19,8 @@
 package xyz.matthewtgm.tgmlib.tweaker;
 
 import org.objectweb.asm.tree.*;
-import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
-import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
-import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
+
+import java.util.List;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -50,12 +49,26 @@ public interface TGMLibTransformer {
         list.add(new InsnNode(cancellation.returnOp));
         list.add(labelNode);
     }
-    default void convertAccessor(ClassNode node, Class<?> accessor) {
+    default void convertAccessorOrInvoker(ClassNode node, Class<?> accessor) {
         boolean found = false;
         for (String anInterface : node.interfaces)
             found = accessor.getName().equals(anInterface);
         if (!found && accessor != null)
             node.interfaces.add(accessor.getName().replace(".", "/"));
+    }
+    default void createInvokerMethod(ClassNode node, String methodName, String methodDesc, List<LoadedVariable> variables, AbstractInsnNode insnNode, int returnCode) {
+        MethodNode method = new MethodNode(ACC_PUBLIC, methodName, methodDesc, null, null);
+        method.instructions.add(new VarInsnNode(ALOAD, 0));
+        for (LoadedVariable variable : variables)
+            method.instructions.add(new VarInsnNode(variable.op, variable.var));
+        method.instructions.add(insnNode);
+        method.instructions.add(new InsnNode(returnCode));
+
+        boolean found = false;
+        for (MethodNode methodNode : node.methods)
+            found = methodNode.name.equals(methodName);
+        if (!found)
+            node.methods.add(method);
     }
     default void createAccessorGetter(ClassNode node, String methodName, String methodDesc, AbstractInsnNode insnNode, int returnCode) {
         MethodNode method = new MethodNode(ACC_PUBLIC, methodName, methodDesc, null, null);
@@ -69,10 +82,10 @@ public interface TGMLibTransformer {
         if (!found)
             node.methods.add(method);
     }
-    default void createAccessorSetter(ClassNode node, String methodName, String methodDesc, int loadCode, int loadVar, FieldInsnNode fieldInsnNode) {
+    default void createAccessorSetter(ClassNode node, String methodName, String methodDesc, int loadCode, FieldInsnNode fieldInsnNode) {
         MethodNode method = new MethodNode(ACC_PUBLIC, methodName, methodDesc, null, null);
         method.instructions.add(new VarInsnNode(ALOAD, 0));
-        method.instructions.add(new VarInsnNode(loadCode, loadVar));
+        method.instructions.add(new VarInsnNode(loadCode, 1));
         method.instructions.add(fieldInsnNode);
         method.instructions.add(new InsnNode(RETURN));
 
@@ -84,6 +97,15 @@ public interface TGMLibTransformer {
     }
     default String hooksPackage() {
         return "xyz/matthewtgm/tgmlib/tweaker/hooks/";
+    }
+
+    class LoadedVariable {
+        public final int op;
+        public final int var;
+        public LoadedVariable(int op, int var) {
+            this.op = op;
+            this.var = var;
+        }
     }
 
     class ReturnValueCancellation {

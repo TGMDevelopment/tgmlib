@@ -35,7 +35,7 @@ public class ScreenPosition {
     }
 
     public ScreenPosition(String jsonString) {
-        this((JsonObject) JsonParser.parse(jsonString));
+        this(JsonParser.parse(jsonString).getAsJsonObject());
     }
 
     public ScreenPosition clone() {

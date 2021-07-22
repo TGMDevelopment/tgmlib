@@ -33,6 +33,7 @@ import org.objectweb.asm.tree.ClassNode;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.tweaker.transformers.*;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 @IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
@@ -40,11 +41,8 @@ import java.util.Collection;
 public class TGMLibClassTransformer implements IClassTransformer {
 
     private static boolean created;
-    private Logger logger = LogManager.getLogger(TGMLib.NAME + " (TGMLibClassTransformer)");
-    private Multimap<String, TGMLibTransformer> transformerMap = ArrayListMultimap.create();
-
-    @Getter private static boolean deobfuscated;
-    @Getter private static final boolean usingNotchMappings;
+    private final Logger logger = LogManager.getLogger(TGMLib.NAME + " (TGMLibClassTransformer)");
+    private final Multimap<String, TGMLibTransformer> transformerMap = ArrayListMultimap.create();
 
     public TGMLibClassTransformer() {
         if (created) {
@@ -60,7 +58,9 @@ public class TGMLibClassTransformer implements IClassTransformer {
         registerTransformer(new FontRendererTransformer());
         registerTransformer(new GuiContainerTransformer());
         registerTransformer(new GuiIngameForgeTransformer());
+        registerTransformer(new GuiIngameTransformer());
         registerTransformer(new GuiNewChatTransformer());
+        registerTransformer(new GuiScreenTransformer());
         registerTransformer(new MinecraftTransformer());
         registerTransformer(new NBTTagCompoundTransformer());
         registerTransformer(new NetHandlerPlayClientTransformer());
@@ -78,7 +78,8 @@ public class TGMLibClassTransformer implements IClassTransformer {
         if (bytes == null)
             return null;
         Collection<TGMLibTransformer> transformers = transformerMap.get(transformedName);
-        if (transformers.isEmpty()) return bytes;
+        if (transformers.isEmpty())
+            return bytes;
         logger.info("Found {} transformer(s) for {}", transformers.size(), transformedName);
         ClassReader reader = new ClassReader(bytes);
         ClassNode node = new ClassNode();
@@ -87,7 +88,7 @@ public class TGMLibClassTransformer implements IClassTransformer {
             logger.info("Applying transformer {} to {}", transformer.getClass().getName(), transformedName);
             transformer.transform(node, transformedName);
         }
-        ClassWriter writer = new ClassWriter(3);
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
         try {
             node.accept(writer);
         } catch (Exception e) {
@@ -97,9 +98,7 @@ public class TGMLibClassTransformer implements IClassTransformer {
     }
 
     static {
-        deobfuscated = false;
-        deobfuscated = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
-        usingNotchMappings = !deobfuscated;
+        TGMLibTransformationChecks.check();
     }
 
 }

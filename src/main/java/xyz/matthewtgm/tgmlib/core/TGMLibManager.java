@@ -123,7 +123,7 @@ public class TGMLibManager {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 if (dataHandler.isMayLogData())
                     webSocket.send(new GameClosePacket(GlobalMinecraft.getSession().getProfile().getId().toString()));
-                webSocket.close(CloseFrame.NOCODE, "Game shutdown");
+                webSocket.close(CloseFrame.NORMAL, "Game shutdown");
             }, "TGMLib Shutdown"));
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,7 +140,7 @@ public class TGMLibManager {
         if (webSocketTest)
             return URI.create("ws://localhost:2298");
         JsonObject object = JsonApiHelper.getJsonObject("https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/websocket.json", true);
-        String uri = object.get("uri").toString();
+        String uri = object.get("uri").getAsString();
         for (int i = 0; i < object.get("loop").getAsInt(); i++)
             uri = new String(Base64.getDecoder().decode(uri));
         return URI.create(uri);

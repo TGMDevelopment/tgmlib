@@ -16,22 +16,18 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.exclusive;
+package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
-import net.minecraft.util.ResourceLocation;
-import xyz.matthewtgm.tgmlib.players.cosmetics.BaseCloakCosmetic;
-import xyz.matthewtgm.tgmlib.util.ResourceHelper;
+public interface TGMLibGuiIngameAccessor {
+    String getRecordPlaying();
+    void setRecordPlaying(String recordPlaying);
+    int getRecordPlayingUpFor();
+    void setRecordPlayingUpFor(int recordPlayingUpFor);
+    boolean isRecordIsPlaying();
+    void setRecordIsPlaying(boolean recordIsPlaying);
 
-public class StrebCloakCosmetic extends BaseCloakCosmetic {
-
-    public StrebCloakCosmetic() {
-        super("Strebbypatty Cloak", "STREB_CLOAK");
-    }
-
-    public ResourceLocation texture() {
-        return ResourceHelper.get("tgmlib", "cosmetics/cloaks/exclusive/streb_cloak.png");
-    }
-
-    public void tick() {}
-
+    String getDisplayedTitle();
+    void setDisplayTitle(String displayTitle);
+    String getDisplayedSubTitle();
+    void setDisplayedSubTitle(String displayedSubTitle);
 }
