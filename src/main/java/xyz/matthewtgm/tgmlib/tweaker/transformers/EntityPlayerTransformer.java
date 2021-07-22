@@ -33,7 +33,7 @@ public class EntityPlayerTransformer implements TGMLibTransformer {
     }
 
     public void transform(ClassNode classNode, String name) {
-        classNode.interfaces.add(TGMLibEntityPlayerAccessor.class.getName().replaceAll("\\.", "/"));
+        convertAccessor(classNode, TGMLibEntityPlayerAccessor.class);
         createAccessorGetter(classNode, "isIsInBed", "()Z", new MethodInsnNode(INVOKEVIRTUAL, EnumTransformerClasses.EntityPlayer.getNameRaw(), EnumTransformerMethods.isInBed.getName(), "()Z", false), IRETURN);
     }
 

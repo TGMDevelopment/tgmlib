@@ -33,7 +33,7 @@ public class GuiContainerTransformer implements TGMLibTransformer {
     }
 
     public void transform(ClassNode classNode, String name) {
-        classNode.interfaces.add(TGMLibGuiContainerAccessor.class.getName().replaceAll("\\.", "/"));
+        convertAccessor(classNode, TGMLibGuiContainerAccessor.class);
         createAccessorGetter(classNode, "getXSize", "()I", EnumTransformerFields.xSize.getField(EnumTransformerClasses.GuiContainer), IRETURN);
         createAccessorGetter(classNode, "getYSize", "()I", EnumTransformerFields.ySize.getField(EnumTransformerClasses.GuiContainer), IRETURN);
         createAccessorGetter(classNode, "getGuiTop", "()I;", EnumTransformerFields.guiTop.getField(EnumTransformerClasses.GuiContainer), IRETURN);

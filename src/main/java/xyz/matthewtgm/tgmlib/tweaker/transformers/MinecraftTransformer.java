@@ -23,6 +23,7 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
+import xyz.matthewtgm.tgmlib.tweaker.hooks.TGMLibMinecraftAccessor;
 import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import java.util.Iterator;
@@ -36,6 +37,7 @@ public class MinecraftTransformer implements TGMLibTransformer {
     }
 
     public void transform(ClassNode classNode, String name) {
+        convertAccessor(classNode, TGMLibMinecraftAccessor.class);
         createAccessorGetter(classNode, "getTimer", "()Lnet/minecraft/util/Timer;", EnumTransformerFields.timer.getField(EnumTransformerClasses.Minecraft), ARETURN);
         for (MethodNode method : classNode.methods) {
             if (EnumTransformerMethods.dispatchKeypresses.matches(method)) {

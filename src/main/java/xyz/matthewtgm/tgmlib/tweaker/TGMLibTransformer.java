@@ -50,6 +50,13 @@ public interface TGMLibTransformer {
         list.add(new InsnNode(cancellation.returnOp));
         list.add(labelNode);
     }
+    default void convertAccessor(ClassNode node, Class<?> accessor) {
+        boolean found = false;
+        for (String anInterface : node.interfaces)
+            found = accessor.getName().equals(anInterface);
+        if (!found && accessor != null)
+            node.interfaces.add(accessor.getName().replace(".", "/"));
+    }
     default void createAccessorGetter(ClassNode node, String methodName, String methodDesc, AbstractInsnNode insnNode, int returnCode) {
         MethodNode method = new MethodNode(ACC_PUBLIC, methodName, methodDesc, null, null);
         method.instructions.add(new VarInsnNode(ALOAD, 0));
