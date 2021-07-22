@@ -91,16 +91,8 @@ shadowJar {
     configurations = [project.configurations.shade]
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-    relocate('org.spongepowered', 'tgmlib.org.spongepowered')
-    relocate('org.slf4j', 'tgmlib.org.slf4j')
-    relocate('org.java_websocket', 'tgmlib.org.websocket')
-    relocate('org.apache', 'tgmlib.org.apache')
-
     relocate('okio', 'tgmlib.okio')
     relocate('okhttp3', 'tgmlib.okhttp3')
-
-    relocate('com.google', 'tgmlib.com.google')
-    relocate('com.besaba', 'tgmlib.com.besaba')
 
     archiveClassifier.set('')
 }
