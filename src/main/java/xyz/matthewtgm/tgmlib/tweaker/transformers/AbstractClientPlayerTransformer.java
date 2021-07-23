@@ -28,13 +28,13 @@ import static org.objectweb.asm.Opcodes.*;
 
 public class AbstractClientPlayerTransformer implements TGMLibTransformer {
 
-    public String[] getClassNames() {
+    public String[] classes() {
         return new String[]{EnumTransformerClasses.AbstractClientPlayer.getTransformerName()};
     }
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.getLocationCape.matches(method)) {
+            if (method.name.equals("k") && method.desc.equals("()Ljy;")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ALOAD, 0));
                     list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "AbstractClientPlayerHook", "returnValue", "(" + EnumTransformerClasses.AbstractClientPlayer.getName() + ")Z", false));

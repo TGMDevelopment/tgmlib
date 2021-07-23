@@ -29,7 +29,7 @@ import static org.objectweb.asm.Opcodes.*;
 
 public class NetHandlerPlayClientTransformer implements TGMLibTransformer {
 
-    public String[] getClassNames() {
+    public String[] classes() {
         return new String[]{EnumTransformerClasses.NetHandlerPlayClient.getTransformerName()};
     }
 

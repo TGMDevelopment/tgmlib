@@ -32,6 +32,9 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformationChecks;
 public enum EnumTransformerFields {
 
     timer("timer", "field_71428_T", "Lnet/minecraft/util/Timer;"),
+    enableGLErrorChecking("enableGLErrorChecking", "field_175619_R", "Z"),
+    leftClickCounter("leftClickCounter", "field_71429_W", "I"),
+    myNetworkManager("myNetworkManager", "field_71453_ak", "Lnet/minecraft/network/NetworkManager;"),
     tagMap("tagMap", "field_74784_a", "Ljava/util/Map;"),
     displayedTitle("displayedTitle", "field_175201_x", "Ljava/lang/String;"),
     displayedSubTitle("displayedSubTitle", "field_175200_y", "Ljava/lang/String;"),

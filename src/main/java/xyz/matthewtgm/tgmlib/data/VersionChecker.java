@@ -36,7 +36,7 @@ public class VersionChecker {
     public VersionChecker(String url, boolean periodicallyFetch) {
         this.url = url;
         if (periodicallyFetch)
-            Multithreading.schedule(this::fetch, 0, 10, TimeUnit.MINUTES);
+            Multithreading.schedule(this::fetch, 0, 5, TimeUnit.MINUTES);
     }
 
     public VersionChecker(String url) {

@@ -57,6 +57,8 @@ public class MinecraftHook {
     }
 
     public static void dispatchTgmLibKeyPresses(Minecraft mc) {
+        if (callKeyInputEvent())
+            return;
         List<KeyBind> keyBinds = KeyBindManager.getKeyBinds();
         boolean wereRepeatEventsEnabled = Keyboard.areRepeatEventsEnabled();
         Keyboard.enableRepeatEvents(true);

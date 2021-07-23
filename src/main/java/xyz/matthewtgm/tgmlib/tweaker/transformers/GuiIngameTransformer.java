@@ -28,7 +28,7 @@ import static org.objectweb.asm.Opcodes.*;
 
 public class GuiIngameTransformer implements TGMLibTransformer {
 
-    public String[] getClassNames() {
+    public String[] classes() {
         return new String[]{EnumTransformerClasses.GuiIngame.getTransformerName()};
     }
 

@@ -18,8 +18,14 @@
 
 package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
+import net.minecraft.network.NetworkManager;
 import net.minecraft.util.Timer;
 
 public interface TGMLibMinecraftAccessor {
     Timer getTimer();
+    boolean isEnableGLErrorChecking();
+    void setEnableGLErrorChecking(boolean enableGLErrorChecking);
+    int getLeftClickCounter();
+    void setLeftClickCounter(int leftClickCounter);
+    NetworkManager getMyNetworkManager();
 }

@@ -26,7 +26,7 @@ import static org.objectweb.asm.Opcodes.*;
 
 public interface TGMLibTransformer {
 
-    String[] getClassNames();
+    String[] classes();
 
     void transform(ClassNode classNode, String name);
 

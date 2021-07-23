@@ -28,6 +28,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import xyz.matthewtgm.tgmlib.util.RenderHelper;
 
 public abstract class BaseCloakCosmetic extends BaseCosmetic {
 
@@ -38,32 +39,32 @@ public abstract class BaseCloakCosmetic extends BaseCosmetic {
     }
 
     public abstract ResourceLocation texture();
-
     public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
         ResourceLocation texture = texture();
         if (texture != null && player.hasPlayerInfo() && !player.isInvisible() && player.isWearing(EnumPlayerModelParts.CAPE) && player.getLocationCape() == null) {
             GlStateManager.color(1f, 1f, 1f, 1f);
-            Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+            RenderHelper.bindTexture(texture);
             GlStateManager.pushMatrix();
             GlStateManager.translate(0f, 0f, 0.125f);
             double d0 = player.prevChasingPosX + (player.chasingPosX - player.prevChasingPosX) * (double)partialTicks - (player.prevPosX + (player.posX - player.prevPosX) * (double)partialTicks);
             double d1 = player.prevChasingPosY + (player.chasingPosY - player.prevChasingPosY) * (double)partialTicks - (player.prevPosY + (player.posY - player.prevPosY) * (double)partialTicks);
             double d2 = player.prevChasingPosZ + (player.chasingPosZ - player.prevChasingPosZ) * (double)partialTicks - (player.prevPosZ + (player.posZ - player.prevPosZ) * (double)partialTicks);
             float f = player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * partialTicks;
-            double d3 = MathHelper.sin(f * (float) Math.PI / 180f);
-            double d4 = (-MathHelper.cos(f * (float) Math.PI / 180f));
-            float f1 = (float) d1 * 10f;
-
+            double d3 = MathHelper.sin(f * (float)Math.PI / 180f);
+            double d4 = (-MathHelper.cos(f * (float)Math.PI / 180f));
+            float f1 = (float)d1 * 10f;
             f1 = MathHelper.clamp_float(f1, -6f, 32f);
-            float f2 = (float) (d0 * d3 + d2 * d4) * 100f;
-            float f3 = (float) (d0 * d4 - d2 * d3) * 100f;
+            float f2 = (float)(d0 * d3 + d2 * d4) * 100f;
+            float f3 = (float)(d0 * d4 - d2 * d3) * 100f;
 
-            if (f2 < 0f) f2 = 0f;
+            if (f2 < 0f)
+                f2 = 0f;
 
             float f4 = player.prevCameraYaw + (player.cameraYaw - player.prevCameraYaw) * partialTicks;
-
             f1 = f1 + MathHelper.sin((player.prevDistanceWalkedModified + (player.distanceWalkedModified - player.prevDistanceWalkedModified) * partialTicks) * 6f) * 32f * f4;
-            if (player.isSneaking()) f1 += 25f;
+
+            if (player.isSneaking())
+                f1 += 25f;
 
             GlStateManager.rotate(6f + f2 / 2f + f1, 1f, 0f, 0f);
             GlStateManager.rotate(f3 / 2f, 0f, 0f, 1f);
@@ -80,19 +81,16 @@ public abstract class BaseCloakCosmetic extends BaseCosmetic {
         private final ModelRenderer cape = new ModelRenderer(this, 0, 0);
 
         public CloakModel() {
-            this.cape.setTextureSize(64, 32);
-            this.cape.addBox(-5.0F, 0.0F, -1.0F, 10, 16, 1);
+            cape.setTextureSize(64, 32);
+            cape.addBox(-5f, 0f, -1f, 10, 16, 1);
         }
 
         public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-            super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-            this.cape.render(scale);
+            cape.render(scale);
         }
 
         public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
-            super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
             EntityPlayer livingEntity = (EntityPlayer) entityIn;
-
             if (livingEntity.getCurrentArmor(2) != null) {
                 if (livingEntity.isSneaking()) {
                     this.cape.rotationPointZ = 0.8F;

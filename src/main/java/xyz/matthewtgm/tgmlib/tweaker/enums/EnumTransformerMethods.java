@@ -31,7 +31,6 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformationChecks;
  */
 public enum EnumTransformerMethods {
 
-    dispatchKeypresses("dispatchKeypresses", "func_152348_aa", "()V"),
     setBossStatus("setBossStatus", "func_82824_a", "(Lnet/minecraft/entity/boss/IBossDisplayData;Z)V"),
     renderBossHealth("renderBossHealth", "func_73828_d", "()V"),
     renderString("renderString", "func_180455_b", "(Ljava/lang/String;FFIZ)I"),
@@ -43,7 +42,6 @@ public enum EnumTransformerMethods {
     handleJoinGame("handleJoinGame", "func_147282_a", "(Lnet/minecraft/network/play/server/S01PacketJoinGame;)V"),
     channelRead0("channelRead0", "channelRead0", "(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V"),
     shouldRender("shouldRender", "func_177071_a", "(Lnet/minecraft/entity/Entity;Lnet/minecraft/client/renderer/culling/ICamera;DDD)Z"),
-    getLocationCape("getLocationCape", "func_110303_q", "()Lnet/minecraft/util/ResourceLocation;"),
     printChatMessage("printChatMessage", "func_146227_a", "(Lnet/minecraft/util/IChatComponent;)V"),
     clearChatMessages("clearChatMessages", "func_146231_a", "()V"),
 

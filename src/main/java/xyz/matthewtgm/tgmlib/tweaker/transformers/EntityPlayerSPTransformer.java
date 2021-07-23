@@ -28,7 +28,7 @@ import static org.objectweb.asm.Opcodes.*;
 
 public class EntityPlayerSPTransformer implements TGMLibTransformer {
 
-    public String[] getClassNames() {
+    public String[] classes() {
         return new String[]{EnumTransformerClasses.EntityPlayerSP.getTransformerName()};
     }
 

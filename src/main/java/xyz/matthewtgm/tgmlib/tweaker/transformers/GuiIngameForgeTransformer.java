@@ -30,7 +30,7 @@ import static org.objectweb.asm.Opcodes.*;
 
 public class GuiIngameForgeTransformer implements TGMLibTransformer {
 
-    public String[] getClassNames() {
+    public String[] classes() {
         return new String[]{"net.minecraftforge.client.GuiIngameForge"};
     }
 

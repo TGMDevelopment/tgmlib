@@ -34,13 +34,24 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.util.FrameTimer;
 import net.minecraft.util.Session;
+import net.minecraft.util.Timer;
+import xyz.matthewtgm.tgmlib.tweaker.hooks.TGMLibMinecraftAccessor;
 
 import java.io.File;
 
 public class GlobalMinecraft {
 
     private static final Minecraft instance = Minecraft.getMinecraft();
+
+    public static Timer getTimer() {
+        return ((TGMLibMinecraftAccessor) instance).getTimer();
+    }
+
+    public static FrameTimer getFrameTimer() {
+        return instance.frameTimer;
+    }
 
     public static int getDisplayWidth() {
         return instance.displayWidth;

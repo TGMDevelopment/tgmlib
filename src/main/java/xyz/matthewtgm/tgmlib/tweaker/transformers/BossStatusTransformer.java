@@ -28,7 +28,7 @@ import static org.objectweb.asm.Opcodes.*;
 
 public class BossStatusTransformer implements TGMLibTransformer {
 
-    public String[] getClassNames() {
+    public String[] classes() {
         return new String[]{EnumTransformerClasses.BossStatus.getTransformerName()};
     }
 

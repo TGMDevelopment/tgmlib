@@ -20,9 +20,7 @@ package xyz.matthewtgm.tgmlib.tweaker;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import lombok.Getter;
 import net.minecraft.launchwrapper.IClassTransformer;
-import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +31,6 @@ import org.objectweb.asm.tree.ClassNode;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.tweaker.transformers.*;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 @IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
@@ -70,8 +67,8 @@ public class TGMLibClassTransformer implements IClassTransformer {
     }
 
     private void registerTransformer(TGMLibTransformer transformer) {
-        for (String className : transformer.getClassNames())
-            transformerMap.put(className, transformer);
+        for (String name : transformer.classes())
+            transformerMap.put(name, transformer);
     }
 
     public byte[] transform(String name, String transformedName, byte[] bytes) {
