@@ -17,7 +17,7 @@
  */
 
 plugins {
-    id "net.minecraftforge.gradle.forge" version "86b2392"
+    id "net.minecraftforge.gradle.forge" version "8708bf3e01"
     id "com.github.johnrengelman.shadow" version "6.1.0"
     id "java"
 }
@@ -63,8 +63,8 @@ dependencies {
     shade('xyz.matthewtgm:JsonTGM:2.8.0')
     shade('xyz.matthewtgm:TGMConfig:2.3.1')
     shade('org.java-websocket:Java-WebSocket:1.5.1')
-    implementation('org.projectlombok:lombok:1.18.20')
-    annotationProcessor('org.projectlombok:lombok:1.18.20')
+    implementation('org.projectlombok:lombok:1.18.16')
+    annotationProcessor('org.projectlombok:lombok:1.18.16')
 
     /* Dependencies for cutting other mods' file sizes. */
     shade('com.github.marcoacierno:pastebin-java-api:v0.2.1')
