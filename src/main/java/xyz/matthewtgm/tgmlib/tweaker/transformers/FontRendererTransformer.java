@@ -34,7 +34,7 @@ public class FontRendererTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (nameMatches(method.name, EnumTransformerMethods.renderString, "b")) {
+            if (nameMatches(method.name, EnumTransformerMethods.renderString) || nameMatches(method.name, "b") && method.desc.equals("")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     /*
 

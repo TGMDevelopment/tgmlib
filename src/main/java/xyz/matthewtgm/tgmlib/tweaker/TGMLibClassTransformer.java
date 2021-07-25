@@ -33,7 +33,9 @@ import xyz.matthewtgm.tgmlib.tweaker.transformers.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
 @IFMLLoadingPlugin.SortingIndex(1001)
@@ -50,6 +52,7 @@ public class TGMLibClassTransformer implements IClassTransformer {
             return;
         }
         created = true;
+
         registerTransformer(new AbstractClientPlayerTransformer());
         registerTransformer(new BossStatusTransformer());
         registerTransformer(new EntityLivingBaseTransformer());

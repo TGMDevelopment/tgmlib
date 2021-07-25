@@ -37,20 +37,20 @@ public class NetHandlerPlayClientTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (nameMatches(method.name, EnumTransformerMethods.addToSendQueue, "a") || method.desc.equals("(Lff;)V")) {
+            if (nameMatches(method.name, EnumTransformerMethods.addToSendQueue) || nameMatches(method.name, "a") && method.desc.equals("(Lff;)V")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ALOAD, 0)); /* this */
                     list.add(new VarInsnNode(ALOAD, 1)); /* packet */
                     list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "NetHandlerPlayClientHook", "callEvent", "(" + EnumTransformerClasses.NetHandlerPlayClient.getName() + EnumTransformerClasses.Packet.getName() + ")V", false)); /* NetHandlerPlayClientHook.callEvent(this, packet); */
                 }));
             }
-            if (nameMatches(method.name, EnumTransformerMethods.handleJoinGame, "a") || method.desc.equals("(Lgt;)V")) {
+            if (nameMatches(method.name, EnumTransformerMethods.handleJoinGame) || nameMatches(method.name, "a") && method.desc.equals("(Lgt;)V")) {
                 Iterator<AbstractInsnNode> iterator = method.instructions.iterator();
                 while (iterator.hasNext()) {
                     AbstractInsnNode next = iterator.next();
                     if (next instanceof MethodInsnNode && next.getOpcode() == INVOKEVIRTUAL) {
                         MethodInsnNode methodInsnNode = (MethodInsnNode) next;
-                        if (nameMatches(methodInsnNode.name, EnumTransformerMethods.sendPacket, "a") || nameMatches(methodInsnNode.name, "a") && methodInsnNode.desc.equals("(Lff;)V")) {
+                        if (nameMatches(methodInsnNode.name, EnumTransformerMethods.sendPacket) || nameMatches(methodInsnNode.name, "a") && methodInsnNode.desc.equals("(Lff;)V")) {
                             method.instructions.insert(methodInsnNode, AsmHelper.createQuickInsnList(list -> {
                                 list.add(new VarInsnNode(ALOAD, 0));
                                 list.add(EnumTransformerFields.netManager.getField(EnumTransformerClasses.NetHandlerPlayClient));

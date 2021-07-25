@@ -34,7 +34,7 @@ public class EntityLivingBaseTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode methodNode : classNode.methods) {
-            if (nameMatches(methodNode.name, EnumTransformerMethods.addPotionEffect, "c") || nameMatches(methodNode.name, "c") && methodNode.desc.equals("(Lpf;)V")) {
+            if (nameMatches(methodNode.name, EnumTransformerMethods.addPotionEffect) || nameMatches(methodNode.name, "c") && methodNode.desc.equals("(Lpf;)V")) {
                 methodNode.instructions.insertBefore(methodNode.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ALOAD, 0)); /* this */
                     list.add(new VarInsnNode(ALOAD, 1)); /* potionEffect */

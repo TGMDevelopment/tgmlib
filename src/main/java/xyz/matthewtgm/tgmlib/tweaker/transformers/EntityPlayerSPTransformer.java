@@ -34,7 +34,7 @@ public class EntityPlayerSPTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (nameMatches(method.name, EnumTransformerMethods.dropOneItem, "a")) {
+            if (nameMatches(method.name, EnumTransformerMethods.dropOneItem) || nameMatches(method.name, "a") && method.desc.equals("(Z)Luz;")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ILOAD, 1)); /* dropAll */
                     list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "EntityPlayerSPHook", "callEvent", "(Z)Z", false));
@@ -45,7 +45,7 @@ public class EntityPlayerSPTransformer implements TGMLibTransformer {
                     list.add(labelNode);
                 }));
             }
-            if (nameMatches(method.name, EnumTransformerMethods.sendChatMessage, "e")) {
+            if (nameMatches(method.name, EnumTransformerMethods.sendChatMessage) || nameMatches(method.name, "e") && method.desc.equals("(Ljava/lang/String;)V")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/SendChatMessageEvent"));
                     list.add(new InsnNode(DUP));

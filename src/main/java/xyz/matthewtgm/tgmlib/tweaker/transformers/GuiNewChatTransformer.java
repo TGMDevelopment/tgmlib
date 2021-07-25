@@ -35,7 +35,7 @@ public class GuiNewChatTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (nameMatches(method.name, EnumTransformerMethods.printChatMessage, "a") || nameMatches(method.name, "a") && method.desc.equals("(Leu;)V")) {
+            if (nameMatches(method.name, EnumTransformerMethods.printChatMessage) || nameMatches(method.name, "a") && method.desc.equals("(Leu;)V")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     /*
                         if (GuiNewChatHook.callPrintEvent(this, chatComponent)) {
@@ -51,7 +51,7 @@ public class GuiNewChatTransformer implements TGMLibTransformer {
                     list.add(labelNode);
                 }));
             }
-            if (nameMatches(method.name, EnumTransformerMethods.clearChatMessages, "a") || nameMatches(method.name, "a") && method.desc.equals("()V")) {
+            if (nameMatches(method.name, EnumTransformerMethods.clearChatMessages) || nameMatches(method.name, "a") && method.desc.equals("()V")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     /*
                         if (GuiNewChatHook.callClearChatEvent(this, this.drawnChatLines, this.chatLines, this.sentMessages)) {

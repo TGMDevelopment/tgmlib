@@ -34,7 +34,7 @@ public class AbstractClientPlayerTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (nameMatches(method.name, EnumTransformerMethods.getLocationCape, "k")) {
+            if (nameMatches(method.name, EnumTransformerMethods.getLocationCape) || nameMatches(method.name, "k") && method.desc.equals("()Ljy;")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ALOAD, 0));
                     list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "AbstractClientPlayerHook", "returnValue", "(" + EnumTransformerClasses.AbstractClientPlayer.getName() + ")Z", false));

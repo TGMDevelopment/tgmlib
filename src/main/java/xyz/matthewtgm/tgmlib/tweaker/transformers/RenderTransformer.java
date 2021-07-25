@@ -36,7 +36,7 @@ public class RenderTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (nameMatches(method.name, EnumTransformerMethods.shouldRender, "a") || method.desc.equals("(Lpk;Lbia;DDD)Z")) {
+            if (nameMatches(method.name, EnumTransformerMethods.shouldRender) || nameMatches(method.name, "a") && method.desc.equals("(Lpk;Lbia;DDD)Z")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ALOAD, 1)); /* livingEntity */
                     list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "RenderHook", "callRenderCheckEvent", "(Lnet/minecraft/entity/Entity;)Z", false)); /* RenderHook.callRenderCheckEvent(livingEntity) */
@@ -47,7 +47,7 @@ public class RenderTransformer implements TGMLibTransformer {
                     list.add(labelNode);
                 }));
             }
-            if (nameMatches(method.name, EnumTransformerMethods.renderLivingLabel, "a") || nameMatches(method.name, "a") && method.desc.equals("(Lpk;Ljava/lang/String;DDDI)V")) {
+            if (nameMatches(method.name, EnumTransformerMethods.renderLivingLabel) || nameMatches(method.name, "a") && method.desc.equals("(Lpk;Ljava/lang/String;DDDI)V")) {
                 method.instructions.insertBefore(method.instructions.getLast().getPrevious().getPrevious().getPrevious(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ALOAD, 1));
                     list.add(new VarInsnNode(DLOAD, 3));
