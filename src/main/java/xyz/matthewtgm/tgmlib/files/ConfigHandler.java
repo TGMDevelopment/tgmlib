@@ -21,20 +21,24 @@ package xyz.matthewtgm.tgmlib.files;
 import lombok.Getter;
 import xyz.matthewtgm.tgmconfig.ConfigEntry;
 import xyz.matthewtgm.tgmconfig.TGMConfig;
+import xyz.matthewtgm.tgmconfig.annotations.TGMConfigAnnotationsAPI;
+import xyz.matthewtgm.tgmconfig.annotations.options.impl.BooleanOption;
+
+import java.io.File;
 
 public class ConfigHandler {
 
-    private final TGMConfig config;
+    @Getter private final TGMConfig config;
 
-    @Getter private boolean lightMode = false;
+    @Getter private final BooleanOption lightMode = new BooleanOption(false);
 
-    @Getter private boolean showCosmetics = true;
-    @Getter private boolean overrideCapes = true;
+    @Getter private final BooleanOption showCosmetics = new BooleanOption(true);
+    @Getter private final BooleanOption overrideCapes = new BooleanOption(true);
 
-    @Getter private boolean showIndicators = true;
+    @Getter private final BooleanOption showIndicators = new BooleanOption(true);
 
-    public ConfigHandler(TGMConfig config) {
-        this.config = config;
+    public ConfigHandler(String name, File dir) {
+        this.config = TGMConfigAnnotationsAPI.handle(name, dir, this);
     }
 
     public void start() {
@@ -50,10 +54,10 @@ public class ConfigHandler {
     }
 
     public void update() {
-        lightMode = config.getAsBoolean("light_mode");
-        showCosmetics = config.getAsBoolean("show_cosmetics");
-        overrideCapes = config.getAsBoolean("override_capes");
-        showIndicators = config.getAsBoolean("show_indicators");
+        lightMode.set(config.getAsBoolean("light_mode"));
+        showCosmetics.set(config.getAsBoolean("show_cosmetics"));
+        overrideCapes.set(config.getAsBoolean("override_capes"));
+        showIndicators.set(config.getAsBoolean("show_indicators"));
     }
 
 }

@@ -20,12 +20,17 @@ package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
 import net.minecraft.entity.Entity;
 import net.minecraftforge.common.MinecraftForge;
+import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.events.EntityRenderCheckEvent;
 
 public class RenderHook {
 
     public static boolean callRenderCheckEvent(Entity entity) {
         return MinecraftForge.EVENT_BUS.post(new EntityRenderCheckEvent<>(entity));
+    }
+
+    public static void renderIndicators(Entity entity, double x, double y, double z, int maxDistance) {
+        TGMLib.getManager().getIndicatorManager().render(entity, x, y, z, maxDistance);
     }
 
     public static void callEntityFireRenderEvent(Entity entity) {

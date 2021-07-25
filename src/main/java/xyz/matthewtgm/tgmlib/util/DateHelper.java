@@ -16,24 +16,21 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks;
+package xyz.matthewtgm.tgmlib.util;
 
-import xyz.matthewtgm.tgmlib.players.cosmetics.BaseAnimatedCloakCosmetic;
-import xyz.matthewtgm.tgmlib.data.GifResourceLocation;
-import xyz.matthewtgm.tgmlib.util.ResourceHelper;
+import java.util.Calendar;
 
-public class DiscordCloakCosmetic extends BaseAnimatedCloakCosmetic {
+public class DateHelper {
 
-    public DiscordCloakCosmetic() {
-        super("Discord Cloak", "DISCORD_CLOAK");
-    }
-
-    public GifResourceLocation gif() {
-        return new GifResourceLocation(ResourceHelper.get("tgmlib", "cosmetics/cloaks/discord_cloak.gif"));
-    }
-
-    public int fps() {
-        return 1;
+    /**
+     * Taken from SkyBlockAddons under MIT license
+     * https://github.com/BiscuitDevelopment/SkyblockAddons/blob/development/LICENSE
+     *
+     * @author Biscuit/Phoube
+     */
+    public static boolean isHalloween() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.MONTH) == Calendar.OCTOBER && calendar.get(Calendar.DAY_OF_MONTH) == 31;
     }
 
 }

@@ -19,6 +19,7 @@
 package xyz.matthewtgm.tgmlib.tweaker;
 
 import org.objectweb.asm.tree.*;
+import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 
 import java.util.List;
 
@@ -29,6 +30,30 @@ public interface TGMLibTransformer {
     String[] classes();
 
     void transform(ClassNode classNode, String name);
+
+    default boolean nameMatches(String method, EnumTransformerMethods transformerMethod) {
+        return method.equals(transformerMethod.getName());
+    }
+    default boolean nameMatches(String method, EnumTransformerMethods transformerMethod, String... names) {
+        boolean matches = method.equals(transformerMethod.getName());
+        for (String name : names) {
+            if (method.equals(name)) {
+                matches = true;
+                break;
+            }
+        }
+        return matches;
+    }
+    default boolean nameMatches(String method, String... names) {
+        boolean matches = false;
+        for (String name : names) {
+            if (method.equals(name)) {
+                matches = true;
+                break;
+            }
+        }
+        return matches;
+    }
 
     default void createReturnValue(InsnList list, int var) {
         list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/tweaker/util/ReturnValue"));

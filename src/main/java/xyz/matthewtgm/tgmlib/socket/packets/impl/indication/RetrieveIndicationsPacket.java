@@ -33,7 +33,7 @@ public class RetrieveIndicationsPacket extends BasePacket {
 
     public void read(TGMLibSocket socket, JsonObject json) {
         TGMLib.getManager().getIndicatorManager().getIndicatorArray().clear();
-        TGMLib.getManager().getIndicatorManager().getIndicatorArray().addAll(json.getObject("data").getArray("indications"));
+        TGMLib.getManager().getIndicatorManager().getIndicatorArray().addAll(json.getAsObject("data").getAsArray("indications"));
     }
 
     public void handle(TGMLibSocket socket) {

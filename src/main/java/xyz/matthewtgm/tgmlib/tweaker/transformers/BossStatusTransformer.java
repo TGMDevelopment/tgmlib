@@ -34,8 +34,8 @@ public class BossStatusTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-           if (EnumTransformerMethods.setBossStatus.matches(method)) {
-               method.instructions.insertBefore(method.instructions.getLast(), AsmHelper.createQuickInsnList(list -> {
+           if (nameMatches(method.name, EnumTransformerMethods.setBossStatus, "a")) {
+               method.instructions.insertBefore(method.instructions.getLast().getPrevious().getPrevious().getPrevious(), AsmHelper.createQuickInsnList(list -> {
                    list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/BossBarEvent$SetEvent"));
                    list.add(new InsnNode(DUP));
                    list.add(new MethodInsnNode(INVOKESPECIAL, "xyz/matthewtgm/tgmlib/events/BossBarEvent$SetEvent", "<init>", "()V", false));
@@ -43,10 +43,6 @@ public class BossStatusTransformer implements TGMLibTransformer {
 
                    list.add(new VarInsnNode(ALOAD, 3));
                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/util/ForgeHelper", "postEvent", "(Lnet/minecraftforge/fml/common/eventhandler/Event;)Z", false));
-                   LabelNode labelNode = new LabelNode();
-                   list.add(new JumpInsnNode(IFEQ, labelNode));
-                   list.add(new InsnNode(RETURN));
-                   list.add(labelNode);
                }));
            }
         }

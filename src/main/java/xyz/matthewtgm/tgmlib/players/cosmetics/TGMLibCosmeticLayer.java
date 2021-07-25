@@ -37,7 +37,7 @@ public class TGMLibCosmeticLayer implements LayerRenderer<AbstractClientPlayer> 
     }
 
     public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
-        if (!TGMLib.getManager().getConfigHandler().isShowCosmetics())
+        if (!TGMLib.getManager().getConfigHandler().getShowCosmetics().get())
             return;
         if (TGMLib.getManager().getDataManager().getDataMap().containsKey(player.getUniqueID().toString())) {
             PlayerData playerData = TGMLib.getManager().getDataManager().getDataMap().get(player.getUniqueID().toString());

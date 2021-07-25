@@ -31,6 +31,9 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformationChecks;
  */
 public enum EnumTransformerMethods {
 
+    dispatchKeyPresses("dispatchKeypresses", "func_152348_aa", "()V"),
+    renderLivingLabel("renderLivingLabel", "func_147906_a", "(Lnet/minecraft/entity/Entity;Ljava/lang/String;DDDI)V"),
+    getLocationCape("getLocationCape", "func_110303_q", "()Lnet/minecraft/util/ResourceLocation;"),
     setBossStatus("setBossStatus", "func_82824_a", "(Lnet/minecraft/entity/boss/IBossDisplayData;Z)V"),
     renderBossHealth("renderBossHealth", "func_73828_d", "()V"),
     renderString("renderString", "func_180455_b", "(Ljava/lang/String;FFIZ)I"),
@@ -49,8 +52,6 @@ public enum EnumTransformerMethods {
 
     private final String name;
     private final String description;
-    private String[] exceptions = null;
-
 
     EnumTransformerMethods(String deobfMethod, String seargeMethod, String seargeDescription) {
         if (TGMLibTransformationChecks.getDeobfuscated())
@@ -70,7 +71,7 @@ public enum EnumTransformerMethods {
     }
 
     public MethodNode createMethodNode() {
-        return new MethodNode(Opcodes.ACC_PUBLIC, name, description, null, exceptions);
+        return new MethodNode(Opcodes.ACC_PUBLIC, name, description, null, null);
     }
 
     public boolean matches(MethodInsnNode methodInsnNode) {

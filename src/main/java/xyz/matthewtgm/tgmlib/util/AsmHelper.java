@@ -29,7 +29,7 @@ public class AsmHelper {
      * @author Unknown
      */
     public static void debug(AbstractInsnNode abstractInsnNode) {
-        String print = ": ";
+        String print;
         if (abstractInsnNode instanceof FieldInsnNode) {
             FieldInsnNode fieldInsnNode = (FieldInsnNode) abstractInsnNode;
             print = "(Field Node: " + fieldInsnNode.owner + "." + fieldInsnNode.name + " | " + fieldInsnNode.desc + ")";

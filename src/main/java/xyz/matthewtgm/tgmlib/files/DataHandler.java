@@ -21,16 +21,20 @@ package xyz.matthewtgm.tgmlib.files;
 import lombok.Getter;
 import xyz.matthewtgm.tgmconfig.ConfigEntry;
 import xyz.matthewtgm.tgmconfig.TGMConfig;
+import xyz.matthewtgm.tgmconfig.annotations.TGMConfigAnnotationsAPI;
+import xyz.matthewtgm.tgmconfig.annotations.options.impl.BooleanOption;
+
+import java.io.File;
 
 public class DataHandler {
 
-    private final TGMConfig data;
+    @Getter private final TGMConfig data;
 
-    @Getter private boolean receivedPrompt;
-    @Getter private boolean mayLogData;
+    @Getter private final BooleanOption receivedPrompt = new BooleanOption(false);
+    @Getter private final BooleanOption mayLogData = new BooleanOption(true);
 
-    public DataHandler(TGMConfig data) {
-        this.data = data;
+    public DataHandler(String name, File dir) {
+        this.data = TGMConfigAnnotationsAPI.handle(name, dir, this);
     }
 
     public void start() {
@@ -42,8 +46,8 @@ public class DataHandler {
     }
 
     public void update() {
-        receivedPrompt = data.getAsBoolean("prompt_received");
-        mayLogData = data.getAsBoolean("log_data");
+        receivedPrompt.set(data.getAsBoolean("prompt_received"));
+        mayLogData.set(data.getAsBoolean("log_data"));
     }
 
 }

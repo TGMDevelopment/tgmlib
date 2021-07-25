@@ -36,8 +36,8 @@ public class GuiContainerTransformer implements TGMLibTransformer {
         convertAccessorOrInvoker(classNode, TGMLibGuiContainerAccessor.class);
         createAccessorGetter(classNode, "getXSize", "()I", EnumTransformerFields.xSize.getField(EnumTransformerClasses.GuiContainer), IRETURN);
         createAccessorGetter(classNode, "getYSize", "()I", EnumTransformerFields.ySize.getField(EnumTransformerClasses.GuiContainer), IRETURN);
-        createAccessorGetter(classNode, "getGuiTop", "()I;", EnumTransformerFields.guiTop.getField(EnumTransformerClasses.GuiContainer), IRETURN);
-        createAccessorGetter(classNode, "getGuiLeft", "()I;", EnumTransformerFields.guiLeft.getField(EnumTransformerClasses.GuiContainer), IRETURN);
+        createAccessorGetter(classNode, "getGuiTop", "()I", EnumTransformerFields.guiTop.getField(EnumTransformerClasses.GuiContainer), IRETURN);
+        createAccessorGetter(classNode, "getGuiLeft", "()I", EnumTransformerFields.guiLeft.getField(EnumTransformerClasses.GuiContainer), IRETURN);
     }
 
 }

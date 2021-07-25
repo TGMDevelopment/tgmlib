@@ -45,6 +45,10 @@ public class GlobalMinecraft {
 
     private static final Minecraft instance = Minecraft.getMinecraft();
 
+    public static float getPartialTicks() {
+        return ((TGMLibMinecraftAccessor) instance).getTimer().renderPartialTicks;
+    }
+
     public static Timer getTimer() {
         return ((TGMLibMinecraftAccessor) instance).getTimer();
     }

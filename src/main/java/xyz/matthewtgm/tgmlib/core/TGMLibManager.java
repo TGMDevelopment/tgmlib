@@ -107,13 +107,16 @@ public class TGMLibManager {
             (config = new TGMConfig("config", fileHandler.getTgmLibDir())).save();
             (keyBindConfig = new TGMConfig("keybinds", fileHandler.getTgmLibDir())).save();
             (data = new TGMConfig("data", fileHandler.getTgmLibDir())).save();
-            (configHandler = new ConfigHandler(config)).start();
-            (keyBindConfigHandler = new KeyBindConfigHandler(keyBindConfig)).update();
-            (dataHandler = new DataHandler(data)).start();
+            (configHandler = new ConfigHandler("config", fileHandler.getTgmLibDir())).start();
+            (config = configHandler.getConfig()).sync();
+            (keyBindConfigHandler = new KeyBindConfigHandler("keybinds", fileHandler.getTgmLibDir())).update();
+            (keyBindConfig = keyBindConfigHandler.getConfig()).sync();
+            (dataHandler = new DataHandler("data", fileHandler.getTgmLibDir())).start();
+            (data = dataHandler.getData()).sync();
             fixSocket();
             if (!webSocket.isOpen())
                 scheduleSocketReconnect();
-            if (dataHandler.isMayLogData())
+            if (dataHandler.getMayLogData().get())
                 webSocket.send(new GameOpenPacket(GlobalMinecraft.getSession().getProfile().getId().toString()));
             (dataManager = new PlayerDataManager()).start();
             (cosmeticManager = new CosmeticManager()).start();
@@ -121,7 +124,7 @@ public class TGMLibManager {
 
             ForgeHelper.registerEventListeners(this);
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                if (dataHandler.isMayLogData())
+                if (dataHandler.getMayLogData().get())
                     webSocket.send(new GameClosePacket(GlobalMinecraft.getSession().getProfile().getId().toString()));
                 webSocket.close(CloseFrame.NORMAL, "Game shutdown");
             }, "TGMLib Shutdown"));
@@ -132,7 +135,7 @@ public class TGMLibManager {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onGuiOpen(GuiScreenEvent.InitGuiEvent event) {
-        if (event.gui instanceof GuiMainMenu && !dataHandler.isReceivedPrompt())
+        if (event.gui instanceof GuiMainMenu && !dataHandler.getReceivedPrompt().get())
             GlobalMinecraft.displayGuiScreen(new GuiTGMLibLogging(event.gui));
     }
 

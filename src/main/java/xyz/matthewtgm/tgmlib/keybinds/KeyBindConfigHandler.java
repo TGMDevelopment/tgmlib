@@ -18,17 +18,21 @@
 
 package xyz.matthewtgm.tgmlib.keybinds;
 
+import lombok.Getter;
 import xyz.matthewtgm.json.entities.JsonElement;
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.tgmconfig.ConfigEntry;
 import xyz.matthewtgm.tgmconfig.TGMConfig;
+import xyz.matthewtgm.tgmconfig.annotations.TGMConfigAnnotationsAPI;
+
+import java.io.File;
 
 public class KeyBindConfigHandler {
 
-    private final TGMConfig config;
+    @Getter private final TGMConfig config;
 
-    public KeyBindConfigHandler(TGMConfig config) {
-        this.config = config;
+    public KeyBindConfigHandler(String name, File dir) {
+        this.config = TGMConfigAnnotationsAPI.handle(name, dir, this);
     }
 
     public void update() {
@@ -38,7 +42,7 @@ public class KeyBindConfigHandler {
             if (!config.getAsJsonObject(keyBind.category()).hasKey(keyBind.name()))
                 update(keyBind);
             JsonElement keyCodeElement = config.getAsJsonObject(keyBind.category()).get(keyBind.name());
-            keyBind.updateKey(keyCodeElement.isDouble() ? (int) keyCodeElement.getAsDouble() : keyCodeElement.getAsInt());
+            keyBind.updateKey(keyCodeElement.isDouble() ? (int) keyCodeElement.getAsDouble() : keyCodeElement.isFloat() ? (int) keyCodeElement.getAsFloat() : keyCodeElement.getAsInt());
         }
     }
 

@@ -46,4 +46,12 @@ public class MathHelper {
         return start + (end - start) * clamp01(interpolation);
     }
 
+    public static float percentageOf(float val, float min, float max) {
+        return (val - min) / (max - min);
+    }
+
+    public static int percentageOf_int(int val, int min, int max) {
+        return (val - min) / (max - min);
+    }
+
 }

@@ -34,7 +34,7 @@ public class NetworkManagerTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.channelRead0.matches(method)) {
+            if (nameMatches(method.name, EnumTransformerMethods.channelRead0, "a") || method.desc.equals("(Lio/netty/channel/ChannelHandlerContext;Lff;)V")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ALOAD, 0)); /* this */
                     list.add(new VarInsnNode(ALOAD, 1)); /* packet */

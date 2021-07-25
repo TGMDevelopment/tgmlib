@@ -16,24 +16,12 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks;
+package xyz.matthewtgm.tgmlib.apis.draggablehud;
 
-import xyz.matthewtgm.tgmlib.players.cosmetics.BaseAnimatedCloakCosmetic;
-import xyz.matthewtgm.tgmlib.data.GifResourceLocation;
-import xyz.matthewtgm.tgmlib.util.ResourceHelper;
+import xyz.matthewtgm.tgmlib.data.ScreenPosition;
 
-public class DiscordCloakCosmetic extends BaseAnimatedCloakCosmetic {
-
-    public DiscordCloakCosmetic() {
-        super("Discord Cloak", "DISCORD_CLOAK");
-    }
-
-    public GifResourceLocation gif() {
-        return new GifResourceLocation(ResourceHelper.get("tgmlib", "cosmetics/cloaks/discord_cloak.gif"));
-    }
-
-    public int fps() {
-        return 1;
-    }
-
+public interface IDraggable {
+    void render(ScreenPosition position, float partialTicks);
+    ScreenPosition position();
+    DraggableSize size();
 }

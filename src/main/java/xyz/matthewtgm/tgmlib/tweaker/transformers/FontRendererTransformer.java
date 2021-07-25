@@ -34,7 +34,7 @@ public class FontRendererTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.renderString.matches(method))
+            if (nameMatches(method.name, EnumTransformerMethods.renderString, "b")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     /*
 
@@ -88,6 +88,7 @@ public class FontRendererTransformer implements TGMLibTransformer {
                     list.add(new FieldInsnNode(GETFIELD, "xyz/matthewtgm/tgmlib/events/StringRenderedEvent", "dropShadow", "Z"));
                     list.add(new VarInsnNode(ISTORE, 5)); /* dropShadow = stringRenderedEvent.dropShadow; */
                 }));
+            }
         }
     }
 

@@ -22,7 +22,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ImageBufferDownload;
+import net.minecraft.client.renderer.ThreadDownloadImageData;
+import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
+import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 
 public class ResourceHelper {
 
@@ -57,6 +62,22 @@ public class ResourceHelper {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * @param resourceLocation The resource location to check for.
+     * @param url The url to download from.
+     * @return The ThreadDownloadImageData object.
+     * @author Minecraft/Mojang (see {@link net.minecraft.client.entity.AbstractClientPlayer#getDownloadImageSkin(ResourceLocation, String)})
+     */
+    public static ThreadDownloadImageData downloadImage(ResourceLocation resourceLocation, String url) {
+        TextureManager textureManager = GlobalMinecraft.getTextureManager();
+        ITextureObject textureObject = textureManager.getTexture(resourceLocation);
+        if (textureObject == null) {
+            textureObject = new ThreadDownloadImageData(null, url, resourceLocation, new ImageBufferDownload());
+            textureManager.loadTexture(resourceLocation, textureObject);
+        }
+        return (ThreadDownloadImageData) textureObject;
     }
 
 }

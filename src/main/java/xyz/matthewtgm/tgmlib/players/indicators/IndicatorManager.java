@@ -25,17 +25,14 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import xyz.matthewtgm.json.entities.JsonArray;
 import xyz.matthewtgm.tgmlib.TGMLib;
-import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.indication.RetrieveIndicationsPacket;
 import xyz.matthewtgm.tgmlib.util.EnhancedFontRenderer;
 import xyz.matthewtgm.tgmlib.util.ForgeHelper;
@@ -77,49 +74,51 @@ public class IndicatorManager extends Thread {
         }
     }
 
-    @SubscribeEvent
-    public void onPlayerRendered(RenderLivingEvent.Post<EntityPlayer> event) {
-        if (TGMLib.getManager().getConfigHandler().isShowIndicators() && renderable(event.entity)) {
-            EntityPlayer player = (EntityPlayer) event.entity;
+    public void render(Entity entity, double x, double y, double z, int max) {
+        if (TGMLib.getManager().getConfigHandler().getShowIndicators().get() && renderable(entity)) {
+            EntityPlayer player = (EntityPlayer) entity;
             if (indicatorArray.has(player.getUniqueID().toString()))
-                render((float) event.x, (float) event.y, (float) event.z, player);
+                render((float) x, (float) y, (float) z, max, player);
         }
     }
 
-    private boolean renderable(EntityLivingBase entity) {
+    private boolean renderable(Entity entity) {
         return entity instanceof EntityPlayer && !(entity instanceof EntityPlayerSP);
     }
 
-    private void render(float x, float y, float z, EntityPlayer player) {
-        RenderManager renderManager = GlobalMinecraft.getInstance().getRenderManager();
-        float f = 1.6f;
-        float f1 = 0.016666668f * f;
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x + 0.0F, y + player.height + 0.5f, z);
-        GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate(-renderManager.playerViewY, 0f, 1f, 0f);
-        GlStateManager.rotate(renderManager.playerViewX, 1f, 0f, 0f);
-        GlStateManager.scale(-f1, -f1, f1);
-        GlStateManager.disableLighting();
-        GlStateManager.depthMask(false);
-        GlStateManager.disableDepth();
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+    private void render(float x, float y, float z, int maxDistance, EntityPlayer player) {
+        double distance = player.getDistanceSqToEntity(GlobalMinecraft.getPlayer());
+        if (distance <= (maxDistance * maxDistance)) {
+            RenderManager renderManager = GlobalMinecraft.getInstance().getRenderManager();
+            float f = 1.6f;
+            float f1 = 0.016666668f * f;
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(x + 0.0F, y + player.height + 0.5f, z);
+            GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(-renderManager.playerViewY, 0f, 1f, 0f);
+            GlStateManager.rotate(renderManager.playerViewX, 1f, 0f, 0f);
+            GlStateManager.scale(-f1, -f1, f1);
+            GlStateManager.disableLighting();
+            GlStateManager.depthMask(false);
+            GlStateManager.disableDepth();
+            GlStateManager.enableBlend();
+            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 
-        double indicatorX = EnhancedFontRenderer.getWidth(player.getDisplayName().getFormattedText()) / 2 + 2;
-        double indicatorY = y / 2 - height / 4;
+            double indicatorX = EnhancedFontRenderer.getWidth(player.getDisplayName().getFormattedText()) / 2 + 2;
+            double indicatorY = y / 2 - height / 4;
 
-        renderIndicator(indicatorX, indicatorY);
+            renderIndicator(indicatorX, indicatorY);
 
-        GlStateManager.enableDepth();
-        GlStateManager.depthMask(true);
+            GlStateManager.enableDepth();
+            GlStateManager.depthMask(true);
 
-        renderIndicator(indicatorX, indicatorY);
+            renderIndicator(indicatorX, indicatorY);
 
-        GlStateManager.enableLighting();
-        GlStateManager.disableBlend();
-        GlStateManager.color(1f, 1f, 1f, 1f);
-        GlStateManager.popMatrix();
+            GlStateManager.enableLighting();
+            GlStateManager.disableBlend();
+            GlStateManager.color(1f, 1f, 1f, 1f);
+            GlStateManager.popMatrix();
+        }
     }
 
     private void renderIndicator(double x, double y) {

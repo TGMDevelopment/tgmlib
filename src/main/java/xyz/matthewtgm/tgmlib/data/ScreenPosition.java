@@ -20,14 +20,18 @@ package xyz.matthewtgm.tgmlib.data;
 
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.parser.JsonParser;
-import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
+import xyz.matthewtgm.tgmlib.util.DevelopmentHelper;
+import xyz.matthewtgm.tgmlib.util.MathHelper;
+import xyz.matthewtgm.tgmlib.util.ScreenHelper;
+import java.lang.*;
 
 public class ScreenPosition {
 
-    private int x, y;
+    private int x, y, rawX, rawY;
 
     public ScreenPosition(int x, int y) {
         setPosition(x, y);
+        DevelopmentHelper.markUnderHeavyDevelopment(this);
     }
 
     public ScreenPosition(JsonObject jsonObject) {
@@ -43,57 +47,47 @@ public class ScreenPosition {
     }
 
     public int getX() {
-        return calculateX(x);
+        System.out.println("X: " + x);
+        return x;
     }
 
     public ScreenPosition setX(int x) {
-        this.x = x;
+        this.x = calculateX(x);
         return this;
     }
 
     public int getY() {
-        return calculateY(y);
+        System.out.println("Y: " + y);
+        return y;
+    }
+
+    public int getRawX() {
+        return rawX;
+    }
+
+    public int getRawY() {
+        return rawY;
     }
 
     public ScreenPosition setY(int y) {
-        this.y = y;
-        return this;
-    }
-
-    public ScreenPosition addX(int amount) {
-        x += amount;
-        return this;
-    }
-
-    public ScreenPosition addY(int amount) {
-        y += amount;
+        this.y = calculateY(y);
         return this;
     }
 
     public ScreenPosition setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
+        this.x = calculateX(x);
+        this.y = calculateY(y);
+        this.rawX = x;
+        this.rawY = y;
         return this;
     }
 
     private int calculateX(int x) {
-        int width = GlobalMinecraft.getDisplayWidth();
-        int ret = -(width - x);
-        if (ret < 0)
-            ret = Math.max(x, 0);
-        if (ret > width)
-            ret = width;
-        return ret;
+        return MathHelper.percentageOf_int(x, 0, ScreenHelper.getScaledWidth());
     }
 
     private int calculateY(int y) {
-        int height = GlobalMinecraft.getDisplayHeight();
-        int ret = -(height - y);
-        if (ret < 0)
-            ret = Math.max(y, 0);
-        if (ret > height)
-            ret = height;
-        return ret;
+        return MathHelper.percentageOf_int(y, 0, ScreenHelper.getScaledHeight());
     }
 
 }

@@ -40,7 +40,7 @@ public class GuiIngameForgeTransformer implements TGMLibTransformer {
         createAccessorSetter(classNode, "setDebugOverlay", "(Lnet/minecraft/client/gui/GuiOverlayDebug;)V", ALOAD, new FieldInsnNode(PUTFIELD, "net/minecraftforge/client/GuiIngameForge", "debugOverlay", "Lnet/minecraft/client/gui/GuiOverlayDebug;"));
 
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.renderBossHealth.matches(method)) {
+            if (nameMatches(method.name, EnumTransformerMethods.renderBossHealth, "j")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/BossBarEvent$RenderEvent"));
                     list.add(new InsnNode(DUP));

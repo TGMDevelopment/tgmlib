@@ -31,6 +31,8 @@ import org.objectweb.asm.tree.ClassNode;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.tweaker.transformers.*;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Collection;
 
 @IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
@@ -38,6 +40,7 @@ import java.util.Collection;
 public class TGMLibClassTransformer implements IClassTransformer {
 
     private static boolean created;
+    private static boolean bytecodeDebug = true;
     private final Logger logger = LogManager.getLogger(TGMLib.NAME + " (TGMLibClassTransformer)");
     private final Multimap<String, TGMLibTransformer> transformerMap = ArrayListMultimap.create();
 
@@ -89,9 +92,35 @@ public class TGMLibClassTransformer implements IClassTransformer {
         try {
             node.accept(writer);
         } catch (Exception e) {
+            outputBytecode(transformedName, writer);
             e.printStackTrace();
         }
+        outputBytecode(transformedName, writer);
         return writer.toByteArray();
+    }
+
+    /**
+     * Taken from SkyBlockAddons under MIT license
+     * https://github.com/BiscuitDevelopment/SkyblockAddons/blob/development/LICENSE
+     *
+     * @author Biscuit/Phoube
+     */
+    private void outputBytecode(String transformedName, ClassWriter writer) {
+        try {
+            if (!bytecodeDebug)
+                return;
+            File bytecodeDirectory = new File("bytecode");
+            if (!bytecodeDirectory.exists() && !bytecodeDirectory.mkdirs())
+                throw new IllegalStateException("Unable to create bytecode storage directory...");
+            File bytecodeOutput = new File(bytecodeDirectory, transformedName + ".class");
+            if (!bytecodeOutput.exists() && !bytecodeOutput.createNewFile())
+                throw new IllegalStateException("Unable to create bytecode output file...");
+            FileOutputStream os = new FileOutputStream(bytecodeOutput);
+            os.write(writer.toByteArray());
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     static {

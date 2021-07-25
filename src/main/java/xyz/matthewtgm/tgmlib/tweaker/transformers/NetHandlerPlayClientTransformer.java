@@ -35,15 +35,15 @@ public class NetHandlerPlayClientTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.addToSendQueue.matches(method)) {
+            if (nameMatches(method.name, EnumTransformerMethods.addToSendQueue, "a") || method.desc.equals("(Lff;)V")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ALOAD, 0)); /* this */
                     list.add(new VarInsnNode(ALOAD, 1)); /* packet */
                     list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "NetHandlerPlayClientHook", "callEvent", "(" + EnumTransformerClasses.NetHandlerPlayClient.getName() + EnumTransformerClasses.Packet.getName() + ")V", false)); /* NetHandlerPlayClientHook.callEvent(this, packet); */
                 }));
             }
-            if (EnumTransformerMethods.handleJoinGame.matches(method)) {
-                method.instructions.insertBefore(method.instructions.getLast(), AsmHelper.createQuickInsnList(list -> {
+            if (nameMatches(method.name, EnumTransformerMethods.handleJoinGame, "a") || method.desc.equals("(Lgt;)V")) {
+                method.instructions.insertBefore(method.instructions.getLast().getPrevious().getPrevious().getPrevious().getPrevious(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ALOAD, 0));
                     list.add(EnumTransformerFields.netManager.getField(EnumTransformerClasses.NetHandlerPlayClient));
                     list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "NetHandlerPlayClientHook", "register", "(" + EnumTransformerClasses.NetworkManager.getName() + ")V", false));

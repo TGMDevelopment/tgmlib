@@ -90,11 +90,11 @@ public class GuiTGMLibCosmetics extends GuiTGMLibBase {
                 return false;
             }
         });
-        buttonList.add(new GuiTransFadingButton(2, backgroundHitBox.getIntWidth() - 134, backgroundHitBox.getIntY() + 2, 100, 30, "Show Cosmetics: " + (TGMLib.getManager().getConfigHandler().isShowCosmetics() ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF")) {
+        buttonList.add(new GuiTransFadingButton(2, backgroundHitBox.getIntWidth() - 134, backgroundHitBox.getIntY() + 2, 100, 30, "Show Cosmetics: " + (TGMLib.getManager().getConfigHandler().getShowCosmetics().get() ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY)) {
                     TGMLibManager manager = TGMLib.getManager();
-                    manager.getConfig().add(new ConfigEntry<>("show_cosmetics", !manager.getConfigHandler().isShowCosmetics()));
+                    manager.getConfig().add(new ConfigEntry<>("show_cosmetics", !manager.getConfigHandler().getShowCosmetics().get()));
                     manager.getConfig().save();
                     manager.getConfigHandler().update();
                     refresh(3);
@@ -102,11 +102,11 @@ public class GuiTGMLibCosmetics extends GuiTGMLibBase {
                 return false;
             }
         });
-        buttonList.add(new GuiTransFadingButton(3, backgroundHitBox.getIntX() + 34, backgroundHitBox.getIntY() + 2, 100, 30, "Override Capes: " + (TGMLib.getManager().getConfigHandler().isOverrideCapes() ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF")) {
+        buttonList.add(new GuiTransFadingButton(3, backgroundHitBox.getIntX() + 34, backgroundHitBox.getIntY() + 2, 100, 30, "Override Capes: " + (TGMLib.getManager().getConfigHandler().getOverrideCapes().get() ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY)) {
                     TGMLibManager manager = TGMLib.getManager();
-                    manager.getConfig().add(new ConfigEntry<>("override_capes", !manager.getConfigHandler().isOverrideCapes()));
+                    manager.getConfig().add(new ConfigEntry<>("override_capes", !manager.getConfigHandler().getOverrideCapes().get()));
                     manager.getConfig().save();
                     manager.getConfigHandler().update();
                     refresh(3);

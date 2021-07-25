@@ -112,7 +112,7 @@ public final class TGMLibCommand {
             switch (first.toLowerCase()) {
                 case "cosmetics":
                     ConfigHandler configHandler = TGMLib.getManager().getConfigHandler();
-                    ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, "Should show cosmetics and override capes: " + (configHandler.isOverrideCapes() && configHandler.isShowCosmetics()));
+                    ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, "Should show cosmetics and override capes: " + (configHandler.getOverrideCapes().get() && configHandler.getShowCosmetics().get()));
                     ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, "Is player NOT present in data map: " + !TGMLib.getManager().getDataManager().getDataMap().containsKey(GlobalMinecraft.getPlayer().getUniqueID().toString()));
                     if (TGMLib.getManager().getDataManager().getDataMap().containsKey(GlobalMinecraft.getPlayer().getUniqueID().toString())) {
                         PlayerCosmeticData cosmeticData = TGMLib.getManager().getDataManager().getDataMap().get(GlobalMinecraft.getPlayer().getUniqueID().toString()).getCosmeticData();

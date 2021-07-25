@@ -28,6 +28,7 @@ import xyz.matthewtgm.tgmlib.data.HitBox;
 import xyz.matthewtgm.tgmlib.util.*;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ConcurrentModificationException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
@@ -136,6 +137,18 @@ public abstract class GuiTGMLibBase extends GuiScreen {
         }
     }
 
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        if (refreshing)
+            return;
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        if (refreshing)
+            return;
+        super.keyTyped(typedChar, keyCode);
+    }
+
     private HitBox createBackgroundHitBox() {
         return new HitBox(20, 20, width - 30,height - 30);
     }
@@ -169,11 +182,11 @@ public abstract class GuiTGMLibBase extends GuiScreen {
     }
 
     private int backgroundColour() {
-        return TGMLib.getManager().getConfigHandler().isLightMode() ? new Color(213, 213, 213, 189).getRGB() : new Color(87, 87, 87, 189).getRGB();
+        return TGMLib.getManager().getConfigHandler().getLightMode().get() ? new Color(213, 213, 213, 189).getRGB() : new Color(87, 87, 87, 189).getRGB();
     }
 
     private int backgroundOutlineColour() {
-        return TGMLib.getManager().getConfigHandler().isLightMode() ? new Color(246, 246, 246, 234).getRGB() : new Color(120, 120, 120, 234).getRGB();
+        return TGMLib.getManager().getConfigHandler().getLightMode().get() ? new Color(246, 246, 246, 234).getRGB() : new Color(120, 120, 120, 234).getRGB();
     }
 
 }

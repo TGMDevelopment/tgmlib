@@ -25,7 +25,7 @@ public class Multithreading {
 
     private static final AtomicInteger threadCount = new AtomicInteger(0);
     private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(50, 50, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), (r) -> new Thread(r, String.format("TGMLib Thread %s", threadCount.incrementAndGet())));
-    private static final ScheduledExecutorService runnableExecutor = new ScheduledThreadPoolExecutor(threadCount.incrementAndGet());
+    private static final ScheduledExecutorService runnableExecutor = new ScheduledThreadPoolExecutor(6);
 
     /**
      * @param runnable The code to run asynchronously.

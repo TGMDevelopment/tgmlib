@@ -36,7 +36,7 @@ public class MinecraftTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (method.name.equals("Z") && method.desc.equals("()V")) {
+            if (nameMatches(method.name, EnumTransformerMethods.dispatchKeyPresses, "Z")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ALOAD, 0));
                     list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "MinecraftHook", "dispatchTgmLibKeyPresses", "(" + EnumTransformerClasses.Minecraft.getName() + ")V", false));

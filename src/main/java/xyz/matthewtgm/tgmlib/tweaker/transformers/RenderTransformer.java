@@ -24,6 +24,8 @@ import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
+import java.util.Iterator;
+
 import static org.objectweb.asm.Opcodes.*;
 
 public class RenderTransformer implements TGMLibTransformer {
@@ -34,7 +36,7 @@ public class RenderTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (EnumTransformerMethods.shouldRender.matches(method)) {
+            if (nameMatches(method.name, EnumTransformerMethods.shouldRender, "a") || method.desc.equals("(Lpk;Lbia;DDD)Z")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ALOAD, 1)); /* livingEntity */
                     list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "RenderHook", "callRenderCheckEvent", "(Lnet/minecraft/entity/Entity;)Z", false)); /* RenderHook.callRenderCheckEvent(livingEntity) */
@@ -43,6 +45,16 @@ public class RenderTransformer implements TGMLibTransformer {
                     list.add(new InsnNode(ICONST_0)); /* return false; */
                     list.add(new InsnNode(IRETURN));
                     list.add(labelNode);
+                }));
+            }
+            if (nameMatches(method.name, EnumTransformerMethods.renderLivingLabel, "a") || nameMatches(method.name, "a") && method.desc.equals("(Lpk;Ljava/lang/String;DDDI)V")) {
+                method.instructions.insertBefore(method.instructions.getLast().getPrevious().getPrevious().getPrevious(), AsmHelper.createQuickInsnList(list -> {
+                    list.add(new VarInsnNode(ALOAD, 1));
+                    list.add(new VarInsnNode(DLOAD, 3));
+                    list.add(new VarInsnNode(DLOAD, 5));
+                    list.add(new VarInsnNode(DLOAD, 7));
+                    list.add(new VarInsnNode(ILOAD, 9));
+                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "RenderHook", "renderIndicators", "(" + EnumTransformerClasses.Entity.getName() + "DDDI)V", false));
                 }));
             }
         }

@@ -29,6 +29,7 @@ import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformationChecks;
 public enum EnumTransformerClasses {
 
     Minecraft("net/minecraft/client/Minecraft"),
+    IBossDisplayData("net/minecraft/entity/boss/IBossDisplayData"),
     NBTTagCompound("net/minecraft/nbt/NBTTagCompound"),
     BossStatus("net/minecraft/entity/boss/BossStatus"),
     FontRenderer("net/minecraft/client/gui/FontRenderer"),
@@ -37,6 +38,7 @@ public enum EnumTransformerClasses {
     NetworkManager("net/minecraft/network/NetworkManager"),
     Packet("net/minecraft/network/Packet"),
     PotionEffect("net/minecraft/potion/PotionEffect"),
+    Entity("net/minecraft/entity/Entity"),
     EntityLivingBase("net/minecraft/entity/EntityLivingBase"),
     EntityPlayer("net/minecraft/entity/player/EntityPlayer"),
     EntityPlayerSP("net/minecraft/client/entity/EntityPlayerSP"),
