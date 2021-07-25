@@ -62,14 +62,15 @@ dependencies {
     /* TGMLib dependencies. */
     shade('xyz.matthewtgm:JsonTGM:2.8.0')
     shade('xyz.matthewtgm:TGMConfig:2.3.1')
-    shade('org.java-websocket:Java-WebSocket:1.5.1')
-    implementation('org.projectlombok:lombok:1.18.16')
-    annotationProcessor('org.projectlombok:lombok:1.18.16')
+    shade('org.java-websocket:Java-WebSocket:1.5.2')
+    implementation('org.projectlombok:lombok:1.18.20')
+    annotationProcessor('org.projectlombok:lombok:1.18.20')
 
     /* Dependencies for cutting other mods' file sizes. */
     shade('com.github.marcoacierno:pastebin-java-api:v0.2.1')
     shade('org.spongepowered:mixin:0.7.11-SNAPSHOT')
     shade('com.squareup.okhttp3:okhttp:3.9.1')
+    shade('org.kohsuke:github-api:1.132')
 }
 
 /* Set the duplicatesStrategy and define configs. */

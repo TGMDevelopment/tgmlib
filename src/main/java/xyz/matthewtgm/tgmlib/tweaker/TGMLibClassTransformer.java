@@ -40,7 +40,7 @@ import java.util.Collection;
 public class TGMLibClassTransformer implements IClassTransformer {
 
     private static boolean created;
-    private static boolean bytecodeDebug = true;
+    private static boolean bytecodeDebug = false;
     private final Logger logger = LogManager.getLogger(TGMLib.NAME + " (TGMLibClassTransformer)");
     private final Multimap<String, TGMLibTransformer> transformerMap = ArrayListMultimap.create();
 

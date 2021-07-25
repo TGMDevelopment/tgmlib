@@ -24,6 +24,8 @@ import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
+import java.util.Iterator;
+
 import static org.objectweb.asm.Opcodes.*;
 
 public class BossStatusTransformer implements TGMLibTransformer {
@@ -35,15 +37,24 @@ public class BossStatusTransformer implements TGMLibTransformer {
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
            if (nameMatches(method.name, EnumTransformerMethods.setBossStatus, "a")) {
-               method.instructions.insertBefore(method.instructions.getLast().getPrevious().getPrevious().getPrevious(), AsmHelper.createQuickInsnList(list -> {
-                   list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/BossBarEvent$SetEvent"));
-                   list.add(new InsnNode(DUP));
-                   list.add(new MethodInsnNode(INVOKESPECIAL, "xyz/matthewtgm/tgmlib/events/BossBarEvent$SetEvent", "<init>", "()V", false));
-                   list.add(new VarInsnNode(ASTORE, 3));
+               Iterator<AbstractInsnNode> iterator = method.instructions.iterator();
+               while (iterator.hasNext()) {
+                   AbstractInsnNode next = iterator.next();
+                   if (next instanceof FieldInsnNode && next.getOpcode() == PUTSTATIC) {
+                       FieldInsnNode fieldInsnNode = (FieldInsnNode) next;
+                       if (fieldInsnNode.name.equals("hasColorModifier")) {
+                           method.instructions.insert(fieldInsnNode, AsmHelper.createQuickInsnList(list -> {
+                               list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/BossBarEvent$SetEvent"));
+                               list.add(new InsnNode(DUP));
+                               list.add(new MethodInsnNode(INVOKESPECIAL, "xyz/matthewtgm/tgmlib/events/BossBarEvent$SetEvent", "<init>", "()V", false));
+                               list.add(new VarInsnNode(ASTORE, 3));
 
-                   list.add(new VarInsnNode(ALOAD, 3));
-                   list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/util/ForgeHelper", "postEvent", "(Lnet/minecraftforge/fml/common/eventhandler/Event;)Z", false));
-               }));
+                               list.add(new VarInsnNode(ALOAD, 3));
+                               list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/util/ForgeHelper", "postEvent", "(Lnet/minecraftforge/fml/common/eventhandler/Event;)Z", false));
+                           }));
+                       }
+                   }
+               }
            }
         }
     }

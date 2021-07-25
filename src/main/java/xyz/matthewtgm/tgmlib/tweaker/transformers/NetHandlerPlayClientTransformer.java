@@ -25,6 +25,8 @@ import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
+import java.util.Iterator;
+
 import static org.objectweb.asm.Opcodes.*;
 
 public class NetHandlerPlayClientTransformer implements TGMLibTransformer {
@@ -43,11 +45,20 @@ public class NetHandlerPlayClientTransformer implements TGMLibTransformer {
                 }));
             }
             if (nameMatches(method.name, EnumTransformerMethods.handleJoinGame, "a") || method.desc.equals("(Lgt;)V")) {
-                method.instructions.insertBefore(method.instructions.getLast().getPrevious().getPrevious().getPrevious().getPrevious(), AsmHelper.createQuickInsnList(list -> {
-                    list.add(new VarInsnNode(ALOAD, 0));
-                    list.add(EnumTransformerFields.netManager.getField(EnumTransformerClasses.NetHandlerPlayClient));
-                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "NetHandlerPlayClientHook", "register", "(" + EnumTransformerClasses.NetworkManager.getName() + ")V", false));
-                }));
+                Iterator<AbstractInsnNode> iterator = method.instructions.iterator();
+                while (iterator.hasNext()) {
+                    AbstractInsnNode next = iterator.next();
+                    if (next instanceof MethodInsnNode && next.getOpcode() == INVOKEVIRTUAL) {
+                        MethodInsnNode methodInsnNode = (MethodInsnNode) next;
+                        if (nameMatches(methodInsnNode.name, EnumTransformerMethods.sendPacket, "a") || nameMatches(methodInsnNode.name, "a") && methodInsnNode.desc.equals("(Lff;)V")) {
+                            method.instructions.insert(methodInsnNode, AsmHelper.createQuickInsnList(list -> {
+                                list.add(new VarInsnNode(ALOAD, 0));
+                                list.add(EnumTransformerFields.netManager.getField(EnumTransformerClasses.NetHandlerPlayClient));
+                                list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "NetHandlerPlayClientHook", "register", "(" + EnumTransformerClasses.NetworkManager.getName() + ")V", false));
+                            }));
+                        }
+                    }
+                }
             }
         }
     }

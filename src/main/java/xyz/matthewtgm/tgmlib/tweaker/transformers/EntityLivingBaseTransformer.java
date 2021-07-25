@@ -34,12 +34,13 @@ public class EntityLivingBaseTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode methodNode : classNode.methods) {
-            if (nameMatches(methodNode.name, EnumTransformerMethods.addPotionEffect, "c"))
+            if (nameMatches(methodNode.name, EnumTransformerMethods.addPotionEffect, "c") || nameMatches(methodNode.name, "c") && methodNode.desc.equals("(Lpf;)V")) {
                 methodNode.instructions.insertBefore(methodNode.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ALOAD, 0)); /* this */
                     list.add(new VarInsnNode(ALOAD, 1)); /* potionEffect */
                     list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/EntityLivingBaseHook", "callEvent", "(" + EnumTransformerClasses.EntityLivingBase.getName() + EnumTransformerClasses.PotionEffect.getName() + ")V", false));
                 }));
+            }
         }
     }
 

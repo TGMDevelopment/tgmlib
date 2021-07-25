@@ -43,6 +43,7 @@ public enum EnumTransformerMethods {
     isInBed("isInBed", "func_175143_p", "()Z"),
     addToSendQueue("addToSendQueue", "func_147297_a", "(Lnet/minecraft/network/Packet;)V"),
     handleJoinGame("handleJoinGame", "func_147282_a", "(Lnet/minecraft/network/play/server/S01PacketJoinGame;)V"),
+    sendPacket("sendPacket", "func_179290_a", "(Lnet/minecraft/network/Packet;)V"),
     channelRead0("channelRead0", "channelRead0", "(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V"),
     shouldRender("shouldRender", "func_177071_a", "(Lnet/minecraft/entity/Entity;Lnet/minecraft/client/renderer/culling/ICamera;DDD)Z"),
     printChatMessage("printChatMessage", "func_146227_a", "(Lnet/minecraft/util/IChatComponent;)V"),
