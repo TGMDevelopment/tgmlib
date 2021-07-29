@@ -22,15 +22,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.tgmlib.commands.advanced.Command;
 import xyz.matthewtgm.tgmlib.data.ColourRGB;
-import xyz.matthewtgm.tgmlib.files.ConfigHandler;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibCosmetics;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibKeyBinds;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibMain;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibSettings;
-import xyz.matthewtgm.tgmlib.players.PlayerCosmeticData;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.announcer.AnnouncementPacket;
 import xyz.matthewtgm.tgmlib.util.*;
-import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 
 import java.awt.*;
 import java.net.URI;
@@ -105,25 +102,6 @@ public final class TGMLibCommand {
         if (args.length <= 0)
             if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE))
                 Desktop.getDesktop().browse(URI.create("https://youtu.be/dQw4w9WgXcQ"));
-
-        if (args.length > 1) {
-            String first = args[1];
-
-            switch (first.toLowerCase()) {
-                case "cosmetics":
-                    ConfigHandler configHandler = TGMLib.getManager().getConfigHandler();
-                    ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, "Should show cosmetics and override capes: " + (configHandler.getOverrideCapes().get() && configHandler.getShowCosmetics().get()));
-                    ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, "Is player NOT present in data map: " + !TGMLib.getManager().getDataManager().getDataMap().containsKey(GlobalMinecraft.getPlayer().getUniqueID().toString()));
-                    if (TGMLib.getManager().getDataManager().getDataMap().containsKey(GlobalMinecraft.getPlayer().getUniqueID().toString())) {
-                        PlayerCosmeticData cosmeticData = TGMLib.getManager().getDataManager().getDataMap().get(GlobalMinecraft.getPlayer().getUniqueID().toString()).getCosmeticData();
-                        ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, "Cosmetic data: " + cosmeticData);
-                        if (cosmeticData != null) {
-                            ChatHelper.sendMessage(ChatHelper.tgmLibChatPrefix, "Enabled cloaks is NOT empty: " + !cosmeticData.getEnabledCloakCosmetics().isEmpty());
-                        }
-                    }
-                    break;
-            }
-        }
     }
 
 }

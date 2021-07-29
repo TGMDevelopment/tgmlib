@@ -19,25 +19,26 @@
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.ClassNode;
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.quickasm.QuickASM;
+import xyz.matthewtgm.quickasm.interfaces.ITransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.hooks.TGMLibGuiContainerAccessor;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class GuiContainerTransformer implements TGMLibTransformer {
+public class GuiContainerTransformer implements ITransformer {
 
     public String[] classes() {
         return new String[]{EnumTransformerClasses.GuiContainer.getTransformerName()};
     }
 
     public void transform(ClassNode classNode, String name) {
-        convertAccessorOrInvoker(classNode, TGMLibGuiContainerAccessor.class);
-        createAccessorGetter(classNode, "getXSize", "()I", EnumTransformerFields.xSize.getField(EnumTransformerClasses.GuiContainer), IRETURN);
-        createAccessorGetter(classNode, "getYSize", "()I", EnumTransformerFields.ySize.getField(EnumTransformerClasses.GuiContainer), IRETURN);
-        createAccessorGetter(classNode, "getGuiTop", "()I", EnumTransformerFields.guiTop.getField(EnumTransformerClasses.GuiContainer), IRETURN);
-        createAccessorGetter(classNode, "getGuiLeft", "()I", EnumTransformerFields.guiLeft.getField(EnumTransformerClasses.GuiContainer), IRETURN);
+        QuickASM.convertAccessor(classNode, TGMLibGuiContainerAccessor.class);
+        QuickASM.createAccessorGetter(classNode, "getXSize", "()I", EnumTransformerFields.xSize.getField(EnumTransformerClasses.GuiContainer), IRETURN);
+        QuickASM.createAccessorGetter(classNode, "getYSize", "()I", EnumTransformerFields.ySize.getField(EnumTransformerClasses.GuiContainer), IRETURN);
+        QuickASM.createAccessorGetter(classNode, "getGuiTop", "()I", EnumTransformerFields.guiTop.getField(EnumTransformerClasses.GuiContainer), IRETURN);
+        QuickASM.createAccessorGetter(classNode, "getGuiLeft", "()I", EnumTransformerFields.guiLeft.getField(EnumTransformerClasses.GuiContainer), IRETURN);
     }
 
 }

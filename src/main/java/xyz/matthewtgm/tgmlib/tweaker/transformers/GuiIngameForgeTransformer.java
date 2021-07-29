@@ -19,7 +19,9 @@
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.*;
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.quickasm.QuickASM;
+import xyz.matthewtgm.quickasm.interfaces.ITransformer;
+import xyz.matthewtgm.quickasm.types.BasicMethodInformation;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
@@ -28,19 +30,21 @@ import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class GuiIngameForgeTransformer implements TGMLibTransformer {
+public class GuiIngameForgeTransformer implements ITransformer {
 
     public String[] classes() {
         return new String[]{"net.minecraftforge.client.GuiIngameForge"};
     }
 
     public void transform(ClassNode classNode, String name) {
-        convertAccessorOrInvoker(classNode, TGMLibGuiIngameForgeAccessor.class);
-        createAccessorGetter(classNode, "getDebugOverlay", "()Lnet/minecraft/client/gui/GuiOverlayDebug;", new FieldInsnNode(GETFIELD, "net/minecraftforge/client/GuiIngameForge", "debugOverlay", "Lnet/minecraft/client/gui/GuiOverlayDebug;"), ARETURN);
-        createAccessorSetter(classNode, "setDebugOverlay", "(Lnet/minecraft/client/gui/GuiOverlayDebug;)V", ALOAD, new FieldInsnNode(PUTFIELD, "net/minecraftforge/client/GuiIngameForge", "debugOverlay", "Lnet/minecraft/client/gui/GuiOverlayDebug;"));
+        QuickASM.convertAccessor(classNode, TGMLibGuiIngameForgeAccessor.class);
+        QuickASM.createAccessorGetter(classNode, "getDebugOverlay", "()Lnet/minecraft/client/gui/GuiOverlayDebug;", new FieldInsnNode(GETFIELD, "net/minecraftforge/client/GuiIngameForge", "debugOverlay", "Lnet/minecraft/client/gui/GuiOverlayDebug;"), ARETURN);
+        QuickASM.createAccessorSetter(classNode, "setDebugOverlay", "(Lnet/minecraft/client/gui/GuiOverlayDebug;)V", ALOAD, new FieldInsnNode(PUTFIELD, "net/minecraftforge/client/GuiIngameForge", "debugOverlay", "Lnet/minecraft/client/gui/GuiOverlayDebug;"));
 
         for (MethodNode method : classNode.methods) {
-            if (nameMatches(method.name, EnumTransformerMethods.renderBossHealth, "j")) {
+            if (QuickASM.nameMatches(method,
+                    new BasicMethodInformation(EnumTransformerMethods.renderBossHealth.getName()),
+                    new BasicMethodInformation("j", "()V"))) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/BossBarEvent$RenderEvent"));
                     list.add(new InsnNode(DUP));
@@ -55,8 +59,9 @@ public class GuiIngameForgeTransformer implements TGMLibTransformer {
                     list.add(labelNode);
                 }));
             }
-            if (method.name.equals("renderRecordOverlay")) {
-                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+            if (QuickASM.nameMatches(method,
+                    new BasicMethodInformation("renderRecordOverlay"))) {
+                QuickASM.insertBefore(method, method.instructions.getFirst(), list -> {
                     list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/ActionBarEvent$RenderEvent"));
                     list.add(new InsnNode(DUP));
                     list.add(new VarInsnNode(ALOAD, 0));
@@ -79,23 +84,11 @@ public class GuiIngameForgeTransformer implements TGMLibTransformer {
                     list.add(new VarInsnNode(ALOAD, 4));
                     list.add(new FieldInsnNode(GETFIELD, "xyz/matthewtgm/tgmlib/events/ActionBarEvent$RenderEvent", "text", "Ljava/lang/String;"));
                     list.add(EnumTransformerFields.recordPlaying.putField(EnumTransformerClasses.GuiIngameForge));
-                }));
+                });
             }
-            if (method.name.equals("renderTitle")) {
-                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
-                    /*
-
-                        Objective: Call `TitleEvent` and set the parameter values to its field values after calling.
-
-                        TitleEvent titleEvent = new TitleEvent(this.displayedTitle, this.displayedSubTitle);
-                        if (ForgeHelper.postEvent(titleEvent)) {
-                            return;
-                        }
-                        this.displayedTitle = titleEvent.title;
-                        this.displayedSubTitle = titleEvent.subTitle;
-
-                    */
-
+            if (QuickASM.nameMatches(method,
+                    new BasicMethodInformation("renderTitle"))) {
+                QuickASM.insertBefore(method, method.instructions.getFirst(), list -> {
                     list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/TitleEvent"));
                     list.add(new InsnNode(DUP));
                     list.add(new VarInsnNode(ALOAD, 0));
@@ -122,7 +115,7 @@ public class GuiIngameForgeTransformer implements TGMLibTransformer {
                     list.add(new VarInsnNode(ALOAD, 4));
                     list.add(new FieldInsnNode(GETFIELD, "xyz/matthewtgm/tgmlib/events/TitleEvent", "subTitle", "Ljava/lang/String;"));
                     list.add(EnumTransformerFields.displayedSubTitle.putField(EnumTransformerClasses.GuiIngameForge));
-                }));
+                });
             }
         }
     }

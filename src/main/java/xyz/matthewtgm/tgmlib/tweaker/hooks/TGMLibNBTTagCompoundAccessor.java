@@ -19,9 +19,10 @@
 package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
 import net.minecraft.nbt.NBTBase;
+import xyz.matthewtgm.quickasm.interfaces.Accessor;
 
 import java.util.Map;
 
-public interface TGMLibNBTTagCompoundAccessor {
+public interface TGMLibNBTTagCompoundAccessor extends Accessor {
     Map<String, NBTBase> getTagMap();
 }

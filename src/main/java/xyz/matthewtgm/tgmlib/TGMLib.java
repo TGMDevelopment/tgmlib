@@ -27,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 import xyz.matthewtgm.json.JsonVersion;
+import xyz.matthewtgm.tgmconfig.ConfigVersion;
 import xyz.matthewtgm.tgmlib.commands.CommandManager;
 import xyz.matthewtgm.tgmlib.core.TGMLibManager;
 import xyz.matthewtgm.tgmlib.gui.menus.GuiTGMLibMain;
@@ -60,6 +61,8 @@ public final class TGMLib {
         logger.info("Starting TGMLib...");
         if (!JsonVersion.CURRENT.isAtLeast(2, 4, 1))
             throw new IllegalStateException("JsonTGM is outdated! (minimum version is 2.4.1)");
+        if (!ConfigVersion.CURRENT.isAtLeast(3, 1, 0))
+            throw new IllegalStateException("TGMConfig is outdated! (minimum version is 3.1.0)");
         ForgeHelper.registerEventListeners(
                 this,
                 new CommandQueue(),

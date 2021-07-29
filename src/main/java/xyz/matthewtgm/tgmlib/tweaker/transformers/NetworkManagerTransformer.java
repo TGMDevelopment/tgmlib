@@ -19,14 +19,16 @@
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.*;
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.quickasm.QuickASM;
+import xyz.matthewtgm.quickasm.interfaces.ITransformer;
+import xyz.matthewtgm.quickasm.types.BasicMethodInformation;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class NetworkManagerTransformer implements TGMLibTransformer {
+public class NetworkManagerTransformer implements ITransformer {
 
     public String[] classes() {
         return new String[]{EnumTransformerClasses.NetworkManager.getTransformerName()};
@@ -34,12 +36,14 @@ public class NetworkManagerTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (nameMatches(method.name, EnumTransformerMethods.channelRead0) || nameMatches(method.name, "a") && method.desc.equals("(Lio/netty/channel/ChannelHandlerContext;Lff;)V")) {
-                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
-                    list.add(new VarInsnNode(ALOAD, 0)); /* this */
-                    list.add(new VarInsnNode(ALOAD, 1)); /* packet */
-                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/NetworkManagerHook", "callEvent", "(" + EnumTransformerClasses.NetworkManager.getName() + EnumTransformerClasses.Packet.getName() + ")V", false)); /* NetworkManagerHook.callEvent(this, packet); */
-                }));
+            if (QuickASM.nameMatches(method,
+                    new BasicMethodInformation(EnumTransformerMethods.channelRead0.getName()),
+                    new BasicMethodInformation("a", "(Lio/netty/channel/ChannelHandlerContext;Lff;)V"))) {
+                QuickASM.insertBefore(method, method.instructions.getFirst(), list -> {
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(new VarInsnNode(ALOAD, 1));
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/NetworkManagerHook", "callEvent", "(" + EnumTransformerClasses.NetworkManager.getName() + EnumTransformerClasses.Packet.getName() + ")V", false));
+                });
             }
         }
     }

@@ -113,7 +113,8 @@ public class GuiTGMLibKeyBinds extends GuiTGMLibBase {
         GlStateManager.enableDepth();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GlHelper.totalScissor(backgroundHitBox.getIntX(), backgroundHitBox.getIntY() + 36, backgroundHitBox.getWidth(), backgroundHitBox.getIntHeight() - backgroundHitBox.getIntY() - 36);
-        for (int i = 0; i < this.keyBindButtonList.size(); i++) this.keyBindButtonList.get(i).drawButton(mc, mouseX, mouseY);
+        for (GuiButton button : this.keyBindButtonList)
+            button.drawButton(mc, mouseX, mouseY);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         GlStateManager.popMatrix();
     }

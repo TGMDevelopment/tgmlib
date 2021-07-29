@@ -19,7 +19,9 @@
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.*;
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.quickasm.QuickASM;
+import xyz.matthewtgm.quickasm.interfaces.ITransformer;
+import xyz.matthewtgm.quickasm.types.BasicMethodInformation;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 import xyz.matthewtgm.tgmlib.util.AsmHelper;
@@ -28,7 +30,7 @@ import java.util.Iterator;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class BossStatusTransformer implements TGMLibTransformer {
+public class BossStatusTransformer implements ITransformer {
 
     public String[] classes() {
         return new String[]{EnumTransformerClasses.BossStatus.getTransformerName()};
@@ -36,7 +38,9 @@ public class BossStatusTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-           if (nameMatches(method.name, EnumTransformerMethods.setBossStatus, "a")) {
+           if (QuickASM.nameMatches(method,
+                   new BasicMethodInformation(EnumTransformerMethods.setBossStatus.getName()),
+                   new BasicMethodInformation("a", "(Luc;Z)V"))) {
                Iterator<AbstractInsnNode> iterator = method.instructions.iterator();
                while (iterator.hasNext()) {
                    AbstractInsnNode next = iterator.next();

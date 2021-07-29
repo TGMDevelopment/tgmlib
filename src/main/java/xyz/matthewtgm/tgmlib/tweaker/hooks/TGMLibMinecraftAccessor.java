@@ -20,8 +20,9 @@ package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
 import net.minecraft.network.NetworkManager;
 import net.minecraft.util.Timer;
+import xyz.matthewtgm.quickasm.interfaces.Accessor;
 
-public interface TGMLibMinecraftAccessor {
+public interface TGMLibMinecraftAccessor extends Accessor {
     Timer getTimer();
     boolean isEnableGLErrorChecking();
     void setEnableGLErrorChecking(boolean enableGLErrorChecking);

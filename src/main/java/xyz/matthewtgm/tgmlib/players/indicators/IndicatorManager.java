@@ -75,7 +75,7 @@ public class IndicatorManager extends Thread {
     }
 
     public void render(Entity entity, double x, double y, double z, int max) {
-        if (TGMLib.getManager().getConfigHandler().getShowIndicators().get() && renderable(entity)) {
+        if (TGMLib.getManager().getConfigHandler().isShowIndicators() && renderable(entity)) {
             EntityPlayer player = (EntityPlayer) entity;
             if (indicatorArray.has(player.getUniqueID().toString()))
                 render((float) x, (float) y, (float) z, max, player);

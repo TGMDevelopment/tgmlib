@@ -23,6 +23,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import xyz.matthewtgm.tgmlib.data.ColourRGB;
@@ -32,6 +33,9 @@ public abstract class BaseWingsCosmetic extends BaseCosmetic {
     private final WingModel model = new WingModel();
     private final Minecraft mc = Minecraft.getMinecraft();
 
+    private float prevAnimTime;
+    private float animTime;
+
     public BaseWingsCosmetic(String name, String id) {
         super(name, id, CosmeticType.WINGS);
     }
@@ -40,6 +44,14 @@ public abstract class BaseWingsCosmetic extends BaseCosmetic {
     public abstract ColourRGB colour();
 
     public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
+        prevAnimTime = animTime;
+        float f10 = 0.2f / (MathHelper.sqrt_double(player.motionX * player.motionX + player.motionZ * player.motionZ) * 10f + 1f);
+        if (player.motionX == 0 && player.motionZ == 0 && player.onGround)
+            f10 = f10 / 2.5f;
+        if (!player.onGround)
+            f10 = (f10 * 2) / 2.5f;
+        animTime += f10;
+
         if (!player.isInvisible()) {
             GL11.glPushMatrix();
             GL11.glScalef(-0.75f, -0.75f, -0.75f);
@@ -48,13 +60,14 @@ public abstract class BaseWingsCosmetic extends BaseCosmetic {
                 GlStateManager.translate(0f, -0.3f, -0.075f);
             GL11.glRotatef(180f, 1f, 0f, 0f);
 
+            float rotate = prevAnimTime + (animTime - prevAnimTime) * partialTicks;
+
             ColourRGB colour = colour();
             GL11.glColor3f((float) colour.getR() / 255, (float) colour.getG() / 255, (float) colour.getB() / 255);
             mc.getTextureManager().bindTexture(texture());
             GL11.glEnable(GL11.GL_CULL_FACE);
             GL11.glCullFace(1028);
             for (int j = 0; j < 2; j++) {
-                float rotate = ((System.currentTimeMillis() % 1000L) / 1000f) * (float) Math.PI * 2f;
                 model.wing.rotateAngleX = 0.125F - (float) Math.cos(rotate) * 0.2f;
                 model.wing.rotateAngleY = 0.25f;
                 model.wing.rotateAngleZ = (float) (Math.sin(rotate) + 0.125D) * 0.8f;

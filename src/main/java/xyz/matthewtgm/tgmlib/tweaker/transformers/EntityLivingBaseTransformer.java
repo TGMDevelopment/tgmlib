@@ -19,14 +19,16 @@
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.*;
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.quickasm.QuickASM;
+import xyz.matthewtgm.quickasm.interfaces.ITransformer;
+import xyz.matthewtgm.quickasm.types.BasicMethodInformation;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class EntityLivingBaseTransformer implements TGMLibTransformer {
+public class EntityLivingBaseTransformer implements ITransformer {
 
     public String[] classes() {
         return new String[]{EnumTransformerClasses.EntityLivingBase.getTransformerName()};
@@ -34,7 +36,9 @@ public class EntityLivingBaseTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode methodNode : classNode.methods) {
-            if (nameMatches(methodNode.name, EnumTransformerMethods.addPotionEffect) || nameMatches(methodNode.name, "c") && methodNode.desc.equals("(Lpf;)V")) {
+            if (QuickASM.nameMatches(methodNode,
+                    new BasicMethodInformation(EnumTransformerMethods.addPotionEffect.getName()),
+                    new BasicMethodInformation("c", "(Lpf;)V"))) {
                 methodNode.instructions.insertBefore(methodNode.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ALOAD, 0)); /* this */
                     list.add(new VarInsnNode(ALOAD, 1)); /* potionEffect */

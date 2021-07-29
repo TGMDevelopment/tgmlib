@@ -19,35 +19,42 @@
 package xyz.matthewtgm.tgmlib.files;
 
 import lombok.Getter;
-import xyz.matthewtgm.tgmconfig.ConfigEntry;
-import xyz.matthewtgm.tgmconfig.TGMConfig;
-import xyz.matthewtgm.tgmconfig.annotations.TGMConfigAnnotationsAPI;
-import xyz.matthewtgm.tgmconfig.annotations.options.impl.BooleanOption;
-
-import java.io.File;
+import xyz.matthewtgm.tgmconfig.Configuration;
 
 public class DataHandler {
 
-    @Getter private final TGMConfig data;
+    @Getter private final Configuration data;
 
-    @Getter private final BooleanOption receivedPrompt = new BooleanOption(false);
-    @Getter private final BooleanOption mayLogData = new BooleanOption(true);
+    @Getter private boolean receivedPrompt = false;
+    @Getter private boolean mayLogData = true;
 
-    public DataHandler(String name, File dir) {
-        this.data = TGMConfigAnnotationsAPI.handle(name, dir, this);
+    public DataHandler(Configuration data) {
+        this.data = data;
     }
 
     public void start() {
-        if (!data.containsKey("prompt_received"))
-            data.addAndSave(new ConfigEntry<>("prompt_received", false));
-        if (!data.containsKey("log_data"))
-            data.addAndSave(new ConfigEntry<>("log_data", false));
+        data.sync();
+        System.out.println(data);
+        if (!data.hasKey("prompt_received"))
+            data.add("prompt_received", false).save();
+        if (!data.hasKey("log_data"))
+            data.add("log_data", false).save();
         update();
     }
 
     public void update() {
-        receivedPrompt.set(data.getAsBoolean("prompt_received"));
-        mayLogData.set(data.getAsBoolean("log_data"));
+        receivedPrompt = data.getAsBoolean("prompt_received");
+        mayLogData = data.getAsBoolean("log_data");
+    }
+
+    public void setReceivedPrompt(boolean receivedPrompt) {
+        this.receivedPrompt = receivedPrompt;
+        data.add("prompt_received", receivedPrompt).save();
+    }
+
+    public void setMayLogData(boolean mayLogData) {
+        this.mayLogData = mayLogData;
+        data.add("log_data", mayLogData).save();
     }
 
 }

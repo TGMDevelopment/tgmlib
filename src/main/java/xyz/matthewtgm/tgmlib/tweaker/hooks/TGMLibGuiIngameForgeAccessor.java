@@ -19,8 +19,9 @@
 package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
 import net.minecraft.client.gui.GuiOverlayDebug;
+import xyz.matthewtgm.quickasm.interfaces.Accessor;
 
-public interface TGMLibGuiIngameForgeAccessor {
+public interface TGMLibGuiIngameForgeAccessor extends Accessor {
     GuiOverlayDebug getDebugOverlay();
     void setDebugOverlay(GuiOverlayDebug debugOverlay);
 }

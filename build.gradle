@@ -19,6 +19,7 @@
 plugins {
     id "net.minecraftforge.gradle.forge" version "8708bf3e01"
     id "com.github.johnrengelman.shadow" version "6.1.0"
+    id "org.jetbrains.kotlin.jvm" version "1.5.21"
     id "java"
 }
 
@@ -61,7 +62,8 @@ configurations {
 dependencies {
     /* TGMLib dependencies. */
     shade('xyz.matthewtgm:JsonTGM:2.8.0')
-    shade('xyz.matthewtgm:TGMConfig:2.3.1')
+    shade('xyz.matthewtgm:TGMConfig:3.1.0')
+    shade('xyz.matthewtgm:QuickASM:1.0.1')
     shade('org.java-websocket:Java-WebSocket:1.5.2')
     implementation('org.projectlombok:lombok:1.18.20')
     annotationProcessor('org.projectlombok:lombok:1.18.20')
@@ -69,8 +71,12 @@ dependencies {
     /* Dependencies for cutting other mods' file sizes. */
     shade('com.github.marcoacierno:pastebin-java-api:v0.2.1')
     shade('org.spongepowered:mixin:0.7.11-SNAPSHOT')
-    shade('com.squareup.okhttp3:okhttp:3.9.1')
+    shade('com.squareup.okhttp3:okhttp:4.9.1')
     shade('org.kohsuke:github-api:1.132')
+
+    shade('org.jetbrains.kotlin:kotlin-stdlib-jdk8')
+    shade('org.jetbrains.kotlin:kotlin-reflect')
+    shade('org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1-native-mt')
 }
 
 /* Set the duplicatesStrategy and define configs. */
@@ -95,7 +101,6 @@ shadowJar {
     relocate('com.besaba.revonline', mod_shaded + 'besaba.revonline')
     relocate('okio', mod_shaded + 'okio')
     relocate('okhttp3', mod_shaded + 'okhttp3')
-    relocate('org.spongepowered', mod_shaded + 'spongepowered')
     relocate('org.java_websocket', mod_shaded + 'websocket')
 
     archiveClassifier.set('')

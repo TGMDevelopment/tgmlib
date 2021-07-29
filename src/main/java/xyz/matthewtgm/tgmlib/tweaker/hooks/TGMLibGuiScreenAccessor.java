@@ -20,10 +20,11 @@ package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
+import xyz.matthewtgm.quickasm.interfaces.Accessor;
 
 import java.util.List;
 
-public interface TGMLibGuiScreenAccessor {
+public interface TGMLibGuiScreenAccessor extends Accessor {
     List<GuiButton> getButtonList();
     void setButtonList(List<GuiButton> buttonList);
     List<GuiLabel> getLabelList();

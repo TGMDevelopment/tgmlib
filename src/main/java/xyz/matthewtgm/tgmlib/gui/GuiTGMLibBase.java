@@ -181,12 +181,16 @@ public abstract class GuiTGMLibBase extends GuiScreen {
         refresh(refreshTime, () -> {});
     }
 
+    public void showParent() {
+        mc.displayGuiScreen(parent);
+    }
+
     private int backgroundColour() {
-        return TGMLib.getManager().getConfigHandler().getLightMode().get() ? new Color(213, 213, 213, 189).getRGB() : new Color(87, 87, 87, 189).getRGB();
+        return TGMLib.getManager().getConfigHandler().isLightMode() ? new Color(213, 213, 213, 189).getRGB() : new Color(87, 87, 87, 189).getRGB();
     }
 
     private int backgroundOutlineColour() {
-        return TGMLib.getManager().getConfigHandler().getLightMode().get() ? new Color(246, 246, 246, 234).getRGB() : new Color(120, 120, 120, 234).getRGB();
+        return TGMLib.getManager().getConfigHandler().isLightMode() ? new Color(246, 246, 246, 234).getRGB() : new Color(120, 120, 120, 234).getRGB();
     }
 
 }

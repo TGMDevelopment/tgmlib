@@ -30,8 +30,6 @@ import java.awt.*;
 
 public class GuiTGMLibMain extends GuiTGMLibBase {
 
-    private final GuiTGMLibMain $this = this;
-
     public GuiTGMLibMain(GuiScreen parent) {
         super("TGMLib", new Color(255, 175, 0).getRGB(), parent);
     }
@@ -40,14 +38,14 @@ public class GuiTGMLibMain extends GuiTGMLibBase {
         buttonList.add(new GuiTransFadingImageButton(1, width / 2 - 52, height / 2 - 10, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/keybinds_icon.png")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY))
-                    mc.displayGuiScreen(new GuiTGMLibKeyBinds($this));
+                    mc.displayGuiScreen(new GuiTGMLibKeyBinds(GuiTGMLibMain.this));
                 return false;
             }
         });
         buttonList.add(new GuiTransFadingImageButton(2, width / 2 + 2, height / 2 - 10, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/settings_icon.png")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY))
-                    mc.displayGuiScreen(new GuiTGMLibSettings($this));
+                    mc.displayGuiScreen(new GuiTGMLibSettings(GuiTGMLibMain.this));
                 return false;
             }
         });
@@ -56,7 +54,7 @@ public class GuiTGMLibMain extends GuiTGMLibBase {
             buttonList.add(new GuiTransFadingImageButton(3, width / 2 - 25, height / 2 - 63, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/cosmetics_icon.png")) {
                 public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                     if (super.mousePressed(mc, mouseX, mouseY))
-                        mc.displayGuiScreen(new GuiTGMLibCosmetics($this));
+                        mc.displayGuiScreen(new GuiTGMLibCosmetics(GuiTGMLibMain.this));
                     return false;
                 }
             });

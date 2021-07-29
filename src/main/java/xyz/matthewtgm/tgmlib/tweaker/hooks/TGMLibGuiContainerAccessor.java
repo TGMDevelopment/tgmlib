@@ -18,7 +18,9 @@
 
 package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
-public interface TGMLibGuiContainerAccessor {
+import xyz.matthewtgm.quickasm.interfaces.Accessor;
+
+public interface TGMLibGuiContainerAccessor extends Accessor {
     int getXSize();
     int getYSize();
     int getGuiTop();

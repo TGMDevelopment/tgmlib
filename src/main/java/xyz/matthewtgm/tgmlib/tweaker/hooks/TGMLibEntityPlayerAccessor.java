@@ -18,6 +18,8 @@
 
 package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
-public interface TGMLibEntityPlayerAccessor {
+import xyz.matthewtgm.quickasm.interfaces.Accessor;
+
+public interface TGMLibEntityPlayerAccessor extends Accessor {
     boolean isIsInBed();
 }

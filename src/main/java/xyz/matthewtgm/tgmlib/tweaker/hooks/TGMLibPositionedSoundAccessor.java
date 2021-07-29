@@ -18,6 +18,8 @@
 
 package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
-public interface TGMLibPositionedSoundAccessor {
+import xyz.matthewtgm.quickasm.interfaces.Accessor;
+
+public interface TGMLibPositionedSoundAccessor extends Accessor {
     void setVolume(float volume);
 }

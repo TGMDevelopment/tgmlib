@@ -19,45 +19,60 @@
 package xyz.matthewtgm.tgmlib.files;
 
 import lombok.Getter;
-import xyz.matthewtgm.tgmconfig.ConfigEntry;
-import xyz.matthewtgm.tgmconfig.TGMConfig;
-import xyz.matthewtgm.tgmconfig.annotations.TGMConfigAnnotationsAPI;
-import xyz.matthewtgm.tgmconfig.annotations.options.impl.BooleanOption;
-
-import java.io.File;
+import xyz.matthewtgm.tgmconfig.Configuration;
 
 public class ConfigHandler {
 
-    @Getter private final TGMConfig config;
+    @Getter private final Configuration configuration;
 
-    @Getter private final BooleanOption lightMode = new BooleanOption(false);
+    @Getter private boolean lightMode = false;
 
-    @Getter private final BooleanOption showCosmetics = new BooleanOption(true);
-    @Getter private final BooleanOption overrideCapes = new BooleanOption(true);
+    @Getter private boolean showCosmetics = true;
+    @Getter private boolean overrideCapes = true;
 
-    @Getter private final BooleanOption showIndicators = new BooleanOption(true);
+    @Getter private boolean showIndicators = true;
 
-    public ConfigHandler(String name, File dir) {
-        this.config = TGMConfigAnnotationsAPI.handle(name, dir, this);
+    public ConfigHandler(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     public void start() {
-        if (!config.containsKey("light_mode"))
-            config.addAndSave(new ConfigEntry<>("light_mode", false));
-        if (!config.containsKey("show_cosmetics"))
-            config.addAndSave(new ConfigEntry<>("show_cosmetics", true));
-        if (!config.containsKey("override_capes"))
-            config.addAndSave(new ConfigEntry<>("override_capes", true));
-        if (!config.containsKey("show_indicators"))
-            config.addAndSave(new ConfigEntry<>("show_indicators", true));
+        if (!configuration.hasKey("light_mode"))
+            configuration.add("light_mode", false).save();
+        if (!configuration.hasKey("show_cosmetics"))
+            configuration.add("show_cosmetics", true).save();
+        if (!configuration.hasKey("override_capes"))
+            configuration.add("override_capes", true).save();
+        if (!configuration.hasKey("show_indicators"))
+            configuration.add("show_indicators", true).save();
         update();
     }
 
     public void update() {
-        lightMode.set(config.getAsBoolean("light_mode"));
-        showCosmetics.set(config.getAsBoolean("show_cosmetics"));
-        overrideCapes.set(config.getAsBoolean("override_capes"));
-        showIndicators.set(config.getAsBoolean("show_indicators"));
+        lightMode = configuration.getAsBoolean("light_mode");
+        showCosmetics = configuration.getAsBoolean("show_cosmetics");
+        overrideCapes = configuration.getAsBoolean("override_capes");
+        showIndicators = configuration.getAsBoolean("show_indicators");
+    }
+
+    public void setLightMode(boolean lightMode) {
+        this.lightMode = lightMode;
+        configuration.add("light_mode", lightMode).save();
+    }
+
+    public void setShowCosmetics(boolean showCosmetics) {
+        this.showCosmetics = showCosmetics;
+        configuration.add("show_cosmetics", showCosmetics).save();
+    }
+
+    public void setOverrideCapes(boolean overrideCapes) {
+        this.overrideCapes = overrideCapes;
+        configuration.add("override_capes", overrideCapes).save();
+    }
+
+    public void setShowIndicators(boolean showIndicators) {
+        this.showIndicators = showIndicators;
+        configuration.add("show_indicators", showIndicators).save();
     }
 
 }

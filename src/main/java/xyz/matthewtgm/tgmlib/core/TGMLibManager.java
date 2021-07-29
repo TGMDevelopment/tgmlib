@@ -29,7 +29,7 @@ import org.java_websocket.framing.CloseFrame;
 import xyz.matthewtgm.json.entities.JsonArray;
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.util.JsonApiHelper;
-import xyz.matthewtgm.tgmconfig.TGMConfig;
+import xyz.matthewtgm.tgmconfig.Configuration;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.players.PlayerDataManager;
 import xyz.matthewtgm.tgmlib.players.cosmetics.CosmeticManager;
@@ -67,12 +67,6 @@ public class TGMLibManager {
     @Getter
     private FileHandler fileHandler;
     @Getter
-    private TGMConfig config;
-    @Getter
-    private TGMConfig keyBindConfig;
-    @Getter
-    private TGMConfig data;
-    @Getter
     private ConfigHandler configHandler;
     @Getter
     private KeyBindConfigHandler keyBindConfigHandler;
@@ -104,19 +98,13 @@ public class TGMLibManager {
                     ChatHelper.sendMessage("There's a new version of TGMLib! You should probably restart your game.");
             });
             (fileHandler = new FileHandler()).start();
-            (config = new TGMConfig("config", fileHandler.getTgmLibDir())).save();
-            (keyBindConfig = new TGMConfig("keybinds", fileHandler.getTgmLibDir())).save();
-            (data = new TGMConfig("data", fileHandler.getTgmLibDir())).save();
-            (configHandler = new ConfigHandler("config", fileHandler.getTgmLibDir())).start();
-            (config = configHandler.getConfig()).sync();
-            (keyBindConfigHandler = new KeyBindConfigHandler("keybinds", fileHandler.getTgmLibDir())).update();
-            (keyBindConfig = keyBindConfigHandler.getConfig()).sync();
-            (dataHandler = new DataHandler("data", fileHandler.getTgmLibDir())).start();
-            (data = dataHandler.getData()).sync();
+            (configHandler = new ConfigHandler(new Configuration(new File(fileHandler.getTgmLibDir(), "config")))).start();
+            (keyBindConfigHandler = new KeyBindConfigHandler(new Configuration(new File(fileHandler.getTgmLibDir(), "keybinds")))).update();
+            (dataHandler = new DataHandler(new Configuration(new File(fileHandler.getTgmLibDir(), "data")))).start();
             fixSocket();
             if (!webSocket.isOpen())
                 scheduleSocketReconnect();
-            if (dataHandler.getMayLogData().get())
+            if (dataHandler.isMayLogData())
                 webSocket.send(new GameOpenPacket(GlobalMinecraft.getSession().getProfile().getId().toString()));
             (dataManager = new PlayerDataManager()).start();
             (cosmeticManager = new CosmeticManager()).start();
@@ -124,7 +112,7 @@ public class TGMLibManager {
 
             ForgeHelper.registerEventListeners(this);
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                if (dataHandler.getMayLogData().get())
+                if (dataHandler.isMayLogData())
                     webSocket.send(new GameClosePacket(GlobalMinecraft.getSession().getProfile().getId().toString()));
                 webSocket.close(CloseFrame.NORMAL, "Game shutdown");
             }, "TGMLib Shutdown"));
@@ -135,7 +123,7 @@ public class TGMLibManager {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onGuiOpen(GuiScreenEvent.InitGuiEvent event) {
-        if (event.gui instanceof GuiMainMenu && !dataHandler.getReceivedPrompt().get())
+        if (event.gui instanceof GuiMainMenu && !dataHandler.isReceivedPrompt())
             GlobalMinecraft.displayGuiScreen(new GuiTGMLibLogging(event.gui));
     }
 
