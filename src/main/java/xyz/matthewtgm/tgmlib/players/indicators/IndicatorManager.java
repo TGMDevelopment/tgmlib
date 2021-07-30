@@ -107,16 +107,17 @@ public class IndicatorManager extends Thread {
             double indicatorX = EnhancedFontRenderer.getWidth(player.getDisplayName().getFormattedText()) / 2 + 2;
             double indicatorY = y / 2 - height / 4;
 
+            GlStateManager.color(0.5f, 0.5f, 0.5f, 0.5f);
             renderIndicator(indicatorX, indicatorY);
 
             GlStateManager.enableDepth();
             GlStateManager.depthMask(true);
 
+            GlStateManager.color(1f, 1f, 1f, 1f);
             renderIndicator(indicatorX, indicatorY);
 
             GlStateManager.enableLighting();
             GlStateManager.disableBlend();
-            GlStateManager.color(1f, 1f, 1f, 1f);
             GlStateManager.popMatrix();
         }
     }
