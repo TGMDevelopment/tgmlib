@@ -34,10 +34,7 @@ import org.lwjgl.opengl.GL11;
 import xyz.matthewtgm.json.entities.JsonArray;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.indication.RetrieveIndicationsPacket;
-import xyz.matthewtgm.tgmlib.util.EnhancedFontRenderer;
-import xyz.matthewtgm.tgmlib.util.ForgeHelper;
-import xyz.matthewtgm.tgmlib.util.Multithreading;
-import xyz.matthewtgm.tgmlib.util.RenderHelper;
+import xyz.matthewtgm.tgmlib.util.*;
 import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 
 import javax.imageio.ImageIO;
@@ -74,11 +71,11 @@ public class IndicatorManager extends Thread {
         }
     }
 
-    public void render(Entity entity, double x, double y, double z, int max) {
+    public void render(Entity entity, String name, double x, double y, double z, int max) {
         if (TGMLib.getManager().getConfigHandler().isShowIndicators() && renderable(entity)) {
             EntityPlayer player = (EntityPlayer) entity;
             if (indicatorArray.has(player.getUniqueID().toString()))
-                render((float) x, (float) y, (float) z, max, player);
+                render(name, (float) x, (float) y, (float) z, max, player);
         }
     }
 
@@ -86,9 +83,12 @@ public class IndicatorManager extends Thread {
         return entity instanceof EntityPlayer && !(entity instanceof EntityPlayerSP);
     }
 
-    private void render(float x, float y, float z, int maxDistance, EntityPlayer player) {
+    private void render(String str, float x, float y, float z, int maxDistance, EntityPlayer player) {
         double distance = player.getDistanceSqToEntity(GlobalMinecraft.getPlayer());
         if (distance <= (maxDistance * maxDistance)) {
+            if (!str.equals(player.getDisplayName().getFormattedText()))
+                return;
+
             RenderManager renderManager = GlobalMinecraft.getInstance().getRenderManager();
             float f = 1.6f;
             float f1 = 0.016666668f * f;
@@ -97,26 +97,30 @@ public class IndicatorManager extends Thread {
             GL11.glNormal3f(0.0F, 1.0F, 0.0F);
             GlStateManager.rotate(-renderManager.playerViewY, 0f, 1f, 0f);
             GlStateManager.rotate(renderManager.playerViewX, 1f, 0f, 0f);
-            GlStateManager.scale(-f1, -f1, f1);
+            GlStateManager.scale(-f1, -f1, 1);
             GlStateManager.disableLighting();
             GlStateManager.depthMask(false);
             GlStateManager.disableDepth();
             GlStateManager.enableBlend();
+            GlStateManager.enableAlpha();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 
             double indicatorX = EnhancedFontRenderer.getWidth(player.getDisplayName().getFormattedText()) / 2 + 2;
             double indicatorY = y / 2 - height / 4;
 
+            GlStateManager.color(0.5f, 0.5f, 0.5f, 0.5f);
             renderIndicator(indicatorX, indicatorY);
 
             GlStateManager.enableDepth();
             GlStateManager.depthMask(true);
 
+            GlStateManager.depthMask(true);
+            GlStateManager.enableDepth();
+            GlStateManager.color(1f, 1f, 1f);
             renderIndicator(indicatorX, indicatorY);
 
             GlStateManager.enableLighting();
             GlStateManager.disableBlend();
-            GlStateManager.color(1f, 1f, 1f, 1f);
             GlStateManager.popMatrix();
         }
     }

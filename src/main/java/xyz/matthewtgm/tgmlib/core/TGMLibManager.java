@@ -110,8 +110,9 @@ public class TGMLibManager {
             (cosmeticManager = new CosmeticManager()).start();
             (indicatorManager = new IndicatorManager()).start();
 
-            ForgeHelper.registerEventListeners(this);
+            ForgeHelper.registerEventListener(this);
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                TGMLib.getInstance().getLogger().info("Shutting down...");
                 if (dataHandler.isMayLogData())
                     webSocket.send(new GameClosePacket(GlobalMinecraft.getSession().getProfile().getId().toString()));
                 webSocket.close(CloseFrame.NORMAL, "Game shutdown");
@@ -145,7 +146,7 @@ public class TGMLibManager {
 
     public void fixSocket() {
         try {
-            if (!createSocket())
+            if (!createSocket()) {
                 Notifications.push("Failed to connect to TGMLib WebSocket!", "Click me to attempt a reconnect.", notification -> {
                     try {
                         String originalTitle = notification.title;
@@ -165,6 +166,7 @@ public class TGMLibManager {
                         e.printStackTrace();
                     }
                 });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -177,8 +179,7 @@ public class TGMLibManager {
     public void scheduleSocketReconnect() {
         Multithreading.schedule(new Thread(() -> {
             try {
-                webSocket.reconnectBlocking();
-                if (!webSocket.isOpen())
+                if (!webSocket.reconnectBlocking())
                     scheduleSocketReconnect();
             } catch (Exception e) {
                 e.printStackTrace();

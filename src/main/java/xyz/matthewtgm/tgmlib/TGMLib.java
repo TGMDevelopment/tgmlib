@@ -71,6 +71,7 @@ public final class TGMLib {
                 new HypixelHelper(),
                 new MessageQueue(),
                 new Notifications(),
+                new PlayerHelper(),
                 new ScreenHelper(),
                 new TitleHandler(),
                 new TGMLibBetterEventsListener()

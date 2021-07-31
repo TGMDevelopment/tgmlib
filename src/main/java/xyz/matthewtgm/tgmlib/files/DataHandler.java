@@ -33,8 +33,6 @@ public class DataHandler {
     }
 
     public void start() {
-        data.sync();
-        System.out.println(data);
         if (!data.hasKey("prompt_received"))
             data.add("prompt_received", false).save();
         if (!data.hasKey("log_data"))

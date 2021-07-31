@@ -19,6 +19,7 @@
 package xyz.matthewtgm.tgmlib.files;
 
 import lombok.Getter;
+import net.minecraft.launchwrapper.Launch;
 import xyz.matthewtgm.tgmconfig.Configuration;
 
 public class ConfigHandler {
@@ -49,10 +50,10 @@ public class ConfigHandler {
     }
 
     public void update() {
-        lightMode = configuration.getAsBoolean("light_mode");
-        showCosmetics = configuration.getAsBoolean("show_cosmetics");
-        overrideCapes = configuration.getAsBoolean("override_capes");
-        showIndicators = configuration.getAsBoolean("show_indicators");
+        setLightMode(configuration.getAsBoolean("light_mode"));
+        setShowCosmetics(configuration.getAsBoolean("show_cosmetics"));
+        setOverrideCapes(configuration.getAsBoolean("override_capes"));
+        setShowIndicators(configuration.getAsBoolean("show_indicators"));
     }
 
     public void setLightMode(boolean lightMode) {
@@ -63,16 +64,19 @@ public class ConfigHandler {
     public void setShowCosmetics(boolean showCosmetics) {
         this.showCosmetics = showCosmetics;
         configuration.add("show_cosmetics", showCosmetics).save();
+        Launch.blackboard.put("tgmLib_show_cosmetics", showCosmetics);
     }
 
     public void setOverrideCapes(boolean overrideCapes) {
         this.overrideCapes = overrideCapes;
         configuration.add("override_capes", overrideCapes).save();
+        Launch.blackboard.put("tgmLib_override_capes", overrideCapes);
     }
 
     public void setShowIndicators(boolean showIndicators) {
         this.showIndicators = showIndicators;
         configuration.add("show_indicators", showIndicators).save();
+        Launch.blackboard.put("tgmLib_show_indicators", showIndicators);
     }
 
 }

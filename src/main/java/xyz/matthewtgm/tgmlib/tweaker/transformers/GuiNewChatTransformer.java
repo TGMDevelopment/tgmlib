@@ -43,8 +43,9 @@ public class GuiNewChatTransformer implements ITransformer {
                 QuickASM.insertBefore(method, method.instructions.getFirst(), list -> {
                     list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/PrintChatMessageEvent"));
                     list.add(new InsnNode(DUP));
+                    list.add(new VarInsnNode(ALOAD, 0));
                     list.add(new VarInsnNode(ALOAD, 1));
-                    list.add(new MethodInsnNode(INVOKESPECIAL, "xyz/matthewtgm/tgmlib/events/PrintChatMessageEvent", "<init>", "(" + EnumTransformerClasses.IChatComponent.getName() + ")V", false));
+                    list.add(new MethodInsnNode(INVOKESPECIAL, "xyz/matthewtgm/tgmlib/events/PrintChatMessageEvent", "<init>", "(" + EnumTransformerClasses.GuiNewChat.getName() + EnumTransformerClasses.IChatComponent.getName() + ")V", false));
                     list.add(new VarInsnNode(ASTORE, 2));
 
                     list.add(new VarInsnNode(ALOAD, 2));

@@ -18,6 +18,7 @@
 
 package xyz.matthewtgm.tgmlib.tweaker;
 
+import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.apache.logging.log4j.LogManager;
@@ -34,12 +35,15 @@ public class TGMLibClassTransformer extends QuickClassTransformer {
     private static final Logger logger = LogManager.getLogger(TGMLib.NAME + " (TGMLibClassTransformer)");
 
     public TGMLibClassTransformer() {
-        super(logger);
+        super(Boolean.parseBoolean(System.getProperty("debugBytecode", "false")), logger);
         if (created) {
             logger.warn("TGMLibClassTransformer was already created, returning.");
             return;
         }
         created = true;
+
+        /* Allow other mods to detect TGMLib, even if they don't use it. */
+        Launch.blackboard.put("tgmLib", true);
 
         addTransformer(new AbstractClientPlayerTransformer());
         addTransformer(new BossStatusTransformer());

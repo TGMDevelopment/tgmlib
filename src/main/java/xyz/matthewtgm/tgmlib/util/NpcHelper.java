@@ -29,7 +29,7 @@ public class NpcHelper {
      * @return Whether or not the entity is an NPC.
      * @author Biscuit
      */
-    public static boolean isNPC(Entity entity) {
+    public static boolean isNpc(Entity entity) {
         if (!(entity instanceof EntityOtherPlayerMP))
             return false;
         EntityLivingBase entityLivingBase = (EntityLivingBase) entity;

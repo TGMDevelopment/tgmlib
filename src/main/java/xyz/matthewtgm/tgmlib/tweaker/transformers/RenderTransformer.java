@@ -54,11 +54,12 @@ public class RenderTransformer implements ITransformer {
                     new BasicMethodInformation("a", "(Lpk;Ljava/lang/String;DDDI)V"))) {
                 QuickASM.insertBefore(method, method.instructions.getLast().getPrevious().getPrevious().getPrevious(), list -> {
                     list.add(new VarInsnNode(ALOAD, 1));
+                    list.add(new VarInsnNode(ALOAD, 2));
                     list.add(new VarInsnNode(DLOAD, 3));
                     list.add(new VarInsnNode(DLOAD, 5));
                     list.add(new VarInsnNode(DLOAD, 7));
                     list.add(new VarInsnNode(ILOAD, 9));
-                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/RenderHook", "renderIndicators", "(" + EnumTransformerClasses.Entity.getName() + "DDDI)V", false));
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/RenderHook", "renderIndicators", "(" + EnumTransformerClasses.Entity.getName() + "Ljava/lang/String;DDDI)V", false));
                 });
             }
         }
