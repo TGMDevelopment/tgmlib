@@ -62,7 +62,7 @@ configurations {
 dependencies {
     /* TGMLib dependencies. */
     shade('xyz.matthewtgm:JsonTGM:2.8.0')
-    shade('xyz.matthewtgm:TGMConfig:3.1.0')
+    shade('xyz.matthewtgm:TGMConfig:3.2.0')
     shade('xyz.matthewtgm:QuickASM:1.0.1')
     shade('org.java-websocket:Java-WebSocket:1.5.2')
 
