@@ -32,6 +32,7 @@ import xyz.matthewtgm.json.serialization.JsonSerializer;
 import xyz.matthewtgm.json.serialization.annotations.JsonSerializeExcluded;
 import xyz.matthewtgm.json.serialization.annotations.JsonSerializeName;
 import xyz.matthewtgm.json.util.JsonApiHelper;
+import xyz.matthewtgm.tgmlib.events.LocrawReceivedEvent;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
@@ -79,6 +80,7 @@ public class HypixelHelper {
                 }
                 JsonObject strippedAsJson = JsonParser.parse(stripped).getAsJsonObject();
                 locraw = new HypixelLocraw(strippedAsJson.get("server"), strippedAsJson.get("mode"), strippedAsJson.get("map"), strippedAsJson.get("gametype"));
+                ForgeHelper.postEvent(new LocrawReceivedEvent(locraw));
                 allowLocrawCancel = false;
                 limboLoop.set(0);
                 event.setCanceled(true);
@@ -145,7 +147,9 @@ public class HypixelHelper {
             }
 
             public static GameType getFromLocraw(String gameType) {
-                for (GameType value : values()) if (value.serverName.equals(gameType)) return value;
+                for (GameType value : values())
+                    if (value.serverName.equals(gameType))
+                        return value;
                 return UNKNOWN;
             }
         }

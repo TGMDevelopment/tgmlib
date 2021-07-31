@@ -18,8 +18,12 @@
 
 package xyz.matthewtgm.tgmlib.util;
 
+import com.mojang.authlib.GameProfile;
+import lombok.Getter;
 import net.minecraft.block.Block;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.entity.player.PlayerCapabilities;
@@ -30,10 +34,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.IChatComponent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import xyz.matthewtgm.tgmlib.tweaker.hooks.TGMLibEntityPlayerAccessor;
 import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 
 public class PlayerHelper {
+
+    @Getter private static String currentName;
 
     public static EntityPlayerSP getPlayer() {
         return GlobalMinecraft.getPlayer();
@@ -41,10 +49,6 @@ public class PlayerHelper {
 
     public static InventoryPlayer getInventory() {
         return GlobalMinecraft.getPlayer().inventory;
-    }
-
-    public static InventoryEnderChest fetchEnderChest() {
-        return null;
     }
 
     public static Container getInventoryContainer() {
@@ -147,6 +151,20 @@ public class PlayerHelper {
         GlobalMinecraft.getPlayer().eyeHeight = eyeHeight;
     }
 
-
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (GlobalMinecraft.getPlayer() == null)
+            return;
+        NetHandlerPlayClient netHandler = GlobalMinecraft.getPlayer().sendQueue;
+        if (netHandler == null)
+            return;
+        NetworkPlayerInfo playerInfo = netHandler.getPlayerInfo(GlobalMinecraft.getSession().getProfile().getId());
+        if (playerInfo == null)
+            return;
+        GameProfile gameProfile = playerInfo.getGameProfile();
+        if (gameProfile == null)
+            return;
+        currentName = gameProfile.getName();
+    }
 
 }

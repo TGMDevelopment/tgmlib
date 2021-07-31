@@ -19,14 +19,16 @@
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.*;
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.quickasm.QuickASM;
+import xyz.matthewtgm.quickasm.interfaces.ITransformer;
+import xyz.matthewtgm.quickasm.types.BasicMethodInformation;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class EntityPlayerSPTransformer implements TGMLibTransformer {
+public class EntityPlayerSPTransformer implements ITransformer {
 
     public String[] classes() {
         return new String[]{EnumTransformerClasses.EntityPlayerSP.getTransformerName()};
@@ -34,19 +36,24 @@ public class EntityPlayerSPTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (nameMatches(method.name, EnumTransformerMethods.dropOneItem) || nameMatches(method.name, "a") && method.desc.equals("(Z)Luz;")) {
-                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+            // nameMatches(method.name, EnumTransformerMethods.dropOneItem) || nameMatches(method.name, "a") && method.desc.equals("(Z)Luz;")
+            if (QuickASM.nameMatches(method,
+                    new BasicMethodInformation(EnumTransformerMethods.dropOneItem.getName()),
+                    new BasicMethodInformation("a", "(Z)Luz;"))) {
+                QuickASM.insertBefore(method, method.instructions.getFirst(), list -> {
                     list.add(new VarInsnNode(ILOAD, 1)); /* dropAll */
-                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "EntityPlayerSPHook", "callEvent", "(Z)Z", false));
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/EntityPlayerSPHook", "callEvent", "(Z)Z", false));
                     LabelNode labelNode = new LabelNode();
                     list.add(new JumpInsnNode(IFEQ, labelNode));
                     list.add(new InsnNode(ACONST_NULL));
                     list.add(new InsnNode(ARETURN));
                     list.add(labelNode);
-                }));
+                });
             }
-            if (nameMatches(method.name, EnumTransformerMethods.sendChatMessage) || nameMatches(method.name, "e") && method.desc.equals("(Ljava/lang/String;)V")) {
-                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+            if (QuickASM.nameMatches(method,
+                    new BasicMethodInformation(EnumTransformerMethods.sendChatMessage.getName()),
+                    new BasicMethodInformation("e", "(Ljava/lang/String;)V"))) {
+                QuickASM.insertBefore(method, method.instructions.getFirst(), list -> {
                     list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/SendChatMessageEvent"));
                     list.add(new InsnNode(DUP));
                     list.add(new VarInsnNode(ALOAD, 0));
@@ -64,7 +71,7 @@ public class EntityPlayerSPTransformer implements TGMLibTransformer {
                     list.add(new VarInsnNode(ALOAD, 2));
                     list.add(new FieldInsnNode(GETFIELD, "xyz/matthewtgm/tgmlib/events/SendChatMessageEvent", "message", "Ljava/lang/String;"));
                     list.add(new VarInsnNode(ASTORE, 1)); /* message = sendChatMessageEvent.message; */
-                }));
+                });
             }
         }
     }

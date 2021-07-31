@@ -39,6 +39,8 @@ public enum EnumTransformerFields {
     displayedTitle("displayedTitle", "field_175201_x", "Ljava/lang/String;"),
     displayedSubTitle("displayedSubTitle", "field_175200_y", "Ljava/lang/String;"),
     recordPlaying("recordPlaying", "field_73838_g", "Ljava/lang/String;"),
+    recordPlayingUpFor("recordPlayingUpFor", "field_73845_h", "Ljava/lang/String;"),
+    recordIsPlaying("recordIsPlaying", "field_73844_j", "Ljava/lang/String;"),
     drawnChatLines("drawnChatLines", "field_146253_i", "Ljava/util/List;"),
     netManager("netManager", "field_147302_e", "Lnet/minecraft/network/NetworkManager;"),
     chatLines("chatLines", "field_146252_h", "Ljava/util/List;"),

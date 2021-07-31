@@ -19,16 +19,16 @@
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.*;
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.quickasm.QuickASM;
+import xyz.matthewtgm.quickasm.interfaces.ITransformer;
+import xyz.matthewtgm.quickasm.types.BasicMethodInformation;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
-import java.util.Iterator;
-
 import static org.objectweb.asm.Opcodes.*;
 
-public class RenderTransformer implements TGMLibTransformer {
+public class RenderTransformer implements ITransformer {
 
     public String[] classes() {
         return new String[]{EnumTransformerClasses.Render.getTransformerName()};
@@ -36,26 +36,31 @@ public class RenderTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (nameMatches(method.name, EnumTransformerMethods.shouldRender) || nameMatches(method.name, "a") && method.desc.equals("(Lpk;Lbia;DDD)Z")) {
-                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
-                    list.add(new VarInsnNode(ALOAD, 1)); /* livingEntity */
-                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "RenderHook", "callRenderCheckEvent", "(Lnet/minecraft/entity/Entity;)Z", false)); /* RenderHook.callRenderCheckEvent(livingEntity) */
-                    LabelNode labelNode = new LabelNode(); /* if (RenderHook.callRenderCheckEvent(livingEntity)) */
+            if (QuickASM.nameMatches(method,
+                    new BasicMethodInformation(EnumTransformerMethods.shouldRender.getName()),
+                    new BasicMethodInformation("a", "(Lpk;Lbia;DDD)Z"))) {
+                QuickASM.insertBefore(method, method.instructions.getFirst(), list -> {
+                    list.add(new VarInsnNode(ALOAD, 1));
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/RenderHook", "callRenderCheckEvent", "(Lnet/minecraft/entity/Entity;)Z", false));
+                    LabelNode labelNode = new LabelNode();
                     list.add(new JumpInsnNode(IFEQ, labelNode));
-                    list.add(new InsnNode(ICONST_0)); /* return false; */
+                    list.add(new InsnNode(ICONST_0));
                     list.add(new InsnNode(IRETURN));
                     list.add(labelNode);
-                }));
+                });
             }
-            if (nameMatches(method.name, EnumTransformerMethods.renderLivingLabel) || nameMatches(method.name, "a") && method.desc.equals("(Lpk;Ljava/lang/String;DDDI)V")) {
-                method.instructions.insertBefore(method.instructions.getLast().getPrevious().getPrevious().getPrevious(), AsmHelper.createQuickInsnList(list -> {
+            if (QuickASM.nameMatches(method,
+                    new BasicMethodInformation(EnumTransformerMethods.renderLivingLabel.getName()),
+                    new BasicMethodInformation("a", "(Lpk;Ljava/lang/String;DDDI)V"))) {
+                QuickASM.insertBefore(method, method.instructions.getLast().getPrevious().getPrevious().getPrevious(), list -> {
                     list.add(new VarInsnNode(ALOAD, 1));
+                    list.add(new VarInsnNode(ALOAD, 2));
                     list.add(new VarInsnNode(DLOAD, 3));
                     list.add(new VarInsnNode(DLOAD, 5));
                     list.add(new VarInsnNode(DLOAD, 7));
                     list.add(new VarInsnNode(ILOAD, 9));
-                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "RenderHook", "renderIndicators", "(" + EnumTransformerClasses.Entity.getName() + "DDDI)V", false));
-                }));
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/RenderHook", "renderIndicators", "(" + EnumTransformerClasses.Entity.getName() + "Ljava/lang/String;DDDI)V", false));
+                });
             }
         }
     }

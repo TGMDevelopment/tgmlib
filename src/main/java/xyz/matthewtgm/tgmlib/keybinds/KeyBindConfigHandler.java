@@ -21,35 +21,31 @@ package xyz.matthewtgm.tgmlib.keybinds;
 import lombok.Getter;
 import xyz.matthewtgm.json.entities.JsonElement;
 import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.tgmconfig.ConfigEntry;
-import xyz.matthewtgm.tgmconfig.TGMConfig;
-import xyz.matthewtgm.tgmconfig.annotations.TGMConfigAnnotationsAPI;
-
-import java.io.File;
+import xyz.matthewtgm.tgmconfig.Configuration;
 
 public class KeyBindConfigHandler {
 
-    @Getter private final TGMConfig config;
+    @Getter private final Configuration configuration;
 
-    public KeyBindConfigHandler(String name, File dir) {
-        this.config = TGMConfigAnnotationsAPI.handle(name, dir, this);
+    public KeyBindConfigHandler(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     public void update() {
         for (KeyBind keyBind : KeyBindManager.getKeyBinds()) {
-            if (!config.containsKey(keyBind.category()))
+            if (!configuration.hasKey(keyBind.category()))
                 update(keyBind);
-            if (!config.getAsJsonObject(keyBind.category()).hasKey(keyBind.name()))
+            if (!configuration.getAsJsonObject(keyBind.category()).hasKey(keyBind.name()))
                 update(keyBind);
-            JsonElement keyCodeElement = config.getAsJsonObject(keyBind.category()).get(keyBind.name());
+            JsonElement keyCodeElement = configuration.getAsJsonObject(keyBind.category()).get(keyBind.name());
             keyBind.updateKey(keyCodeElement.isDouble() ? (int) keyCodeElement.getAsDouble() : keyCodeElement.isFloat() ? (int) keyCodeElement.getAsFloat() : keyCodeElement.getAsInt());
         }
     }
 
     public void update(KeyBind keyBind) {
-        if (!config.containsKey(keyBind.category()))
-            config.addAndSave(new ConfigEntry<>(keyBind.category(), new JsonObject().add(keyBind.name(), keyBind.getKey())));
-        config.addAndSave(new ConfigEntry<>(keyBind.category(), config.getAsJsonObject(keyBind.category()).add(keyBind.name(), keyBind.getKey())));
+        if (!configuration.hasKey(keyBind.category()))
+            configuration.add(keyBind.category(), new JsonObject().add(keyBind.name(), keyBind.getKey())).save();
+        configuration.add(keyBind.category(), configuration.getAsJsonObject(keyBind.category()).add(keyBind.name(), keyBind.getKey())).save();
     }
 
 }

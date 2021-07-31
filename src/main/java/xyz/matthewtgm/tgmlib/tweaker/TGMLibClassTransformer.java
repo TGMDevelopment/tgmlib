@@ -18,112 +18,50 @@
 
 package xyz.matthewtgm.tgmlib.tweaker;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.tree.ClassNode;
+import xyz.matthewtgm.quickasm.QuickClassTransformer;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.tweaker.transformers.*;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 @IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
 @IFMLLoadingPlugin.SortingIndex(1001)
-public class TGMLibClassTransformer implements IClassTransformer {
+public class TGMLibClassTransformer extends QuickClassTransformer {
 
     private static boolean created;
-    private static boolean bytecodeDebug = false;
-    private final Logger logger = LogManager.getLogger(TGMLib.NAME + " (TGMLibClassTransformer)");
-    private final Multimap<String, TGMLibTransformer> transformerMap = ArrayListMultimap.create();
+    private static final Logger logger = LogManager.getLogger(TGMLib.NAME + " (TGMLibClassTransformer)");
 
     public TGMLibClassTransformer() {
+        super(Boolean.parseBoolean(System.getProperty("debugBytecode", "false")), logger);
         if (created) {
             logger.warn("TGMLibClassTransformer was already created, returning.");
             return;
         }
         created = true;
 
-        registerTransformer(new AbstractClientPlayerTransformer());
-        registerTransformer(new BossStatusTransformer());
-        registerTransformer(new EntityLivingBaseTransformer());
-        registerTransformer(new EntityPlayerSPTransformer());
-        registerTransformer(new EntityPlayerTransformer());
-        registerTransformer(new FontRendererTransformer());
-        registerTransformer(new GuiContainerTransformer());
-        registerTransformer(new GuiIngameForgeTransformer());
-        registerTransformer(new GuiIngameTransformer());
-        registerTransformer(new GuiNewChatTransformer());
-        registerTransformer(new GuiScreenTransformer());
-        registerTransformer(new MinecraftTransformer());
-        registerTransformer(new NBTTagCompoundTransformer());
-        registerTransformer(new NetHandlerPlayClientTransformer());
-        registerTransformer(new NetworkManagerTransformer());
-        registerTransformer(new PositionedSoundTransformer());
-        registerTransformer(new RenderTransformer());
-    }
+        /* Allow other mods to detect TGMLib, even if they don't use it. */
+        Launch.blackboard.put("tgmLib", true);
 
-    private void registerTransformer(TGMLibTransformer transformer) {
-        for (String name : transformer.classes())
-            transformerMap.put(name, transformer);
-    }
-
-    public byte[] transform(String name, String transformedName, byte[] bytes) {
-        if (bytes == null)
-            return null;
-        Collection<TGMLibTransformer> transformers = transformerMap.get(transformedName);
-        if (transformers.isEmpty())
-            return bytes;
-        logger.info("Found {} transformer(s) for {}", transformers.size(), transformedName);
-        ClassReader reader = new ClassReader(bytes);
-        ClassNode node = new ClassNode();
-        reader.accept(node, ClassReader.EXPAND_FRAMES);
-        for (TGMLibTransformer transformer : transformers) {
-            logger.info("Applying transformer {} to {}", transformer.getClass().getName(), transformedName);
-            transformer.transform(node, transformedName);
-        }
-        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-        try {
-            node.accept(writer);
-        } catch (Exception e) {
-            outputBytecode(transformedName, writer);
-            e.printStackTrace();
-        }
-        outputBytecode(transformedName, writer);
-        return writer.toByteArray();
-    }
-
-    /**
-     * Taken from SkyBlockAddons under MIT license
-     * https://github.com/BiscuitDevelopment/SkyblockAddons/blob/development/LICENSE
-     *
-     * @author Biscuit/Phoube
-     */
-    private void outputBytecode(String transformedName, ClassWriter writer) {
-        try {
-            if (!bytecodeDebug)
-                return;
-            File bytecodeDirectory = new File("bytecode");
-            if (!bytecodeDirectory.exists() && !bytecodeDirectory.mkdirs())
-                throw new IllegalStateException("Unable to create bytecode storage directory...");
-            File bytecodeOutput = new File(bytecodeDirectory, transformedName + ".class");
-            if (!bytecodeOutput.exists() && !bytecodeOutput.createNewFile())
-                throw new IllegalStateException("Unable to create bytecode output file...");
-            FileOutputStream os = new FileOutputStream(bytecodeOutput);
-            os.write(writer.toByteArray());
-            os.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        addTransformer(new AbstractClientPlayerTransformer());
+        addTransformer(new BossStatusTransformer());
+        addTransformer(new EntityLivingBaseTransformer());
+        addTransformer(new EntityPlayerSPTransformer());
+        addTransformer(new EntityPlayerTransformer());
+        addTransformer(new FontRendererTransformer());
+        addTransformer(new GuiContainerTransformer());
+        addTransformer(new GuiIngameForgeTransformer());
+        addTransformer(new GuiIngameTransformer());
+        addTransformer(new GuiNewChatTransformer());
+        addTransformer(new GuiScreenTransformer());
+        addTransformer(new MinecraftTransformer());
+        addTransformer(new NBTTagCompoundTransformer());
+        addTransformer(new NetHandlerPlayClientTransformer());
+        addTransformer(new NetworkManagerTransformer());
+        addTransformer(new PositionedSoundTransformer());
+        addTransformer(new RenderTransformer());
     }
 
     static {

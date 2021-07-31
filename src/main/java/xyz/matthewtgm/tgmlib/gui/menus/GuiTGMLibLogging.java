@@ -20,14 +20,11 @@ package xyz.matthewtgm.tgmlib.gui.menus;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
-import xyz.matthewtgm.json.entities.JsonArray;
-import xyz.matthewtgm.tgmconfig.ConfigEntry;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.gui.GuiTGMLibBase;
 import xyz.matthewtgm.tgmlib.gui.GuiTransFadingButton;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.other.GameOpenPacket;
+import xyz.matthewtgm.tgmlib.util.ChatColour;
 import xyz.matthewtgm.tgmlib.util.EnhancedFontRenderer;
 import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 
@@ -58,16 +55,14 @@ public class GuiTGMLibLogging extends GuiTGMLibBase {
     public void draw(int mouseX, int mouseY, float partialTicks) {
         EnhancedFontRenderer.drawCenteredStyledText("Will you allow TGMLib", width / 2, height / 2 - 60, -1);
         EnhancedFontRenderer.drawCenteredStyledText("to log data such as", width / 2, height / 2 - 50, -1);
-        EnhancedFontRenderer.drawCenteredStyledText("log-in/out times and", width / 2, height / 2 - 40, -1);
-        EnhancedFontRenderer.drawCenteredStyledText("mods you use?", width / 2, height / 2 - 30, -1);
-        EnhancedFontRenderer.drawCenteredStyledText("(denying this will stop", width / 2, height / 2 - 20, -1);
-        EnhancedFontRenderer.drawCenteredStyledText("some features from working)", width / 2, height / 2 - 10, -1);
+        EnhancedFontRenderer.drawCenteredStyledText("when you log-in/out?", width / 2, height / 2 - 40, -1);
+        EnhancedFontRenderer.drawCenteredStyledText(ChatColour.RED + "(denying this will stop", width / 2, height / 2 - 30, -1);
+        EnhancedFontRenderer.drawCenteredStyledText(ChatColour.RED + "some features from working)", width / 2, height / 2 - 20, -1);
     }
 
     private void input(boolean value) {
-        TGMLib.getManager().getData().add(new ConfigEntry<>("prompt_received", true));
-        TGMLib.getManager().getData().add(new ConfigEntry<>("log_data", value));
-        TGMLib.getManager().getData().save();
+        TGMLib.getManager().getDataHandler().setReceivedPrompt(true);
+        TGMLib.getManager().getDataHandler().setMayLogData(value);
         TGMLib.getManager().getDataHandler().update();
         if (value)
             TGMLib.getManager().getWebSocket().send(new GameOpenPacket(GlobalMinecraft.getSession().getProfile().getId().toString()));

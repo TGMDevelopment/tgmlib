@@ -54,4 +54,8 @@ public class MathHelper {
         return (val - min) / (max - min);
     }
 
+    public static boolean isBetween(int val, int min, int max) {
+        return (val > min) && (val < max);
+    }
+
 }

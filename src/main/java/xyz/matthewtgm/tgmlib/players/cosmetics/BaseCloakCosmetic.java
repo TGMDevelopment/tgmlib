@@ -40,10 +40,9 @@ public abstract class BaseCloakCosmetic extends BaseCosmetic {
 
     public abstract ResourceLocation texture();
     public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
-        ResourceLocation texture = texture();
-        if (texture != null && player.hasPlayerInfo() && !player.isInvisible() && player.isWearing(EnumPlayerModelParts.CAPE) && player.getLocationCape() == null) {
+        if (player.hasPlayerInfo() && !player.isInvisible() && player.isWearing(EnumPlayerModelParts.CAPE) && player.getLocationCape() == null) {
             GlStateManager.color(1f, 1f, 1f, 1f);
-            RenderHelper.bindTexture(texture);
+            RenderHelper.bindTexture(texture());
             GlStateManager.pushMatrix();
             GlStateManager.translate(0f, 0f, 0.125f);
             double d0 = player.prevChasingPosX + (player.chasingPosX - player.prevChasingPosX) * (double)partialTicks - (player.prevPosX + (player.posX - player.prevPosX) * (double)partialTicks);
@@ -59,6 +58,8 @@ public abstract class BaseCloakCosmetic extends BaseCosmetic {
 
             if (f2 < 0f)
                 f2 = 0f;
+            if (f2 > 180f)
+                f2 = 180f;
 
             float f4 = player.prevCameraYaw + (player.cameraYaw - player.prevCameraYaw) * partialTicks;
             f1 = f1 + MathHelper.sin((player.prevDistanceWalkedModified + (player.distanceWalkedModified - player.prevDistanceWalkedModified) * partialTicks) * 6f) * 32f * f4;

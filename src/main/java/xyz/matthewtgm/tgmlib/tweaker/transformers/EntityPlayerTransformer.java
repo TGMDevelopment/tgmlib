@@ -19,22 +19,23 @@
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.*;
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.quickasm.QuickASM;
+import xyz.matthewtgm.quickasm.interfaces.ITransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 import xyz.matthewtgm.tgmlib.tweaker.hooks.TGMLibEntityPlayerAccessor;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class EntityPlayerTransformer implements TGMLibTransformer {
+public class EntityPlayerTransformer implements ITransformer {
 
     public String[] classes() {
         return new String[]{EnumTransformerClasses.EntityPlayer.getTransformerName()};
     }
 
     public void transform(ClassNode classNode, String name) {
-        convertAccessorOrInvoker(classNode, TGMLibEntityPlayerAccessor.class);
-        createAccessorGetter(classNode, "isIsInBed", "()Z", new MethodInsnNode(INVOKEVIRTUAL, EnumTransformerClasses.EntityPlayer.getNameRaw(), EnumTransformerMethods.isInBed.getName(), "()Z", false), IRETURN);
+        QuickASM.convertAccessor(classNode, TGMLibEntityPlayerAccessor.class);
+        QuickASM.createAccessorGetter(classNode, "isIsInBed", "()Z", new MethodInsnNode(INVOKEVIRTUAL, EnumTransformerClasses.EntityPlayer.getNameRaw(), EnumTransformerMethods.isInBed.getName(), "()Z", false), IRETURN);
     }
 
 }

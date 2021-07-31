@@ -18,7 +18,9 @@
 
 package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
-public interface TGMLibGuiIngameAccessor {
+import xyz.matthewtgm.quickasm.interfaces.Accessor;
+
+public interface TGMLibGuiIngameAccessor extends Accessor {
     String getRecordPlaying();
     void setRecordPlaying(String recordPlaying);
     int getRecordPlayingUpFor();

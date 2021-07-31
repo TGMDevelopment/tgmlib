@@ -19,7 +19,9 @@
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.*;
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.quickasm.QuickASM;
+import xyz.matthewtgm.quickasm.interfaces.ITransformer;
+import xyz.matthewtgm.quickasm.types.BasicMethodInformation;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
@@ -28,7 +30,7 @@ import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class MinecraftTransformer implements TGMLibTransformer {
+public class MinecraftTransformer implements ITransformer {
 
     public String[] classes() {
         return new String[] {EnumTransformerClasses.Minecraft.getTransformerName()};
@@ -36,42 +38,23 @@ public class MinecraftTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (nameMatches(method.name, EnumTransformerMethods.dispatchKeyPresses, "Z")) {
-                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
+            if (QuickASM.nameMatches(method,
+                    new BasicMethodInformation(EnumTransformerMethods.dispatchKeyPresses.getName()),
+                    new BasicMethodInformation("Z", "()V"))) {
+                QuickASM.insertBefore(method, method.instructions.getFirst(), list -> {
                     list.add(new VarInsnNode(ALOAD, 0));
-                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "MinecraftHook", "dispatchTgmLibKeyPresses", "(" + EnumTransformerClasses.Minecraft.getName() + ")V", false));
-                }));
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/MinecraftHook", "dispatchTgmLibKeyPresses", "(" + EnumTransformerClasses.Minecraft.getName() + ")V", false));
+                });
             }
-            /*if (EnumTransformerMethods.runTick.matches(method)) {
-                Iterator<AbstractInsnNode> iterator = method.instructions.iterator();
-                while (iterator.hasNext()) {
-                    AbstractInsnNode next = iterator.next();
-                    if (next instanceof MethodInsnNode) {
-                        MethodInsnNode methodInsnNode = (MethodInsnNode) next;
-                        if (methodInsnNode.owner.equals("net/minecraftforge/fml/common/FMLCommonHandler") && methodInsnNode.name.contains("fireMouseInput")) {
-                            AsmHelper.debug(methodInsnNode.getNext().getNext().getNext());
-                            method.instructions.insertBefore(methodInsnNode.getNext().getNext().getNext(), mouseInputEvent());
-                        }
-                    }
-                }
-            }*/
         }
 
-        convertAccessorOrInvoker(classNode, TGMLibMinecraftAccessor.class);
-        createAccessorGetter(classNode, "getTimer", "()Lnet/minecraft/util/Timer;", EnumTransformerFields.timer.getField(EnumTransformerClasses.Minecraft), ARETURN);
-        createAccessorGetter(classNode, "isEnableGLErrorChecking", "()Z", EnumTransformerFields.enableGLErrorChecking.getField(EnumTransformerClasses.Minecraft), IRETURN);
-        createAccessorSetter(classNode, "setEnableGLErrorChecking", "(Z)V", ILOAD, EnumTransformerFields.enableGLErrorChecking.putField(EnumTransformerClasses.Minecraft));
-        createAccessorGetter(classNode, "getLeftClickCounter", "()I", EnumTransformerFields.leftClickCounter.getField(EnumTransformerClasses.Minecraft), IRETURN);
-        createAccessorSetter(classNode, "setLeftClickCounter", "(I)V", ILOAD, EnumTransformerFields.leftClickCounter.putField(EnumTransformerClasses.Minecraft));
-        createAccessorGetter(classNode, "getMyNetworkManager", "()Lnet/minecraft/network/NetworkManager;", EnumTransformerFields.myNetworkManager.getField(EnumTransformerClasses.Minecraft), ARETURN);
-
+        QuickASM.convertAccessor(classNode, TGMLibMinecraftAccessor.class);
+        QuickASM.createAccessorGetter(classNode, "getTimer", "()Lnet/minecraft/util/Timer;", EnumTransformerFields.timer.getField(EnumTransformerClasses.Minecraft), ARETURN);
+        QuickASM.createAccessorGetter(classNode, "isEnableGLErrorChecking", "()Z", EnumTransformerFields.enableGLErrorChecking.getField(EnumTransformerClasses.Minecraft), IRETURN);
+        QuickASM.createAccessorSetter(classNode, "setEnableGLErrorChecking", "(Z)V", ILOAD, EnumTransformerFields.enableGLErrorChecking.putField(EnumTransformerClasses.Minecraft));
+        QuickASM.createAccessorGetter(classNode, "getLeftClickCounter", "()I", EnumTransformerFields.leftClickCounter.getField(EnumTransformerClasses.Minecraft), IRETURN);
+        QuickASM.createAccessorSetter(classNode, "setLeftClickCounter", "(I)V", ILOAD, EnumTransformerFields.leftClickCounter.putField(EnumTransformerClasses.Minecraft));
+        QuickASM.createAccessorGetter(classNode, "getMyNetworkManager", "()Lnet/minecraft/network/NetworkManager;", EnumTransformerFields.myNetworkManager.getField(EnumTransformerClasses.Minecraft), ARETURN);
     }
-
-    /*private InsnList mouseInputEvent() {
-        InsnList list = new InsnList();
-        list.add(new VarInsnNode(ALOAD, 0));
-        list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "MinecraftHook", "callMouseInputEvent", "()V", false));
-        return list;
-    }*/
 
 }

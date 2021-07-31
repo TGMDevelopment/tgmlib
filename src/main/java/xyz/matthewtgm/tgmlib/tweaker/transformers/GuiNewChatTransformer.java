@@ -19,7 +19,9 @@
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.*;
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.quickasm.QuickASM;
+import xyz.matthewtgm.quickasm.interfaces.ITransformer;
+import xyz.matthewtgm.quickasm.types.BasicMethodInformation;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
@@ -27,7 +29,7 @@ import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class GuiNewChatTransformer implements TGMLibTransformer {
+public class GuiNewChatTransformer implements ITransformer {
 
     public String[] classes() {
         return new String[]{EnumTransformerClasses.GuiNewChat.getTransformerName()};
@@ -35,29 +37,34 @@ public class GuiNewChatTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (nameMatches(method.name, EnumTransformerMethods.printChatMessage) || nameMatches(method.name, "a") && method.desc.equals("(Leu;)V")) {
-                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
-                    /*
-                        if (GuiNewChatHook.callPrintEvent(this, chatComponent)) {
-                            return;
-                        }
-                    */
-                    list.add(new VarInsnNode(ALOAD, 0)); /* this */
-                    list.add(new VarInsnNode(ALOAD, 1)); /* chatComponent */
-                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "GuiNewChatHook", "callPrintEvent", "(" + EnumTransformerClasses.GuiNewChat.getName() + EnumTransformerClasses.IChatComponent.getName() + ")Z", false)); /* GuiNewChatHook.callPrintEvent(this, chatComponent) */
-                    LabelNode labelNode = new LabelNode(); /* if (GuiNewChatHook.callPrintEvent(this, chatComponent)) */
+            if (QuickASM.nameMatches(method,
+                    new BasicMethodInformation(EnumTransformerMethods.printChatMessage.getName()),
+                    new BasicMethodInformation("a", "(Leu;)V"))) {
+                QuickASM.insertBefore(method, method.instructions.getFirst(), list -> {
+                    list.add(new TypeInsnNode(NEW, "xyz/matthewtgm/tgmlib/events/PrintChatMessageEvent"));
+                    list.add(new InsnNode(DUP));
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(new VarInsnNode(ALOAD, 1));
+                    list.add(new MethodInsnNode(INVOKESPECIAL, "xyz/matthewtgm/tgmlib/events/PrintChatMessageEvent", "<init>", "(" + EnumTransformerClasses.GuiNewChat.getName() + EnumTransformerClasses.IChatComponent.getName() + ")V", false));
+                    list.add(new VarInsnNode(ASTORE, 2));
+
+                    list.add(new VarInsnNode(ALOAD, 2));
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/util/ForgeHelper", "postEvent", "(Lnet/minecraftforge/fml/common/eventhandler/Event;)Z", false));
+                    LabelNode labelNode = new LabelNode();
                     list.add(new JumpInsnNode(IFEQ, labelNode));
-                    list.add(new InsnNode(RETURN)); /* return; */
+                    list.add(new InsnNode(RETURN));
                     list.add(labelNode);
-                }));
+
+                    list.add(new VarInsnNode(ALOAD, 0));
+                    list.add(new VarInsnNode(ALOAD, 2));
+                    list.add(new FieldInsnNode(GETFIELD, "xyz/matthewtgm/tgmlib/events/PrintChatMessageEvent", "component", EnumTransformerClasses.IChatComponent.getName()));
+                    list.add(new VarInsnNode(ASTORE, 1));
+                });
             }
-            if (nameMatches(method.name, EnumTransformerMethods.clearChatMessages) || nameMatches(method.name, "a") && method.desc.equals("()V")) {
-                method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
-                    /*
-                        if (GuiNewChatHook.callClearChatEvent(this, this.drawnChatLines, this.chatLines, this.sentMessages)) {
-                            return;
-                        }
-                    */
+            if (QuickASM.nameMatches(method,
+                    new BasicMethodInformation(EnumTransformerMethods.clearChatMessages.getName()),
+                    new BasicMethodInformation("a", "()V"))) {
+                QuickASM.insertBefore(method, method.instructions.getFirst(), list -> {
                     list.add(new VarInsnNode(ALOAD, 0));
                     list.add(new VarInsnNode(ALOAD, 0));
                     list.add(EnumTransformerFields.drawnChatLines.getField(EnumTransformerClasses.GuiNewChat));
@@ -65,12 +72,12 @@ public class GuiNewChatTransformer implements TGMLibTransformer {
                     list.add(EnumTransformerFields.chatLines.getField(EnumTransformerClasses.GuiNewChat));
                     list.add(new VarInsnNode(ALOAD, 0));
                     list.add(EnumTransformerFields.sentMessages.getField(EnumTransformerClasses.GuiNewChat));
-                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "GuiNewChatHook", "callChatClearEvent", "(" + EnumTransformerClasses.GuiNewChat.getName() + "Ljava/util/List;Ljava/util/List;Ljava/util/List;)Z", false));
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/GuiNewChatHook", "callChatClearEvent", "(" + EnumTransformerClasses.GuiNewChat.getName() + "Ljava/util/List;Ljava/util/List;Ljava/util/List;)Z", false));
                     LabelNode labelNode = new LabelNode();
                     list.add(new JumpInsnNode(IFEQ, labelNode));
                     list.add(new InsnNode(RETURN));
                     list.add(labelNode);
-                }));
+                });
             }
         }
     }

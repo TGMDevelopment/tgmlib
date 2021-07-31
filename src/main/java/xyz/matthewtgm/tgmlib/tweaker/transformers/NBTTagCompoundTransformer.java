@@ -19,22 +19,23 @@
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.ClassNode;
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.quickasm.QuickASM;
+import xyz.matthewtgm.quickasm.interfaces.ITransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.hooks.TGMLibNBTTagCompoundAccessor;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class NBTTagCompoundTransformer implements TGMLibTransformer {
+public class NBTTagCompoundTransformer implements ITransformer {
 
     public String[] classes() {
         return new String[]{EnumTransformerClasses.NBTTagCompound.getTransformerName()};
     }
 
     public void transform(ClassNode classNode, String name) {
-        convertAccessorOrInvoker(classNode, TGMLibNBTTagCompoundAccessor.class);
-        createAccessorGetter(classNode, "getTagMap", "()Ljava/util/Map;", EnumTransformerFields.tagMap.getField(EnumTransformerClasses.NBTTagCompound), ARETURN);
+        QuickASM.convertAccessor(classNode, TGMLibNBTTagCompoundAccessor.class);
+        QuickASM.createAccessorGetter(classNode, "getTagMap", "()Ljava/util/Map;", EnumTransformerFields.tagMap.getField(EnumTransformerClasses.NBTTagCompound), ARETURN);
     }
 
 }

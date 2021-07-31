@@ -29,12 +29,8 @@ public class RenderHook {
         return MinecraftForge.EVENT_BUS.post(new EntityRenderCheckEvent<>(entity));
     }
 
-    public static void renderIndicators(Entity entity, double x, double y, double z, int maxDistance) {
-        TGMLib.getManager().getIndicatorManager().render(entity, x, y, z, maxDistance);
-    }
-
-    public static void callEntityFireRenderEvent(Entity entity) {
-        //MinecraftForge.EVENT_BUS.post();
+    public static void renderIndicators(Entity entity, String str, double x, double y, double z, int maxDistance) {
+        TGMLib.getManager().getIndicatorManager().render(entity, str, x, y, z, maxDistance);
     }
 
 }

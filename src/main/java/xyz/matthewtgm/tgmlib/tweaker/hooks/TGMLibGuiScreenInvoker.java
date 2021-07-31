@@ -19,10 +19,11 @@
 package xyz.matthewtgm.tgmlib.tweaker.hooks;
 
 import net.minecraft.client.gui.GuiButton;
+import xyz.matthewtgm.quickasm.interfaces.Invoker;
 
 import java.io.IOException;
 
-public interface TGMLibGuiScreenInvoker {
+public interface TGMLibGuiScreenInvoker extends Invoker {
     void invokeMouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException;
     void invokeMouseReleased(int mouseX, int mouseY, int state) throws IOException;
     void invokeKeyTyped(char typedChar, int keyCode) throws IOException;

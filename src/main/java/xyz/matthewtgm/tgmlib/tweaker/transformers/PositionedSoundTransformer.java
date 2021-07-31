@@ -19,22 +19,23 @@
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.ClassNode;
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.quickasm.QuickASM;
+import xyz.matthewtgm.quickasm.interfaces.ITransformer;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerFields;
 import xyz.matthewtgm.tgmlib.tweaker.hooks.TGMLibPositionedSoundAccessor;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class PositionedSoundTransformer implements TGMLibTransformer {
+public class PositionedSoundTransformer implements ITransformer {
 
     public String[] classes() {
         return new String[]{EnumTransformerClasses.PositionedSound.getTransformerName()};
     }
 
     public void transform(ClassNode classNode, String name) {
-        convertAccessorOrInvoker(classNode, TGMLibPositionedSoundAccessor.class);
-        createAccessorSetter(classNode, "setVolume", "(F)V", FLOAD, EnumTransformerFields.PositionedSound_volume.putField(EnumTransformerClasses.PositionedSound));
+        QuickASM.convertAccessor(classNode, TGMLibPositionedSoundAccessor.class);
+        QuickASM.createAccessorSetter(classNode, "setVolume", "(F)V", FLOAD, EnumTransformerFields.PositionedSound_volume.putField(EnumTransformerClasses.PositionedSound));
     }
 
 }

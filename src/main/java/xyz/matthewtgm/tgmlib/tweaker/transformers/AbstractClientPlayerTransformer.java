@@ -19,14 +19,16 @@
 package xyz.matthewtgm.tgmlib.tweaker.transformers;
 
 import org.objectweb.asm.tree.*;
-import xyz.matthewtgm.tgmlib.tweaker.TGMLibTransformer;
+import xyz.matthewtgm.quickasm.QuickASM;
+import xyz.matthewtgm.quickasm.interfaces.ITransformer;
+import xyz.matthewtgm.quickasm.types.BasicMethodInformation;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerClasses;
 import xyz.matthewtgm.tgmlib.tweaker.enums.EnumTransformerMethods;
 import xyz.matthewtgm.tgmlib.util.AsmHelper;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class AbstractClientPlayerTransformer implements TGMLibTransformer {
+public class AbstractClientPlayerTransformer implements ITransformer {
 
     public String[] classes() {
         return new String[]{EnumTransformerClasses.AbstractClientPlayer.getTransformerName()};
@@ -34,10 +36,12 @@ public class AbstractClientPlayerTransformer implements TGMLibTransformer {
 
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (nameMatches(method.name, EnumTransformerMethods.getLocationCape) || nameMatches(method.name, "k") && method.desc.equals("()Ljy;")) {
+            if (QuickASM.nameMatches(method,
+                    new BasicMethodInformation(EnumTransformerMethods.getLocationCape.getName()),
+                    new BasicMethodInformation("k", "()Ljy;"))) {
                 method.instructions.insertBefore(method.instructions.getFirst(), AsmHelper.createQuickInsnList(list -> {
                     list.add(new VarInsnNode(ALOAD, 0));
-                    list.add(new MethodInsnNode(INVOKESTATIC, hooksPackage() + "AbstractClientPlayerHook", "returnValue", "(" + EnumTransformerClasses.AbstractClientPlayer.getName() + ")Z", false));
+                    list.add(new MethodInsnNode(INVOKESTATIC, "xyz/matthewtgm/tgmlib/tweaker/hooks/AbstractClientPlayerHook", "returnValue", "(" + EnumTransformerClasses.AbstractClientPlayer.getName() + ")Z", false));
                     LabelNode labelNode = new LabelNode();
                     list.add(new JumpInsnNode(IFEQ, labelNode));
                     list.add(new InsnNode(ACONST_NULL));
