@@ -65,6 +65,7 @@ dependencies {
     shade('xyz.matthewtgm:TGMConfig:3.1.0')
     shade('xyz.matthewtgm:QuickASM:1.0.1')
     shade('org.java-websocket:Java-WebSocket:1.5.2')
+
     implementation('org.projectlombok:lombok:1.18.20')
     annotationProcessor('org.projectlombok:lombok:1.18.20')
 
@@ -103,6 +104,24 @@ shadowJar {
     relocate('okhttp3', mod_shaded + 'okhttp3')
     relocate('org.java_websocket', mod_shaded + 'websocket')
 
+    exclude('LICENSE.md')
+    exclude('pack.mcmeta')
+    exclude('dummyThing')
+    exclude('**/module-info.class')
+    exclude('*.so')
+    exclude('*.dylib')
+    exclude('*.dll')
+    exclude('*.jnilib')
+    exclude('ibxm/**')
+    exclude('com/jcraft/**')
+    exclude('org/lwjgl/**')
+    exclude('net/java/**')
+
+    exclude('META-INF/proguard/**')
+    exclude('META-INF/maven/**')
+    exclude('META-INF/versions/**')
+    exclude('META-INF/com.android.tools/**')
+
     archiveClassifier.set('')
 }
 
@@ -127,10 +146,10 @@ processResources {
     inputs.property 'modid', mod_id
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        expand (
-                'version':project.version,
-                'mcversion':project.minecraft.version,
-                'name':mod_name,
+        expand(
+                'version': project.version,
+                'mcversion': project.minecraft.version,
+                'name': mod_name,
                 'modid': mod_id
         )
     }
@@ -146,7 +165,7 @@ task moveResources {
         try {
             ant.move file: "${buildDir}/resources/main",
                     todir: "${buildDir}/classes/java"
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace()
         }
     }
