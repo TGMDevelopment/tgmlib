@@ -8,6 +8,10 @@ import xyz.matthewtgm.tgmlib.util.ForgeHelper
  * Heavily modified version of "kotlin-forge-api"'s event DSL
  * https://github.com/ChachyDev/kotlin-forge-api/blob/master/LICENSE
  *
+ * CHANGES:
+ * Renamed functions and classes.
+ * Compressed all files (~4) into this single file.
+ *
  * @author ChachyDev
  */
 
