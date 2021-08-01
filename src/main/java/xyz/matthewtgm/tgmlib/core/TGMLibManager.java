@@ -20,15 +20,19 @@ package xyz.matthewtgm.tgmlib.core;
 
 import lombok.Getter;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.java_websocket.framing.CloseFrame;
 import xyz.matthewtgm.json.entities.JsonArray;
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.util.JsonApiHelper;
+import xyz.matthewtgm.json.util.JsonHelper;
 import xyz.matthewtgm.tgmconfig.Configuration;
 import xyz.matthewtgm.tgmlib.TGMLib;
 import xyz.matthewtgm.tgmlib.players.PlayerDataManager;
@@ -52,11 +56,16 @@ import xyz.matthewtgm.tgmlib.util.global.GlobalMinecraft;
 import java.io.File;
 import java.net.URI;
 import java.util.Base64;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class TGMLibManager {
 
-    private static final boolean webSocketTest = false;
+    private static boolean webSocketTest = false;
+    private static boolean webSocketDebug = false;
+
+    private static final Logger logger = LogManager.getLogger(TGMLib.NAME + " (Manager)");
+
     @Getter
     private static boolean initialized;
     @Getter
@@ -82,6 +91,7 @@ public class TGMLibManager {
     private IndicatorManager indicatorManager;
 
     public void initialize(File mcDir) {
+        checkJvmProperties();
         if (initialized)
             return;
         TGMLibManager.mcDir = mcDir;
@@ -89,6 +99,17 @@ public class TGMLibManager {
         if (!tgmLibDir.exists() && !tgmLibDir.mkdirs())
             throw new IllegalStateException("Couldn't create TGMLib directory.");
         initialized = true;
+    }
+
+    private void checkJvmProperties() {
+        try {
+            if (!webSocketTest)
+                webSocketTest = Boolean.parseBoolean(System.getProperty("tgmLibWebSocketTest", "false"));
+            if (!webSocketDebug)
+                webSocketDebug = Boolean.parseBoolean(System.getProperty("tgmLibWebSocketDebug", "false"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void start() {
@@ -133,8 +154,15 @@ public class TGMLibManager {
             return URI.create("ws://localhost:2298");
         JsonObject object = JsonApiHelper.getJsonObject("https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/websocket.json", true);
         String uri = object.get("uri").getAsString();
+        if (webSocketDebug) {
+            logger.info(JsonHelper.makePretty(object));
+            logger.info("Pre: " + uri);
+        }
         for (int i = 0; i < object.get("loop").getAsInt(); i++)
             uri = new String(Base64.getDecoder().decode(uri));
+        if (webSocketDebug) {
+            logger.info("Post: " + uri);
+        }
         return URI.create(uri);
     }
 
