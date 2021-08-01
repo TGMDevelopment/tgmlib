@@ -23,6 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.launchwrapper.Launch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
@@ -63,6 +64,8 @@ public final class TGMLib {
             throw new IllegalStateException("JsonTGM is outdated! (minimum version is 2.4.1)");
         if (!ConfigVersion.CURRENT.isAtLeast(3, 2, 0))
             throw new IllegalStateException("TGMConfig is outdated! (minimum version is 3.2.0)");
+        /* Allow other mods to detect TGMLib, even if they don't use it. */
+        Launch.blackboard.put("tgmLib", true);
         ForgeHelper.registerEventListeners(
                 this,
                 new CommandQueue(),

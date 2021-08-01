@@ -16,22 +16,32 @@
  * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.exclusive;
+package xyz.matthewtgm.tgmlib.players.cosmetics;
 
-import net.minecraft.util.ResourceLocation;
-import xyz.matthewtgm.tgmlib.players.cosmetics.BaseCloakCosmetic;
-import xyz.matthewtgm.tgmlib.util.ResourceHelper;
+import xyz.matthewtgm.tgmlib.data.GifResourceLocation;
 
-public class StrebCloakCosmetic extends BaseCloakCosmetic {
+public class AnimatedCloakCosmetic extends CloakCosmetic {
 
-    public StrebCloakCosmetic() {
-        super("Strebbypatty Cloak", "STREB_CLOAK");
+    protected GifResourceLocation cachedGif;
+    protected int cachedFps;
+    private int tick;
+
+    public AnimatedCloakCosmetic(String name, String id, int fps, GifResourceLocation gif) {
+        super(name, id, gif.getTexture());
+        this.cachedGif = gif;
+        this.cachedFps = fps;
     }
 
-    public ResourceLocation texture() {
-        return ResourceHelper.get("tgmlib", "cosmetics/cloaks/exclusive/streb_cloak.png");
+    public void tick() {
+        if (fpsTick()) {
+            this.texture = cachedGif.update();
+            tick = 0;
+        }
+        tick++;
     }
 
-    public void tick() {}
+    private boolean fpsTick() {
+        return tick % cachedFps == 0;
+    }
 
 }

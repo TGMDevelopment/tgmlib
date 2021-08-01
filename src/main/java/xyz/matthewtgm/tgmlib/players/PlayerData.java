@@ -23,6 +23,10 @@ import lombok.Setter;
 
 public class PlayerData {
 
-    @Getter @Setter private PlayerCosmeticData cosmeticData;
+    @Getter private PlayerCosmeticData cosmeticData;
 
+    public PlayerData setCosmeticData(PlayerCosmeticData cosmeticData) {
+        this.cosmeticData = cosmeticData;
+        return this;
+    }
 }

@@ -19,7 +19,6 @@
 package xyz.matthewtgm.tgmlib.players.cosmetics;
 
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,20 +29,14 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.tgmlib.TGMLib;
-import xyz.matthewtgm.tgmlib.players.PlayerData;
-import xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.*;
-import xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.contentcreators.TwitchCloakCosmetic;
-import xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.contentcreators.YouTubCloakCosmetic;
-import xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.exclusive.MatthewTgmCloakCosmetic;
-import xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.exclusive.StrebCloakCosmetic;
-import xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.exclusive.WyvestCloakCosmetic;
-import xyz.matthewtgm.tgmlib.players.cosmetics.impl.cloaks.partners.DarkCheeseIglooCloakCosmetic;
-import xyz.matthewtgm.tgmlib.players.cosmetics.impl.wings.ChromaDragonWingsCosmetic;
-import xyz.matthewtgm.tgmlib.players.cosmetics.impl.wings.DragonWingsCosmetic;
-import xyz.matthewtgm.tgmlib.players.cosmetics.impl.wings.TgmWingsCosmetic;
+import xyz.matthewtgm.tgmlib.data.ColourRGB;
+import xyz.matthewtgm.tgmlib.data.GifResourceLocation;
+import xyz.matthewtgm.tgmlib.players.cosmetics.impl.DragonWingsCosmetic;
 import xyz.matthewtgm.tgmlib.socket.TGMLibSocket;
 import xyz.matthewtgm.tgmlib.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
+import xyz.matthewtgm.tgmlib.util.ColourHelper;
 import xyz.matthewtgm.tgmlib.util.PlayerRendererHelper;
+import xyz.matthewtgm.tgmlib.util.ResourceHelper;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -72,32 +65,36 @@ public class CosmeticManager extends Thread {
 
     private synchronized void initialize() {
         logger.info("Initializing cosmetics...");
-        cosmetics.add(new BeehiveCloakCosmetic());
-        cosmetics.add(new BoosterCloakCosmetic());
-        cosmetics.add(new BugHunterCloakCosmetic());
-        cosmetics.add(new DarkCheeseIglooCloakCosmetic());
-        cosmetics.add(new DiscordCloakCosmetic());
-        cosmetics.add(new DragonsEyeCloakCosmetic());
-        cosmetics.add(new EnchanterCloakCosmetic());
-        cosmetics.add(new DeveloperCloakCosmetic());
-        cosmetics.add(new KeycapCloakCosmetic());
-        cosmetics.add(new MatthewTgmCloakCosmetic());
-        cosmetics.add(new MinecoinCloakCosmetic());
-        cosmetics.add(new ModderCloakCosmetic());
-        cosmetics.add(new PartnerCloakCosmetic());
-        cosmetics.add(new StrebCloakCosmetic());
-        cosmetics.add(new SunsetSkyCloakCosmetic());
-        cosmetics.add(new TwitchCloakCosmetic());
-        cosmetics.add(new UwUCloakCosmetic());
-        cosmetics.add(new VaporwaveCloakCosmetic());
-        cosmetics.add(new WaterMeadowCloakCosmetic());
-        cosmetics.add(new WinterCloak());
-        cosmetics.add(new WyvestCloakCosmetic());
-        cosmetics.add(new YouTubCloakCosmetic());
+        cosmetics.add(new CloakCosmetic("Beehive Cloak", "BEEHIVE_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/beehive_cloak.png")));
+        cosmetics.add(new CloakCosmetic("Booster Cloak", "BOOSTER_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/booster_cloak.png")));
+        cosmetics.add(new CloakCosmetic("Bug Hunter Cloak", "BUG_HUNTER_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/bug_hunter_cloak.png")));
+        cosmetics.add(new AnimatedCloakCosmetic("DarkCheese's Igloo Cloak", "DARK_CHEESE_IGLOO_CLOAK", 3, new GifResourceLocation(ResourceHelper.get("tgmlib", "cosmetics/cloaks/partners/darkcheese_igloo_cloak.gif"))));
+        cosmetics.add(new CloakCosmetic("Developer Cloak", "DEVELOPER_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/developer_cloak.png")));
+        cosmetics.add(new AnimatedCloakCosmetic("Discord Cloak", "DISCORD_CLOAK", 1, new GifResourceLocation(ResourceHelper.get("tgmlib", "cosmetics/cloaks/discord_cloak.gif"))));
+        cosmetics.add(new CloakCosmetic("Dragon's Eye Cloak", "DRAGON_EYE_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/dragons_eye_cloak.png")));
+        cosmetics.add(new AnimatedCloakCosmetic("Enchanter Cloak", "ENCHANTER_CLOAK", 1, new GifResourceLocation(ResourceHelper.get("tgmlib", "cosmetics/cloaks/enchanter_cloak.gif"))));
+        cosmetics.add(new CloakCosmetic("Keycap Cloak", "KEYCAP_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/keycap_cloak.png")));
+        cosmetics.add(new CloakCosmetic("MatthewTGM Cloak", "MATTHEWTGM_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/exclusive/matthewtgm_cloak.png")));
+        cosmetics.add(new CloakCosmetic("Minecoin Cloak", "MINECOIN_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/minecoin_cloak.png")));
+        cosmetics.add(new CloakCosmetic("Modder Cloak", "MODDER_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/modder_cloak.png")));
+        cosmetics.add(new CloakCosmetic("Partner Cloak", "PARTNER_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/partner_cloak.png")));
+        cosmetics.add(new CloakCosmetic("Strebbypatty Cloak", "STREB_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/exclusive/streb_cloak.png")));
+        cosmetics.add(new CloakCosmetic("Sunset Sky Cloak", "SUNSET_SKY_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/sunset_sky_cloak.png")));
+        cosmetics.add(new CloakCosmetic("Twitch Cloak", "STANDARD_TWITCH_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/content_creators/twitch_cloak.png")));
+        cosmetics.add(new CloakCosmetic("UwU Cloak", "UWU_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/uwu_cloak.png")));
+        cosmetics.add(new AnimatedCloakCosmetic("Vaporwave Cloak", "VAPORWAVE_CLOAK", 1, new GifResourceLocation(ResourceHelper.get("tgmlib", "cosmetics/cloaks/vaporwave_cloak.gif"))));
+        cosmetics.add(new CloakCosmetic("Watery Meadow Cloak", "WATER_MEADOW_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/water_meadow_cloak.png")));
+        cosmetics.add(new CloakCosmetic("Winter Cloak", "WINTER_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/winter_cloak.png")));
+        cosmetics.add(new CloakCosmetic("Wyvest Cloak", "WYVEST_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/exclusive/wyvest_cloak.png")));
+        cosmetics.add(new CloakCosmetic("YouTube Cloak", "STANDARD_YOUTUBE_CLOAK", ResourceHelper.get("tgmlib", "cosmetics/cloaks/content_creators/youtube_cloak.png")));
 
-        cosmetics.add(new DragonWingsCosmetic());
-        cosmetics.add(new ChromaDragonWingsCosmetic());
-        cosmetics.add(new TgmWingsCosmetic());
+        cosmetics.add(new DragonWingsCosmetic("Dragon Wings", "DRAGON_WINGS", new ColourRGB(255, 255, 255), ResourceHelper.get("tgmlib", "cosmetics/wings/dragon_wings.png")));
+        cosmetics.add(new DragonWingsCosmetic("Chroma Dragon Wings", "CHROMA_DRAGON_WINGS", new ColourRGB(255, 255, 255), ResourceHelper.get("tgmlib", "cosmetics/wings/dragon_wings.png")) {
+            public void tick() {
+                this.colour = new ColourRGB(ColourHelper.timeBasedChroma()).setA_builder(255);
+            }
+        });
+        cosmetics.add(new DragonWingsCosmetic("TGM Wings", "TGM_WINGS", new ColourRGB(255, 255, 255), ResourceHelper.get("tgmlib", "cosmetics/wings/tgm_wings.png")));
         logger.info("Cosmetics initialized.");
     }
 

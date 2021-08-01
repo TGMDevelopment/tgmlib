@@ -115,7 +115,7 @@ public class GifResourceLocation {
         return textures[currentFrame];
     }
 
-    public void update() {
+    public ResourceLocation update() {
         if (currentTick > fps) {
             currentTick = 0;
             currentFrame++;
@@ -124,6 +124,7 @@ public class GifResourceLocation {
             }
         }
         currentTick++;
+        return getTexture();
     }
 
 }

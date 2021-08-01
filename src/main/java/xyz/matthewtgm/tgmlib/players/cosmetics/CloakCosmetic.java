@@ -18,7 +18,6 @@
 
 package xyz.matthewtgm.tgmlib.players.cosmetics;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -30,19 +29,21 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import xyz.matthewtgm.tgmlib.util.RenderHelper;
 
-public abstract class BaseCloakCosmetic extends BaseCosmetic {
+public class CloakCosmetic extends BaseCosmetic {
 
-    private final CloakModel model = new CloakModel();
+    private final CloakModel model;
+    protected ResourceLocation texture;
 
-    public BaseCloakCosmetic(String name, String id) {
+    public CloakCosmetic(String name, String id, ResourceLocation texture) {
         super(name, id, CosmeticType.CLOAK);
+        this.model = new CloakModel();
+        this.texture = texture;
     }
 
-    public abstract ResourceLocation texture();
     public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float tickAge, float netHeadYaw, float netHeadPitch, float scale) {
         if (player.hasPlayerInfo() && !player.isInvisible() && player.isWearing(EnumPlayerModelParts.CAPE) && player.getLocationCape() == null) {
             GlStateManager.color(1f, 1f, 1f, 1f);
-            RenderHelper.bindTexture(texture());
+            RenderHelper.bindTexture(texture);
             GlStateManager.pushMatrix();
             GlStateManager.translate(0f, 0f, 0.125f);
             double d0 = player.prevChasingPosX + (player.chasingPosX - player.prevChasingPosX) * (double)partialTicks - (player.prevPosX + (player.posX - player.prevPosX) * (double)partialTicks);
@@ -76,6 +77,8 @@ public abstract class BaseCloakCosmetic extends BaseCosmetic {
             GlStateManager.popMatrix();
         }
     }
+
+    public void tick() {}
 
     private static class CloakModel extends ModelBase {
 

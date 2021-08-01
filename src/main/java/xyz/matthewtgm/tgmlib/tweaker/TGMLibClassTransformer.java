@@ -42,9 +42,6 @@ public class TGMLibClassTransformer extends QuickClassTransformer {
         }
         created = true;
 
-        /* Allow other mods to detect TGMLib, even if they don't use it. */
-        Launch.blackboard.put("tgmLib", true);
-
         addTransformer(new AbstractClientPlayerTransformer());
         addTransformer(new BossStatusTransformer());
         addTransformer(new EntityLivingBaseTransformer());
