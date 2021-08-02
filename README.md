@@ -1,6 +1,6 @@
 <div align="center">
 
-# TGMLib - Forge Modding Library
+# Requisite - Forge Modding Library
 [![forthebadge](https://forthebadge.com/images/badges/makes-people-smile.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/fixed-bugs.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/check-it-out.svg)](https://forthebadge.com)
@@ -12,7 +12,7 @@
 </div>
 
 ## What is it?
-TGMLib is a library for making MinecraftForge mods, including utilities for most needs and other commonly used components!
+Requisite is a library for making MinecraftForge mods, including utilities for most needs and other commonly used components!
 
 ## Why should I use it?
 There's no reason in specific. The library is just for your own QoL.
