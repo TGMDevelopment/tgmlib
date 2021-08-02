@@ -72,7 +72,9 @@ dependencies {
     /* Dependencies for cutting other mods' file sizes. */
     shade('com.github.marcoacierno:pastebin-java-api:v0.2.1')
     shade('org.spongepowered:mixin:0.7.11-SNAPSHOT')
-    shade('com.squareup.okhttp3:okhttp:4.9.1')
+    shade('com.squareup.okhttp3:okhttp:4.9.1') {
+        exclude module: 'kotlin-stdlib-jdk8'
+    }
     shade('org.kohsuke:github-api:1.132')
 
     shade('org.jetbrains.kotlin:kotlin-stdlib-jdk8')
@@ -122,9 +124,9 @@ shadowJar {
     exclude('META-INF/versions/**')
     exclude('META-INF/com.android.tools/**')
     
-    exclude '**/*.kotlin_metadata'
-    exclude '**/*.kotlin_module'
-    exclude '**/*.kotlin_builtins'
+    exclude('**/*.kotlin_metadata')
+    exclude('**/*.kotlin_module')
+    exclude('**/*.kotlin_builtins')
 
     archiveClassifier.set('')
 }
