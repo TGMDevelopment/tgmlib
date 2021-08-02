@@ -1,19 +1,19 @@
 /*
- * Copyright (C) MatthewTGM
- * This file is part of TGMLib <https://github.com/TGMDevelopment/TGMLib>.
+ * Requisite - Minecraft library mod
+ * Copyright (C) 2021 MatthewTGM
  *
- * TGMLib is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
+ * Requisite is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 2.1 of the License, or
  * (at your option) any later version.
  *
- * TGMLib is distributed in the hope that it will be useful,
+ * Requisite is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with TGMLib. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
 plugins {
@@ -60,7 +60,7 @@ configurations {
 
 /* Define dependencies. */
 dependencies {
-    /* TGMLib dependencies. */
+    /* Requisite dependencies. */
     shade('xyz.matthewtgm:JsonTGM:2.8.0')
     shade('xyz.matthewtgm:TGMConfig:3.2.0')
     shade('xyz.matthewtgm:QuickASM:1.0.1')
@@ -87,7 +87,7 @@ jar {
     enabled = false
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest.attributes(
-            'FMLCorePlugin': 'xyz.matthewtgm.tgmlib.core.mod.TGMLibLoadingPlugin',
+            'FMLCorePlugin': 'xyz.matthewtgm.requisite.core.mod.RequisiteLoadingPlugin',
             'TweakOrder': 0,
             'FMLCorePluginContainsFMLMod': true,
             'ForceLoadAsMod': true,
