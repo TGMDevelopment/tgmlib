@@ -86,11 +86,12 @@ jar {
     enabled = false
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest.attributes(
-            'FMLCorePlugin': 'xyz.matthewtgm.requisite.core.mod.RequisiteLoadingPlugin',
-            'TweakOrder': 0,
+            'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+            'MixinConfigs': 'mixins.requisite.json',
             'FMLCorePluginContainsFMLMod': true,
             'ForceLoadAsMod': true,
-            'ModSide': 'CLIENT'
+            'ModSide': 'CLIENT',
+            'TweakOrder': 0
     )
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
 }

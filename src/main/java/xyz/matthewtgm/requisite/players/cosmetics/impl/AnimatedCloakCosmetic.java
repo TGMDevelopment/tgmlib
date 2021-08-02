@@ -16,7 +16,7 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.players.cosmetics;
+package xyz.matthewtgm.requisite.players.cosmetics.impl;
 
 import xyz.matthewtgm.requisite.data.GifResourceLocation;
 

@@ -16,7 +16,7 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.players.cosmetics;
+package xyz.matthewtgm.requisite.players.cosmetics.impl;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
@@ -27,6 +27,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import xyz.matthewtgm.requisite.players.cosmetics.BaseCosmetic;
+import xyz.matthewtgm.requisite.players.cosmetics.CosmeticType;
 import xyz.matthewtgm.requisite.util.RenderHelper;
 
 public class CloakCosmetic extends BaseCosmetic {

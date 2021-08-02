@@ -31,6 +31,8 @@ import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.requisite.Requisite;
 import xyz.matthewtgm.requisite.data.ColourRGB;
 import xyz.matthewtgm.requisite.data.GifResourceLocation;
+import xyz.matthewtgm.requisite.players.cosmetics.impl.AnimatedCloakCosmetic;
+import xyz.matthewtgm.requisite.players.cosmetics.impl.CloakCosmetic;
 import xyz.matthewtgm.requisite.players.cosmetics.impl.DragonWingsCosmetic;
 import xyz.matthewtgm.requisite.networking.RequisiteClientSocket;
 import xyz.matthewtgm.requisite.networking.packets.impl.cosmetics.CosmeticsRetrievePacket;
@@ -43,12 +45,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class CosmeticManager extends Thread {
 
-    @Getter
-    private static boolean loaded;
-    @Getter
-    private final List<BaseCosmetic> cosmetics = new ArrayList<>();
-    @Getter
-    private static final List<String> madeRequestsFor = new ArrayList<>();
+    @Getter private static boolean loaded;
+    @Getter private final List<BaseCosmetic> cosmetics = new ArrayList<>();
+    @Getter private static final List<String> madeRequestsFor = new ArrayList<>();
     private RequisiteClientSocket tgmLibSocket;
     private final Logger logger = LogManager.getLogger(Requisite.NAME + " (" + getClass().getSimpleName() + ")");
 
@@ -108,7 +107,6 @@ public class CosmeticManager extends Thread {
     public void onEntityJoinedWorld(EntityJoinWorldEvent event) {
         if (madeRequestsFor.size() > 200)
             madeRequestsFor.clear();
-
         if (event.entity instanceof EntityPlayer && !Requisite.getManager().getDataManager().getDataMap().containsKey(event.entity.getUniqueID().toString()) && !madeRequestsFor.contains(event.entity.getUniqueID().toString()))
             get(event.entity.getUniqueID().toString());
     }
