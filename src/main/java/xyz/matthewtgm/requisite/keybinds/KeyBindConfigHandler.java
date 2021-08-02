@@ -21,6 +21,7 @@ package xyz.matthewtgm.requisite.keybinds;
 import lombok.Getter;
 import xyz.matthewtgm.json.entities.JsonElement;
 import xyz.matthewtgm.json.entities.JsonObject;
+import xyz.matthewtgm.requisite.Requisite;
 import xyz.matthewtgm.tgmconfig.Configuration;
 
 import java.io.File;
@@ -34,7 +35,7 @@ public class KeyBindConfigHandler {
     }
 
     public void update() {
-        for (KeyBind keyBind : KeyBindManager.getKeyBinds()) {
+        for (KeyBind keyBind : Requisite.getManager().getKeyBindManager().getKeyBinds()) {
             if (!configuration.hasKey(keyBind.category()))
                 update(keyBind);
             if (!configuration.getAsJsonObject(keyBind.category()).hasKey(keyBind.name()))

@@ -21,17 +21,17 @@ package xyz.matthewtgm.requisite.gui.menus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import xyz.matthewtgm.requisite.Requisite;
-import xyz.matthewtgm.requisite.gui.GuiTGMLibBase;
+import xyz.matthewtgm.requisite.gui.GuiRequisiteBase;
 import xyz.matthewtgm.requisite.gui.GuiTransFadingButton;
 import xyz.matthewtgm.requisite.socket.packets.impl.other.GameOpenPacket;
 import xyz.matthewtgm.requisite.util.ChatColour;
 import xyz.matthewtgm.requisite.util.EnhancedFontRenderer;
 import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;
 
-public class GuiTGMLibLogging extends GuiTGMLibBase {
+public class GuiRequisiteLogging extends GuiRequisiteBase {
 
-    public GuiTGMLibLogging(GuiScreen parent) {
-        super("Logging Prompt", parent);
+    public GuiRequisiteLogging(GuiScreen parent) {
+        super(Requisite.NAME + " - Logging Prompt", parent);
     }
 
     public void initialize() {
@@ -53,7 +53,7 @@ public class GuiTGMLibLogging extends GuiTGMLibBase {
     }
 
     public void draw(int mouseX, int mouseY, float partialTicks) {
-        EnhancedFontRenderer.drawCenteredStyledText("Will you allow TGMLib", width / 2, height / 2 - 60, -1);
+        EnhancedFontRenderer.drawCenteredStyledText("Will you allow " + Requisite.NAME, width / 2, height / 2 - 60, -1);
         EnhancedFontRenderer.drawCenteredStyledText("to log data such as", width / 2, height / 2 - 50, -1);
         EnhancedFontRenderer.drawCenteredStyledText("when you log-in/out?", width / 2, height / 2 - 40, -1);
         EnhancedFontRenderer.drawCenteredStyledText(ChatColour.RED + "(denying this will stop", width / 2, height / 2 - 30, -1);

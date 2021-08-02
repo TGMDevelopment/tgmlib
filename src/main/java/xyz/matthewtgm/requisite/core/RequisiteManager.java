@@ -26,6 +26,7 @@ import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.util.JsonApiHelper;
 import xyz.matthewtgm.json.util.JsonHelper;
 import xyz.matthewtgm.requisite.Requisite;
+import xyz.matthewtgm.requisite.keybinds.KeyBindManager;
 import xyz.matthewtgm.requisite.players.PlayerDataManager;
 import xyz.matthewtgm.requisite.players.cosmetics.CosmeticManager;
 import xyz.matthewtgm.requisite.data.VersionChecker;
@@ -60,6 +61,7 @@ public class RequisiteManager {
     @Getter private KeyBindConfigHandler keyBindConfigHandler;
     @Getter private DataHandler dataHandler;
     @Getter private RequisiteClientSocket webSocket;
+    @Getter private KeyBindManager keyBindManager = new KeyBindManager();
     @Getter private PlayerDataManager dataManager;
     @Getter private CosmeticManager cosmeticManager;
     @Getter private IndicatorManager indicatorManager;

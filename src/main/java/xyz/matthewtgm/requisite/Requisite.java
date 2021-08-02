@@ -34,11 +34,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 import xyz.matthewtgm.json.JsonVersion;
+import xyz.matthewtgm.requisite.gui.menus.GuiRequisiteMain;
 import xyz.matthewtgm.tgmconfig.ConfigVersion;
 import xyz.matthewtgm.requisite.commands.CommandManager;
 import xyz.matthewtgm.requisite.core.RequisiteManager;
-import xyz.matthewtgm.requisite.gui.menus.GuiTGMLibLogging;
-import xyz.matthewtgm.requisite.gui.menus.GuiTGMLibMain;
+import xyz.matthewtgm.requisite.gui.menus.GuiRequisiteLogging;
 import xyz.matthewtgm.requisite.keybinds.KeyBind;
 import xyz.matthewtgm.requisite.keybinds.KeyBindManager;
 import xyz.matthewtgm.requisite.util.*;
@@ -99,7 +99,7 @@ public final class Requisite {
                 buttonList.add(new GuiButton(IntegerHelper.getRandomNumber(2346, 345671), screen.width / 2 - 50, screen.height - 24, 100, 20, "TGMLib") {
                     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                         if (super.mousePressed(mc, mouseX, mouseY))
-                            mc.displayGuiScreen(new GuiTGMLibMain(screen));
+                            mc.displayGuiScreen(new GuiRequisiteMain(screen));
                         return false;
                     }
                 });
@@ -107,7 +107,7 @@ public final class Requisite {
             public void draw(GuiScreen screen, int mouseX, int mouseY, float partialTicks) {}
         });
         CommandManager.register(RequisiteCommand.class);
-        KeyBindManager.register(new KeyBind(Keyboard.KEY_H) {
+        manager.getKeyBindManager().register(new KeyBind(Keyboard.KEY_H) {
             public String name() {
                 return "Requisite";
             }
@@ -115,7 +115,7 @@ public final class Requisite {
                 return "Requisite";
             }
             public void pressed() {
-                GuiHelper.open(new GuiTGMLibMain());
+                GuiHelper.open(new GuiRequisiteMain());
             }
             public void held() {}
             public void released() {}
@@ -125,7 +125,7 @@ public final class Requisite {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onGuiOpen(GuiScreenEvent.InitGuiEvent event) {
         if (event.gui instanceof GuiMainMenu && !manager.getDataHandler().isReceivedPrompt())
-            GlobalMinecraft.displayGuiScreen(new GuiTGMLibLogging(event.gui));
+            GlobalMinecraft.displayGuiScreen(new GuiRequisiteLogging(event.gui));
     }
 
 }

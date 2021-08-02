@@ -26,19 +26,19 @@ import java.util.List;
 
 public class KeyBindManager {
 
-    @Getter private static final List<KeyBind> keyBinds = new ArrayList<>();
+    @Getter private final List<KeyBind> keyBinds = new ArrayList<>();
 
-    public static void register(KeyBind keyBind) {
+    public void register(KeyBind keyBind) {
         keyBinds.add(keyBind);
         Requisite.getManager().getKeyBindConfigHandler().update();
     }
 
-    public static void unregister(String name) {
+    public void unregister(String name) {
         keyBinds.stream().filter(keyBind -> keyBind.name().equalsIgnoreCase(name)).findFirst().ifPresent(keyBinds::remove);
         Requisite.getManager().getKeyBindConfigHandler().update();
     }
 
-    public static void unregister(KeyBind keyBind) {
+    public void unregister(KeyBind keyBind) {
         unregister(keyBind.name());
     }
 

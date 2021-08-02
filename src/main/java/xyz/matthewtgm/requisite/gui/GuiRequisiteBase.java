@@ -33,14 +33,13 @@ import java.util.ConcurrentModificationException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
-public abstract class GuiTGMLibBase extends GuiScreen {
+public abstract class GuiRequisiteBase extends GuiScreen {
 
     private String title;
     private int titleColour = -1;
     @Getter private GuiScreen parent;
 
     protected HitBox backgroundHitBox;
-    protected HitBox backgroundOutlineHitBox;
 
     /* Settings. */
     @Getter private boolean refreshing;
@@ -49,25 +48,25 @@ public abstract class GuiTGMLibBase extends GuiScreen {
         return false;
     }
 
-    public GuiTGMLibBase(String title, int titleColour, GuiScreen parent) {
+    public GuiRequisiteBase(String title, int titleColour, GuiScreen parent) {
         this.title = title;
         this.titleColour = titleColour;
         this.parent = parent;
     }
 
-    public GuiTGMLibBase(String title, GuiScreen parent) {
+    public GuiRequisiteBase(String title, GuiScreen parent) {
         this(title, -1, parent);
     }
 
-    public GuiTGMLibBase(String title, int titleColour) {
+    public GuiRequisiteBase(String title, int titleColour) {
         this(title, titleColour, null);
     }
 
-    public GuiTGMLibBase(String title) {
+    public GuiRequisiteBase(String title) {
         this(title, -1, null);
     }
 
-    private GuiTGMLibBase() {}
+    private GuiRequisiteBase() {}
 
     public abstract void initialize();
     public abstract void draw(int mouseX, int mouseY, float partialTicks);
@@ -82,7 +81,6 @@ public abstract class GuiTGMLibBase extends GuiScreen {
         buttonList.clear();
 
         backgroundHitBox = createBackgroundHitBox();
-        backgroundOutlineHitBox = createBackgroundOutlineHitBox(backgroundHitBox);
         buttonList.add(new GuiTransFadingImageButton(0, backgroundHitBox.getIntX() + 2, backgroundHitBox.getIntY() + 2, 30, 30, ResourceHelper.get("tgmlib", "gui/icons/exit_icon.png")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY))
@@ -97,16 +95,15 @@ public abstract class GuiTGMLibBase extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         GuiHelper.drawBackground(this, 120);
 
-        if (backgroundHitBox == null || backgroundOutlineHitBox == null)
+        if (backgroundHitBox == null)
             return;
 
         /* Background. */
         RenderHelper.drawRect(backgroundHitBox.getIntX(), backgroundHitBox.getIntY(), backgroundHitBox.getIntWidth(), backgroundHitBox.getIntHeight(), backgroundColour());
-        RenderHelper.drawHollowRect(backgroundOutlineHitBox.getIntX(), backgroundOutlineHitBox.getIntY(), backgroundOutlineHitBox.getIntWidth(), backgroundOutlineHitBox.getIntHeight(), backgroundOutlineColour());
-        RenderHelper.drawHollowRect(backgroundHitBox.getIntX(), backgroundHitBox.getIntY(), backgroundHitBox.getIntWidth() - backgroundHitBox.getIntX(), backgroundHitBox.getIntY() + 14, backgroundOutlineColour());
+        RenderHelper.drawHollowRect(backgroundHitBox.getIntX(), backgroundHitBox.getIntY(), backgroundHitBox.getIntWidth() - backgroundHitBox.getIntX(), backgroundHitBox.getIntY() + EnhancedFontRenderer.getFontHeight() * 4, foregroundDividerColour());
 
         /* Text. */
-        EnhancedFontRenderer.drawCenteredStyledScaledText(title, 2, width / 2, backgroundOutlineHitBox.getY() + 10, titleColour);
+        EnhancedFontRenderer.drawCenteredStyledScaledText(title, 2, width / 2, backgroundHitBox.getY() + EnhancedFontRenderer.getFontHeight(), titleColour);
 
         /* Default. */
         draw(mouseX, mouseY, partialTicks);
@@ -150,11 +147,7 @@ public abstract class GuiTGMLibBase extends GuiScreen {
     }
 
     private HitBox createBackgroundHitBox() {
-        return new HitBox(20, 20, width - 30,height - 30);
-    }
-
-    private HitBox createBackgroundOutlineHitBox(HitBox backgroundHitBox) {
-        return new HitBox(backgroundHitBox.getX(), backgroundHitBox.getY(), backgroundHitBox.getWidth() - backgroundHitBox.getX(), backgroundHitBox.getHeight() - backgroundHitBox.getY());
+        return new HitBox(0, 0, width,height);
     }
 
     public boolean doesGuiPauseGame() {
@@ -189,7 +182,7 @@ public abstract class GuiTGMLibBase extends GuiScreen {
         return Requisite.getManager().getConfigHandler().isLightMode() ? new Color(213, 213, 213, 189).getRGB() : new Color(87, 87, 87, 189).getRGB();
     }
 
-    private int backgroundOutlineColour() {
+    private int foregroundDividerColour() {
         return Requisite.getManager().getConfigHandler().isLightMode() ? new Color(246, 246, 246, 234).getRGB() : new Color(120, 120, 120, 234).getRGB();
     }
 

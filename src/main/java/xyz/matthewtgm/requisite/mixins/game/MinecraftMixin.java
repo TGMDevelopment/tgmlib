@@ -45,9 +45,10 @@ public class MinecraftMixin {
                 Keyboard.getKeyCount(),
                 Keyboard.isRepeatEvent(),
                 Keyboard.areRepeatEventsEnabled()
-        )))
+        ))) {
             ci.cancel();
-        List<KeyBind> keyBinds = KeyBindManager.getKeyBinds();
+        }
+        List<KeyBind> keyBinds = Requisite.getManager().getKeyBindManager().getKeyBinds();
         boolean wereRepeatEventsEnabled = Keyboard.areRepeatEventsEnabled();
         Keyboard.enableRepeatEvents(true);
         int key = Keyboard.getEventKey();

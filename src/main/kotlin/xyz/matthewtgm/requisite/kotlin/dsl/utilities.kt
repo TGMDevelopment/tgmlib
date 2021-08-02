@@ -27,6 +27,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.Event
 import xyz.matthewtgm.json.entities.JsonObject
 import xyz.matthewtgm.json.util.JsonHelper
+import xyz.matthewtgm.requisite.Requisite
 import xyz.matthewtgm.requisite.data.ColourRGB
 import xyz.matthewtgm.requisite.keybinds.KeyBind
 import xyz.matthewtgm.requisite.keybinds.KeyBindManager
@@ -69,10 +70,6 @@ fun ResourceLocation.toInputStream(): InputStream = ResourceHelper.toInputStream
 /* net.minecraft.client.renderer.texture.DynamicTexture */
 fun DynamicTexture.convert(name: String): ResourceLocation = GlobalMinecraft.getTextureManager().getDynamicTextureLocation(name, this)
 fun DynamicTexture.bind(name: String) = GlobalMinecraft.getTextureManager().bindTexture(GlobalMinecraft.getTextureManager().getDynamicTextureLocation(name, this))
-
-/* xyz.matthewtgm.tgmlib.keybinds.KeyBind */
-fun KeyBind.register() = KeyBindManager.register(this)
-fun KeyBind.unregister() = KeyBindManager.unregister(name())
 
 /* java.awt.Color */
 fun Color.toColourRGB(): ColourRGB = ColourRGB(red, green, blue, alpha)

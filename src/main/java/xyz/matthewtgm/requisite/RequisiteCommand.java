@@ -22,10 +22,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.matthewtgm.requisite.commands.advanced.Command;
 import xyz.matthewtgm.requisite.data.ColourRGB;
-import xyz.matthewtgm.requisite.gui.menus.GuiTGMLibCosmetics;
-import xyz.matthewtgm.requisite.gui.menus.GuiTGMLibKeyBinds;
-import xyz.matthewtgm.requisite.gui.menus.GuiTGMLibMain;
-import xyz.matthewtgm.requisite.gui.menus.GuiTGMLibSettings;
+import xyz.matthewtgm.requisite.gui.menus.GuiRequisiteCosmetics;
+import xyz.matthewtgm.requisite.gui.menus.GuiRequisiteKeyBinds;
+import xyz.matthewtgm.requisite.gui.menus.GuiRequisiteMain;
+import xyz.matthewtgm.requisite.gui.menus.GuiRequisiteSettings;
 import xyz.matthewtgm.requisite.socket.packets.impl.announcer.AnnouncementPacket;
 import xyz.matthewtgm.requisite.util.*;
 import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Command(name = "tgmlib", autoGenTabCompleteOptions = true)
+@Command(name = "requisite", autoGenTabCompleteOptions = true)
 public final class RequisiteCommand {
 
     private final Pattern announcementPattern = Pattern.compile("(\\\".+\\\") (\\\".+\\\") (\\\".+\\\")");
@@ -46,22 +46,22 @@ public final class RequisiteCommand {
 
     @Command.Process
     private void process() {
-        GuiHelper.open(new GuiTGMLibMain(GlobalMinecraft.getCurrentScreen()));
+        GuiHelper.open(new GuiRequisiteMain(GlobalMinecraft.getCurrentScreen()));
     }
 
     @Command.Argument(name = "cosmetics")
     private void cosmetics() {
-        GuiHelper.open(new GuiTGMLibCosmetics(GlobalMinecraft.getCurrentScreen()));
+        GuiHelper.open(new GuiRequisiteCosmetics(GlobalMinecraft.getCurrentScreen()));
     }
 
     @Command.Argument(name = "keybinds", aliases = "keybindings")
     private void keybinds() {
-        GuiHelper.open(new GuiTGMLibKeyBinds(GlobalMinecraft.getCurrentScreen()));
+        GuiHelper.open(new GuiRequisiteKeyBinds(GlobalMinecraft.getCurrentScreen()));
     }
 
     @Command.Argument(name = "settings", aliases = {"config", "options"})
     private void settings() {
-        GuiHelper.open(new GuiTGMLibSettings(GlobalMinecraft.getCurrentScreen()));
+        GuiHelper.open(new GuiRequisiteSettings(GlobalMinecraft.getCurrentScreen()));
     }
 
     @Command.Argument(name = "announce")
@@ -91,7 +91,7 @@ public final class RequisiteCommand {
         Notifications.push("Hello, World 2!", "I'm an even cooler notification with text wrappinggg YOOOOOOOOOO!", notification -> {
             notification.title = "Loading...";
             notification.description = "";
-            GuiHelper.open(new GuiTGMLibMain(null));
+            GuiHelper.open(new GuiRequisiteMain(null));
             notification.close();
         });
         Notifications.push("Hello, World 3!", "I'm a custom coloured notification!", new Notifications.Notification.NotificationColour(null, new ColourRGB(0, 0, 255)));

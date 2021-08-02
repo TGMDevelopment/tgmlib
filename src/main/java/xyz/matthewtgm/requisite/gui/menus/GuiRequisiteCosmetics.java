@@ -28,11 +28,11 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import xyz.matthewtgm.requisite.Requisite;
 import xyz.matthewtgm.requisite.core.RequisiteManager;
+import xyz.matthewtgm.requisite.gui.GuiRequisiteBase;
 import xyz.matthewtgm.requisite.players.PlayerCosmeticData;
 import xyz.matthewtgm.requisite.players.cosmetics.BaseCosmetic;
 import xyz.matthewtgm.requisite.players.cosmetics.CosmeticManager;
 import xyz.matthewtgm.requisite.players.cosmetics.CosmeticType;
-import xyz.matthewtgm.requisite.gui.GuiTGMLibBase;
 import xyz.matthewtgm.requisite.gui.GuiTransFadingButton;
 import xyz.matthewtgm.requisite.gui.GuiTransFadingImageButton;
 import xyz.matthewtgm.requisite.socket.packets.impl.cosmetics.CosmeticsTogglePacket;
@@ -45,7 +45,7 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class GuiTGMLibCosmetics extends GuiTGMLibBase {
+public class GuiRequisiteCosmetics extends GuiRequisiteBase {
 
     private List<GuiButton> cosmeticButtonList = new ArrayList<>();
     private int lastButtonId;
@@ -58,8 +58,8 @@ public class GuiTGMLibCosmetics extends GuiTGMLibBase {
     private final List<Integer> scrollCache = new ArrayList<>();
     private int scrollAmount;
 
-    public GuiTGMLibCosmetics(GuiScreen parent) {
-        super("Cosmetics", new Color(0, 179, 0).getRGB(), parent);
+    public GuiRequisiteCosmetics(GuiScreen parent) {
+        super(Requisite.NAME + " - Cosmetics", new Color(0, 179, 0).getRGB(), parent);
     }
 
     public void initialize() {
@@ -113,9 +113,9 @@ public class GuiTGMLibCosmetics extends GuiTGMLibBase {
         });
 
         AtomicInteger buttonId = new AtomicInteger(4);
-        AtomicInteger typeY = new AtomicInteger(backgroundOutlineHitBox.getIntY() + 40);
+        AtomicInteger typeY = new AtomicInteger(backgroundHitBox.getIntY() + 40);
         for (CosmeticType type : CosmeticType.values()) {
-            buttonList.add(new GuiTransFadingButton(buttonId.getAndAdd(1), backgroundOutlineHitBox.getIntX() + 4, typeY.getAndAdd(22), 120, 20, type.getName()) {
+            buttonList.add(new GuiTransFadingButton(buttonId.getAndAdd(1), backgroundHitBox.getIntX() + 4, typeY.getAndAdd(22), 120, 20, type.getName()) {
                 public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                     if (super.mousePressed(mc, mouseX, mouseY)) {
                         currentType = type;
@@ -167,11 +167,11 @@ public class GuiTGMLibCosmetics extends GuiTGMLibBase {
     private void cosmeticButtons(int mouseX, int mouseY) {
         List<GuiButton> cosmeticButtonList = new ArrayList<>();
         AtomicInteger buttonId = new AtomicInteger(lastButtonId);
-        AtomicInteger cosmeticY = new AtomicInteger(backgroundOutlineHitBox.getIntY() + 40);
+        AtomicInteger cosmeticY = new AtomicInteger(backgroundHitBox.getIntY() + 40);
         handleScrolling(cosmeticY);
         for (BaseCosmetic owned : cachedOwnedCosmetics) {
             if (owned.getType().equals(currentType)) {
-                cosmeticButtonList.add(new GuiTransFadingButton(buttonId.getAndAdd(1), backgroundOutlineHitBox.getIntX() + 132, cosmeticY.getAndAdd(22), width - 186, 20, owned.getName() + ": " + (cachedEnabledCosmetics.contains(owned) ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF")) {
+                cosmeticButtonList.add(new GuiTransFadingButton(buttonId.getAndAdd(1), backgroundHitBox.getIntX() + 132, cosmeticY.getAndAdd(22), width - 136, 20, owned.getName() + ": " + (cachedEnabledCosmetics.contains(owned) ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF")) {
                     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                         if (super.mousePressed(mc, mouseX, mouseY)) {
                             for (BaseCosmetic enabled : cachedEnabledCosmetics) if (!enabled.getId().equalsIgnoreCase(owned.getId()) && enabled.getType().equals(currentType)) Requisite.getManager().getWebSocket().send(new CosmeticsTogglePacket(mc.getSession().getProfile().getId().toString(), enabled.getId()));
@@ -190,7 +190,7 @@ public class GuiTGMLibCosmetics extends GuiTGMLibBase {
         GlStateManager.enableAlpha();
         GlStateManager.enableDepth();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GlHelper.totalScissor(backgroundOutlineHitBox.getIntX() + 132, backgroundOutlineHitBox.getIntY() + 40, width - 186, backgroundOutlineHitBox.getIntHeight() - backgroundOutlineHitBox.getIntY() - 26);
+        GlHelper.totalScissor(backgroundHitBox.getIntX() + 132, backgroundHitBox.getIntY() + 40, width - 136, backgroundHitBox.getIntHeight() - backgroundHitBox.getIntY() - 26);
         for (int i = 0; i < this.cosmeticButtonList.size(); i++) this.cosmeticButtonList.get(i).drawButton(mc, mouseX, mouseY);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         GlStateManager.popMatrix();

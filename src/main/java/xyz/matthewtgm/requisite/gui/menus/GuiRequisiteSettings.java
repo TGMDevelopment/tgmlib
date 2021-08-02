@@ -22,14 +22,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import xyz.matthewtgm.requisite.Requisite;
 import xyz.matthewtgm.requisite.core.RequisiteManager;
-import xyz.matthewtgm.requisite.gui.GuiTGMLibBase;
+import xyz.matthewtgm.requisite.gui.GuiRequisiteBase;
 import xyz.matthewtgm.requisite.gui.GuiTransFadingButton;
 import xyz.matthewtgm.requisite.util.ChatColour;
 
-public class GuiTGMLibSettings extends GuiTGMLibBase {
+public class GuiRequisiteSettings extends GuiRequisiteBase {
 
-    public GuiTGMLibSettings(GuiScreen parent) {
-        super("Settings", parent);
+    public GuiRequisiteSettings(GuiScreen parent) {
+        super(Requisite.NAME + " - Settings", parent);
     }
 
     public void initialize() {

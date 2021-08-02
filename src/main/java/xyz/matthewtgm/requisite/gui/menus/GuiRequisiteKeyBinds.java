@@ -26,7 +26,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import xyz.matthewtgm.requisite.Requisite;
-import xyz.matthewtgm.requisite.gui.GuiTGMLibBase;
+import xyz.matthewtgm.requisite.gui.GuiRequisiteBase;
 import xyz.matthewtgm.requisite.gui.GuiTransFadingButton;
 import xyz.matthewtgm.requisite.keybinds.KeyBind;
 import xyz.matthewtgm.requisite.keybinds.KeyBindManager;
@@ -37,9 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class GuiTGMLibKeyBinds extends GuiTGMLibBase {
+public class GuiRequisiteKeyBinds extends GuiRequisiteBase {
 
-    private final GuiTGMLibKeyBinds $this = this;
+    private final GuiRequisiteKeyBinds $this = this;
 
     private List<GuiButton> keyBindButtonList = new ArrayList<>();
 
@@ -49,8 +49,8 @@ public class GuiTGMLibKeyBinds extends GuiTGMLibBase {
     private final List<Integer> scrollCache = new ArrayList<>();
     private int scrollAmount;
 
-    public GuiTGMLibKeyBinds(GuiScreen parent) {
-        super("KeyBinds", parent);
+    public GuiRequisiteKeyBinds(GuiScreen parent) {
+        super(Requisite.NAME + " - KeyBinds", parent);
     }
 
     public void initialize() {}
@@ -90,7 +90,7 @@ public class GuiTGMLibKeyBinds extends GuiTGMLibBase {
         AtomicInteger keyBindY = new AtomicInteger(backgroundHitBox.getIntY() + 40);
         handleScrolling(keyBindY);
 
-        for (KeyBind keyBind : KeyBindManager.getKeyBinds()) {
+        for (KeyBind keyBind : Requisite.getManager().getKeyBindManager().getKeyBinds()) {
             keyBindButtonList.add(new GuiTransFadingButton(buttonId.getAndAdd(1), backgroundHitBox.getIntX() + 4, keyBindY.getAndAdd(22), backgroundHitBox.getIntWidth() - 28, 20, "(" + keyBind.category() + ") " + keyBind.name() + " : " + Keyboard.getKeyName(keyBind.getKey())) {
                 public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                     if (super.mousePressed(mc, mouseX, mouseY)) {
