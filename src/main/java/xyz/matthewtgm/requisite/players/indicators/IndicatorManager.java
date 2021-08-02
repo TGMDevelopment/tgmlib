@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import xyz.matthewtgm.json.entities.JsonArray;
 import xyz.matthewtgm.requisite.Requisite;
-import xyz.matthewtgm.requisite.socket.packets.impl.indication.RetrieveIndicationsPacket;
+import xyz.matthewtgm.requisite.networking.packets.impl.indication.RetrieveIndicationsPacket;
 import xyz.matthewtgm.requisite.util.*;
 import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;
 

@@ -40,7 +40,6 @@ import xyz.matthewtgm.requisite.commands.CommandManager;
 import xyz.matthewtgm.requisite.core.RequisiteManager;
 import xyz.matthewtgm.requisite.gui.menus.GuiRequisiteLogging;
 import xyz.matthewtgm.requisite.keybinds.KeyBind;
-import xyz.matthewtgm.requisite.keybinds.KeyBindManager;
 import xyz.matthewtgm.requisite.util.*;
 import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;
 
@@ -73,14 +72,17 @@ public final class Requisite {
      * Starts Requisite services, registers utilities and checks for library versions.
      */
     private void start() {
+        /* Ensure that all currently used JsonTGM features are available at runtime. */
         if (!JsonVersion.CURRENT.isAtLeast(2, 8, 0))
             throw new IllegalStateException("JsonTGM is outdated! (minimum version is 2.8.0)");
+        /* Ensure that all currently used TGMConfig features are available at runtime. */
         if (!ConfigVersion.CURRENT.isAtLeast(3, 2, 0))
             throw new IllegalStateException("TGMConfig is outdated! (minimum version is 3.2.0)");
 
         /* Allow other mods to detect Requisite, even if they don't use it. */
         Launch.blackboard.put("requisite", true);
 
+        /* Register utilities that use Forge events, or Requisite features that need events. */
         ForgeHelper.registerEventListeners(
                 this,
                 new CommandQueue(),
@@ -93,10 +95,14 @@ public final class Requisite {
                 new ScreenHelper(),
                 new RequisiteImprovedEventsListener()
         );
+
+        /* Start the manager services, so that it can initialize things in the background. */
         manager.start();
+
+        /* Modify options menu so Requisite can be easily accessed. */
         GuiEditor.addEdit(GuiOptions.class, new GuiEditor.GuiEditRunnable() {
             public void init(GuiScreen screen, List<GuiButton> buttonList) {
-                buttonList.add(new GuiButton(IntegerHelper.getRandomNumber(2346, 345671), screen.width / 2 - 50, screen.height - 24, 100, 20, "TGMLib") {
+                buttonList.add(new GuiButton(IntegerHelper.getRandomNumber(234346, 342345671), screen.width / 2 - 50, screen.height - 24, 100, 20, "TGMLib") {
                     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                         if (super.mousePressed(mc, mouseX, mouseY))
                             mc.displayGuiScreen(new GuiRequisiteMain(screen));
@@ -106,7 +112,11 @@ public final class Requisite {
             }
             public void draw(GuiScreen screen, int mouseX, int mouseY, float partialTicks) {}
         });
+
+        /* Register the Requisite command. */
         CommandManager.register(RequisiteCommand.class);
+
+        /* Register keybind, mostly so other mods know the custom keybinds framework exists. */
         manager.getKeyBindManager().register(new KeyBind(Keyboard.KEY_H) {
             public String name() {
                 return "Requisite";
@@ -122,6 +132,9 @@ public final class Requisite {
         });
     }
 
+    /**
+     * Permits Requisite to open it's data logging menu on initial run.
+     */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onGuiOpen(GuiScreenEvent.InitGuiEvent event) {
         if (event.gui instanceof GuiMainMenu && !manager.getDataHandler().isReceivedPrompt())

@@ -23,46 +23,68 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
+import xyz.matthewtgm.requisite.function.QuadConsumer;
+import xyz.matthewtgm.requisite.function.TriConsumer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class SimpleCommand extends CommandBase {
 
-    private final SimpleCommandRunnable runnable;
+    private final String name;
+    private final List<String> aliases;
+    private final QuadConsumer<List<String>, EntityPlayer, String[], BlockPos> tabCompletions;
+    private final BiConsumer<EntityPlayer, String[]> execute;
 
-    public SimpleCommand(SimpleCommandRunnable runnable) {
-        this.runnable = runnable;
+    public SimpleCommand(String name, List<String> aliases, QuadConsumer<List<String>, EntityPlayer, String[], BlockPos> tabCompletions, BiConsumer<EntityPlayer, String[]> execute) {
+        this.name = name;
+        this.aliases = aliases;
+        this.tabCompletions = tabCompletions;
+        this.execute = execute;
+    }
+
+    public SimpleCommand(String name, List<String> aliases, BiConsumer<EntityPlayer, String[]> execute) {
+        this(name, aliases, (ar, e, a, p) -> {}, execute);
+    }
+
+    public SimpleCommand(String name, QuadConsumer<List<String>, EntityPlayer, String[], BlockPos> tabCompletions, BiConsumer<EntityPlayer, String[]> execute) {
+        this(name, new ArrayList<>(), tabCompletions, execute);
+    }
+
+    public SimpleCommand(String name, BiConsumer<EntityPlayer, String[]> execute) {
+        this(name, new ArrayList<>(), (ar, e, a, p) -> {}, execute);
     }
 
     @Override
     public String getCommandName() {
-        return runnable.name();
-    }
-
-    @Override
-    public int getRequiredPermissionLevel() {
-        return runnable.permissionLevel();
+        return name;
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return runnable.usage();
+        return "";
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-        runnable.process((EntityPlayer) sender.getCommandSenderEntity(), args);
+        execute.accept((EntityPlayer) sender, args);
     }
 
     @Override
     public List<String> getCommandAliases() {
-        return runnable.aliases();
+        return aliases;
+    }
+
+    public boolean canCommandSenderUseCommand(ICommandSender sender) {
+        return true;
     }
 
     @Override
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-        return new ArrayList<>(runnable.tabCompleteOptions((EntityPlayer) sender, args, pos));
+        List<String> options = new ArrayList<>();
+        tabCompletions.accept(options, (EntityPlayer) sender, args, pos);
+        return new ArrayList<>(options);
     }
 
 }

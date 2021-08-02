@@ -16,13 +16,13 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.socket.packets.impl.announcer;
+package xyz.matthewtgm.requisite.networking.packets.impl.announcer;
 
-import net.minecraft.util.EnumChatFormatting;
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.requisite.Requisite;
-import xyz.matthewtgm.requisite.socket.RequisiteClientSocket;
-import xyz.matthewtgm.requisite.socket.packets.BasePacket;
+import xyz.matthewtgm.requisite.networking.RequisiteClientSocket;
+import xyz.matthewtgm.requisite.networking.packets.BasePacket;
+import xyz.matthewtgm.requisite.util.ChatColour;
 import xyz.matthewtgm.requisite.util.ChatHelper;
 import xyz.matthewtgm.requisite.util.Notifications;
 
@@ -49,10 +49,9 @@ public class AnnouncementPacket extends BasePacket {
         data.add("password", password);
     }
 
-    public void read(RequisiteClientSocket socket, JsonObject json) {
-        JsonObject jsonData = json.get("data").getAsJsonObject();
-        Notifications.push(jsonData.get("title").toString(), jsonData.get("description").toString());
-        ChatHelper.sendMessage(EnumChatFormatting.GRAY + "[" + EnumChatFormatting.RED + EnumChatFormatting.BOLD + Requisite.NAME + " Announcement" + EnumChatFormatting.RESET + EnumChatFormatting.GRAY + "] [" + jsonData.get("title").toString() + "]", jsonData.get("description").toString());
+    public void read(RequisiteClientSocket socket, JsonObject object, JsonObject data) {
+        Notifications.push(data.get("title").getAsString(), data.get("description").getAsString());
+        ChatHelper.sendMessage(ChatColour.GRAY + "[" + ChatColour.RED + ChatColour.BOLD + Requisite.NAME + " Announcement" + ChatColour.RESET + ChatColour.GRAY + "] [" + data.get("title").getAsString() + "]", data.get("description").getAsString());
     }
 
     public void handle(RequisiteClientSocket socket) {}

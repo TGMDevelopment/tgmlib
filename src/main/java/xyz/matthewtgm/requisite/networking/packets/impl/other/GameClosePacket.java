@@ -16,26 +16,31 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.commands;
+package xyz.matthewtgm.requisite.networking.packets.impl.other;
 
-import net.minecraft.command.CommandException;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
+import xyz.matthewtgm.json.entities.JsonObject;
+import xyz.matthewtgm.requisite.networking.RequisiteClientSocket;
+import xyz.matthewtgm.requisite.networking.packets.BasePacket;
 
-import java.util.Collections;
-import java.util.List;
+public class GameClosePacket extends BasePacket {
 
-public interface SimpleCommandRunnable {
+    private final String uuid;
 
-    String name();
-    String usage();
-    int permissionLevel();
-    void process(EntityPlayer sender, String[] args) throws CommandException;
-    default List<String> tabCompleteOptions(EntityPlayer sender, String[] args, BlockPos pos) {
-        return Collections.emptyList();
+    public GameClosePacket(String uuid) {
+        super("CLOSE", "GAME", 6f);
+        this.uuid = uuid;
     }
-    default List<String> aliases() {
-        return Collections.emptyList();
+
+    public GameClosePacket() {
+        this(null);
     }
+
+    public void write(RequisiteClientSocket socket) {
+        data.add("uuid", uuid);
+    }
+
+    public void read(RequisiteClientSocket socket, JsonObject object, JsonObject data) {}
+
+    public void handle(RequisiteClientSocket socket) {}
 
 }

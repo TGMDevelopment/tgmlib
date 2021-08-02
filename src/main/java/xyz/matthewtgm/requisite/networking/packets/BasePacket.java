@@ -16,10 +16,10 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.socket.packets;
+package xyz.matthewtgm.requisite.networking.packets;
 
 import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.requisite.socket.RequisiteClientSocket;
+import xyz.matthewtgm.requisite.networking.RequisiteClientSocket;
 
 public abstract class BasePacket {
 
@@ -40,7 +40,7 @@ public abstract class BasePacket {
     }
 
     public abstract void write(RequisiteClientSocket socket);
-    public abstract void read(RequisiteClientSocket socket, JsonObject json);
+    public abstract void read(RequisiteClientSocket socket, JsonObject object, JsonObject data);
     public abstract void handle(RequisiteClientSocket socket);
 
     public void error(String name, String reason) {
@@ -49,7 +49,7 @@ public abstract class BasePacket {
                 .add("reason", reason));
     }
 
-    public JsonObject toJson() {
+    public JsonObject jsonify() {
         JsonObject value = new JsonObject();
         value.add("name", name);
         value.add("type", type);

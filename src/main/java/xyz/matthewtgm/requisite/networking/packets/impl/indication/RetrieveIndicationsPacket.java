@@ -16,12 +16,12 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.socket.packets.impl.indication;
+package xyz.matthewtgm.requisite.networking.packets.impl.indication;
 
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.requisite.Requisite;
-import xyz.matthewtgm.requisite.socket.RequisiteClientSocket;
-import xyz.matthewtgm.requisite.socket.packets.BasePacket;
+import xyz.matthewtgm.requisite.networking.RequisiteClientSocket;
+import xyz.matthewtgm.requisite.networking.packets.BasePacket;
 
 public class RetrieveIndicationsPacket extends BasePacket {
 
@@ -31,9 +31,9 @@ public class RetrieveIndicationsPacket extends BasePacket {
 
     public void write(RequisiteClientSocket socket) {}
 
-    public void read(RequisiteClientSocket socket, JsonObject json) {
+    public void read(RequisiteClientSocket socket, JsonObject object, JsonObject data) {
         Requisite.getManager().getIndicatorManager().getIndicatorArray().clear();
-        Requisite.getManager().getIndicatorManager().getIndicatorArray().addAll(json.getAsObject("data").getAsArray("indications"));
+        Requisite.getManager().getIndicatorManager().getIndicatorArray().addAll(data.getAsArray("indications"));
     }
 
     public void handle(RequisiteClientSocket socket) {

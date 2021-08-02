@@ -25,6 +25,9 @@ import net.minecraftforge.fml.relauncher.Side
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
+/**
+ * Permits mods to be able to use `object` as their mod holder.
+ */
 class KotlinModLanguageAdapter : ILanguageAdapter {
 
     override fun supportsStatics() = true

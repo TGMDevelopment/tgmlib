@@ -16,15 +16,15 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.socket.packets.impl.cosmetics;
+package xyz.matthewtgm.requisite.networking.packets.impl.cosmetics;
 
 import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.requisite.Requisite;
 import xyz.matthewtgm.requisite.players.PlayerCosmeticData;
 import xyz.matthewtgm.requisite.players.cosmetics.BaseCosmetic;
 import xyz.matthewtgm.requisite.players.cosmetics.CosmeticManager;
-import xyz.matthewtgm.requisite.socket.RequisiteClientSocket;
-import xyz.matthewtgm.requisite.socket.packets.BasePacket;
+import xyz.matthewtgm.requisite.networking.RequisiteClientSocket;
+import xyz.matthewtgm.requisite.networking.packets.BasePacket;
 
 public class CosmeticsTogglePacket extends BasePacket {
 
@@ -46,15 +46,14 @@ public class CosmeticsTogglePacket extends BasePacket {
         data.add("cosmetic", cosmeticId);
     }
 
-    public void read(RequisiteClientSocket socket, JsonObject json) {
-        JsonObject jsonData = json.get("data").getAsJsonObject();
+    public void read(RequisiteClientSocket socket, JsonObject object, JsonObject data) {
         CosmeticManager cosmeticManager = Requisite.getManager().getCosmeticManager();
-        BaseCosmetic cosmetic = cosmeticManager.getCosmeticFromId(jsonData.get("cosmetic").toString());
-        PlayerCosmeticData data = Requisite.getManager().getDataManager().getDataMap().get(jsonData.get("uuid").toString()).getCosmeticData();
-        if (jsonData.get("toggled").getAsBoolean())
-            data.getEnabledCosmetics().add(cosmetic);
+        BaseCosmetic cosmetic = cosmeticManager.getCosmeticFromId(data.get("cosmetic").getAsString());
+        PlayerCosmeticData cosmeticData = Requisite.getManager().getDataManager().getDataMap().get(data.get("uuid").getAsString()).getCosmeticData();
+        if (data.get("toggled").getAsBoolean())
+            cosmeticData.getEnabledCosmetics().add(cosmetic);
         else
-            data.getEnabledCosmetics().remove(cosmetic);
+            cosmeticData.getEnabledCosmetics().remove(cosmetic);
     }
 
     public void handle(RequisiteClientSocket socket) {}

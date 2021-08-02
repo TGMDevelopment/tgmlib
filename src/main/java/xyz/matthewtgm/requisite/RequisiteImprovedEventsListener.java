@@ -24,6 +24,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.matthewtgm.requisite.events.ActionBarEvent;
 import xyz.matthewtgm.requisite.events.ChatMessageReceivedEvent;
 
+/**
+ * Permits custom Requisite "improved" events to be run inside of Forge events, a good example of this would be splitting the `ClientChatReceivedEvent`.
+ */
 public final class RequisiteImprovedEventsListener {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

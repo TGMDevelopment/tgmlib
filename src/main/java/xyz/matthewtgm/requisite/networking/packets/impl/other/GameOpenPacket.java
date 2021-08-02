@@ -16,22 +16,22 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.socket.packets.impl.other;
+package xyz.matthewtgm.requisite.networking.packets.impl.other;
 
 import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.requisite.socket.RequisiteClientSocket;
-import xyz.matthewtgm.requisite.socket.packets.BasePacket;
+import xyz.matthewtgm.requisite.networking.RequisiteClientSocket;
+import xyz.matthewtgm.requisite.networking.packets.BasePacket;
 
-public class GameClosePacket extends BasePacket {
+public class GameOpenPacket extends BasePacket {
 
     private final String uuid;
 
-    public GameClosePacket(String uuid) {
-        super("CLOSE", "GAME", 6f);
+    public GameOpenPacket(String uuid) {
+        super("OPEN", "GAME", 5f);
         this.uuid = uuid;
     }
 
-    public GameClosePacket() {
+    public GameOpenPacket() {
         this(null);
     }
 
@@ -39,7 +39,7 @@ public class GameClosePacket extends BasePacket {
         data.add("uuid", uuid);
     }
 
-    public void read(RequisiteClientSocket socket, JsonObject json) {}
+    public void read(RequisiteClientSocket socket, JsonObject object, JsonObject data) {}
 
     public void handle(RequisiteClientSocket socket) {}
 

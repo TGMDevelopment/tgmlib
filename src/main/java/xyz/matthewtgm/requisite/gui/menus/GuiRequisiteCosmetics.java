@@ -35,7 +35,7 @@ import xyz.matthewtgm.requisite.players.cosmetics.CosmeticManager;
 import xyz.matthewtgm.requisite.players.cosmetics.CosmeticType;
 import xyz.matthewtgm.requisite.gui.GuiTransFadingButton;
 import xyz.matthewtgm.requisite.gui.GuiTransFadingImageButton;
-import xyz.matthewtgm.requisite.socket.packets.impl.cosmetics.CosmeticsTogglePacket;
+import xyz.matthewtgm.requisite.networking.packets.impl.cosmetics.CosmeticsTogglePacket;
 import xyz.matthewtgm.requisite.util.*;
 import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;
 
@@ -191,7 +191,8 @@ public class GuiRequisiteCosmetics extends GuiRequisiteBase {
         GlStateManager.enableDepth();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GlHelper.totalScissor(backgroundHitBox.getIntX() + 132, backgroundHitBox.getIntY() + 40, width - 136, backgroundHitBox.getIntHeight() - backgroundHitBox.getIntY() - 26);
-        for (int i = 0; i < this.cosmeticButtonList.size(); i++) this.cosmeticButtonList.get(i).drawButton(mc, mouseX, mouseY);
+        for (GuiButton button : this.cosmeticButtonList)
+            button.drawButton(mc, mouseX, mouseY);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         GlStateManager.popMatrix();
     }

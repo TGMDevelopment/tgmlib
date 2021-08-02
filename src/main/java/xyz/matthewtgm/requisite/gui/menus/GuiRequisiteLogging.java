@@ -23,7 +23,7 @@ import net.minecraft.client.gui.GuiScreen;
 import xyz.matthewtgm.requisite.Requisite;
 import xyz.matthewtgm.requisite.gui.GuiRequisiteBase;
 import xyz.matthewtgm.requisite.gui.GuiTransFadingButton;
-import xyz.matthewtgm.requisite.socket.packets.impl.other.GameOpenPacket;
+import xyz.matthewtgm.requisite.networking.packets.impl.other.GameOpenPacket;
 import xyz.matthewtgm.requisite.util.ChatColour;
 import xyz.matthewtgm.requisite.util.EnhancedFontRenderer;
 import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;

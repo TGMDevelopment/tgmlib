@@ -26,7 +26,7 @@ import xyz.matthewtgm.requisite.gui.menus.GuiRequisiteCosmetics;
 import xyz.matthewtgm.requisite.gui.menus.GuiRequisiteKeyBinds;
 import xyz.matthewtgm.requisite.gui.menus.GuiRequisiteMain;
 import xyz.matthewtgm.requisite.gui.menus.GuiRequisiteSettings;
-import xyz.matthewtgm.requisite.socket.packets.impl.announcer.AnnouncementPacket;
+import xyz.matthewtgm.requisite.networking.packets.impl.announcer.AnnouncementPacket;
 import xyz.matthewtgm.requisite.util.*;
 import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;
 
@@ -38,7 +38,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Command(name = "requisite", autoGenTabCompleteOptions = true)
+/**
+ * Lets the user interact with Requisite in the simplest way possible.
+ */
+@Command(
+        name = "requisite",
+        autoGenTabCompleteOptions = true
+)
 public final class RequisiteCommand {
 
     private final Pattern announcementPattern = Pattern.compile("(\\\".+\\\") (\\\".+\\\") (\\\".+\\\")");

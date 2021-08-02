@@ -16,31 +16,17 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.socket.packets.impl.other;
+package xyz.matthewtgm.requisite.function;
 
-import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.requisite.socket.RequisiteClientSocket;
-import xyz.matthewtgm.requisite.socket.packets.BasePacket;
+import java.util.Objects;
 
-public class GameOpenPacket extends BasePacket {
-
-    private final String uuid;
-
-    public GameOpenPacket(String uuid) {
-        super("OPEN", "GAME", 5f);
-        this.uuid = uuid;
+public interface TriConsumer<T, U, V> {
+    void accept(T t, U u, V v);
+    default TriConsumer<T, U, V> andThen(TriConsumer<T, U, V> after) {
+        Objects.requireNonNull(after);
+        return (t, u, v) -> {
+            accept(t, u, v);
+            after.accept(t, u, v);
+        };
     }
-
-    public GameOpenPacket() {
-        this(null);
-    }
-
-    public void write(RequisiteClientSocket socket) {
-        data.add("uuid", uuid);
-    }
-
-    public void read(RequisiteClientSocket socket, JsonObject json) {}
-
-    public void handle(RequisiteClientSocket socket) {}
-
 }

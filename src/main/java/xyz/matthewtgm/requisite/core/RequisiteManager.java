@@ -35,9 +35,9 @@ import xyz.matthewtgm.requisite.files.DataHandler;
 import xyz.matthewtgm.requisite.files.FileHandler;
 import xyz.matthewtgm.requisite.keybinds.KeyBindConfigHandler;
 import xyz.matthewtgm.requisite.players.indicators.IndicatorManager;
-import xyz.matthewtgm.requisite.socket.RequisiteClientSocket;
-import xyz.matthewtgm.requisite.socket.packets.impl.other.GameClosePacket;
-import xyz.matthewtgm.requisite.socket.packets.impl.other.GameOpenPacket;
+import xyz.matthewtgm.requisite.networking.RequisiteClientSocket;
+import xyz.matthewtgm.requisite.networking.packets.impl.other.GameClosePacket;
+import xyz.matthewtgm.requisite.networking.packets.impl.other.GameOpenPacket;
 import xyz.matthewtgm.requisite.util.*;
 import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;
 
@@ -61,16 +61,16 @@ public class RequisiteManager {
     @Getter private KeyBindConfigHandler keyBindConfigHandler;
     @Getter private DataHandler dataHandler;
     @Getter private RequisiteClientSocket webSocket;
-    @Getter private KeyBindManager keyBindManager = new KeyBindManager();
     @Getter private PlayerDataManager dataManager;
     @Getter private CosmeticManager cosmeticManager;
     @Getter private IndicatorManager indicatorManager;
+    @Getter private final KeyBindManager keyBindManager = new KeyBindManager();
 
     public void initialize() {
         checkJvmProperties();
-        tgmLibDir = new File(GlobalMinecraft.getGameDirectory(), "TGMLib");
+        tgmLibDir = new File(GlobalMinecraft.getGameDirectory(), Requisite.NAME);
         if (!tgmLibDir.exists() && !tgmLibDir.mkdirs())
-            throw new IllegalStateException("Couldn't create TGMLib directory.");
+            throw new IllegalStateException("Couldn't create " + Requisite.NAME + " directory.");
     }
 
     private void checkJvmProperties() {
@@ -107,7 +107,7 @@ public class RequisiteManager {
                 if (dataHandler.isMayLogData())
                     webSocket.send(new GameClosePacket(GlobalMinecraft.getSession().getProfile().getId().toString()));
                 webSocket.close(CloseFrame.NORMAL, "Game shutdown");
-            }, "TGMLib Shutdown"));
+            }, Requisite.NAME + " Shutdown"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -139,7 +139,7 @@ public class RequisiteManager {
     public void fixSocket() {
         try {
             if (!createSocket()) {
-                Notifications.push("Failed to connect to TGMLib WebSocket!", "Click me to attempt a reconnect.", notification -> {
+                Notifications.push("Failed to connect to " + Requisite.NAME + " WebSocket!", "Click me to attempt a reconnect.", notification -> {
                     try {
                         String originalTitle = notification.title;
                         String originalDescription = notification.description;

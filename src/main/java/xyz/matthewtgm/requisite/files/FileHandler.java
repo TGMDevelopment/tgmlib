@@ -20,6 +20,7 @@ package xyz.matthewtgm.requisite.files;
 
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
+import xyz.matthewtgm.requisite.Requisite;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class FileHandler {
             mcDir = Minecraft.getMinecraft().mcDataDir,
             configDir = new File(mcDir, "config"),
             tgmDevelopmentDir = new File(configDir, "TGMDevelopment"),
-            tgmLibDir = new File(tgmDevelopmentDir, "TGMLib");
+            tgmLibDir = new File(tgmDevelopmentDir, Requisite.NAME);
     @Getter private final List<File> directories = new ArrayList<>(Arrays.asList(
             mcDir,
             configDir,
