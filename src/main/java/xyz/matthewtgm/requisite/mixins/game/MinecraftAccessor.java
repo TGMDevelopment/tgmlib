@@ -16,21 +16,20 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.events;
+package xyz.matthewtgm.requisite.mixins.game;
 
-import net.minecraft.entity.boss.IBossDisplayData;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.util.Timer;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-public class BossBarEvent extends Event {
-    public static class SetEvent extends BossBarEvent {
-        public final IBossDisplayData displayData;
-        public final boolean hasColorModifier;
-        public SetEvent(IBossDisplayData displayData, boolean hasColorModifier) {
-            this.displayData = displayData;
-            this.hasColorModifier = hasColorModifier;
-        }
-    }
-    @Cancelable
-    public static class RenderEvent extends BossBarEvent {}
+@Mixin({Minecraft.class})
+public interface MinecraftAccessor {
+    @Accessor Timer getTimer();
+    @Accessor boolean isEnableGLErrorChecking();
+    @Accessor void setEnableGLErrorChecking(boolean enableGLErrorChecking);
+    @Accessor int getLeftClickCounter();
+    @Accessor void setLeftClickCounter(int leftClickCounter);
+    @Accessor NetworkManager getMyNetworkManager();
 }

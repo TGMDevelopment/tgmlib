@@ -16,21 +16,17 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.events;
+package xyz.matthewtgm.requisite.mixins.gui;
 
-import net.minecraft.entity.boss.IBossDisplayData;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraft.client.gui.GuiIngame;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-public class BossBarEvent extends Event {
-    public static class SetEvent extends BossBarEvent {
-        public final IBossDisplayData displayData;
-        public final boolean hasColorModifier;
-        public SetEvent(IBossDisplayData displayData, boolean hasColorModifier) {
-            this.displayData = displayData;
-            this.hasColorModifier = hasColorModifier;
-        }
-    }
-    @Cancelable
-    public static class RenderEvent extends BossBarEvent {}
+@Mixin({GuiIngame.class})
+public interface GuiIngameAccessor {
+    @Accessor String getDisplayedTitle();
+    @Accessor String getDisplayedSubTitle();
+
+    @Accessor String getRecordPlaying();
+    @Accessor void setRecordPlaying(String recordPlaying);
 }

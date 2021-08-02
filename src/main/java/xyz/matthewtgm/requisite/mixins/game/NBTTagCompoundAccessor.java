@@ -16,21 +16,16 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.events;
+package xyz.matthewtgm.requisite.mixins.game;
 
-import net.minecraft.entity.boss.IBossDisplayData;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-public class BossBarEvent extends Event {
-    public static class SetEvent extends BossBarEvent {
-        public final IBossDisplayData displayData;
-        public final boolean hasColorModifier;
-        public SetEvent(IBossDisplayData displayData, boolean hasColorModifier) {
-            this.displayData = displayData;
-            this.hasColorModifier = hasColorModifier;
-        }
-    }
-    @Cancelable
-    public static class RenderEvent extends BossBarEvent {}
+import java.util.Map;
+
+@Mixin({NBTTagCompound.class})
+public interface NBTTagCompoundAccessor {
+    @Accessor Map<String, NBTBase> getTagMap();
 }

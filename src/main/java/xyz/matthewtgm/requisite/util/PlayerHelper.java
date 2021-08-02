@@ -35,7 +35,7 @@ import net.minecraft.util.FoodStats;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import xyz.matthewtgm.requisite.tweaker.hooks.RequisiteEntityPlayerAccessor;
+import xyz.matthewtgm.requisite.mixins.player.EntityPlayerInvoker;
 import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;
 
 public class PlayerHelper {
@@ -99,7 +99,7 @@ public class PlayerHelper {
     }
 
     public static boolean isInBed() {
-        return ((RequisiteEntityPlayerAccessor) GlobalMinecraft.getPlayer()).isIsInBed();
+        return ((EntityPlayerInvoker) GlobalMinecraft.getPlayer()).isIsInBed();
     }
 
     public static boolean isSleeping() {

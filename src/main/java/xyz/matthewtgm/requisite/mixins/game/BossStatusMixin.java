@@ -16,21 +16,24 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.events;
+package xyz.matthewtgm.requisite.mixins.game;
 
+import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.boss.IBossDisplayData;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.common.MinecraftForge;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import xyz.matthewtgm.requisite.events.BossBarEvent;
 
-public class BossBarEvent extends Event {
-    public static class SetEvent extends BossBarEvent {
-        public final IBossDisplayData displayData;
-        public final boolean hasColorModifier;
-        public SetEvent(IBossDisplayData displayData, boolean hasColorModifier) {
-            this.displayData = displayData;
-            this.hasColorModifier = hasColorModifier;
-        }
+@Mixin({BossStatus.class})
+public class BossStatusMixin {
+
+    @Inject(method = "setBossStatus", at = @At("HEAD"), cancellable = true)
+    private static void onBossStatusSet(IBossDisplayData displayData, boolean hasColorModifierIn, CallbackInfo ci) {
+        if (MinecraftForge.EVENT_BUS.post(new BossBarEvent.SetEvent(displayData, hasColorModifierIn)))
+            ci.cancel();
     }
-    @Cancelable
-    public static class RenderEvent extends BossBarEvent {}
+
 }

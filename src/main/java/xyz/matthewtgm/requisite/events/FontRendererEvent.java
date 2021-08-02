@@ -18,19 +18,29 @@
 
 package xyz.matthewtgm.requisite.events;
 
-import net.minecraft.entity.boss.IBossDisplayData;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class BossBarEvent extends Event {
-    public static class SetEvent extends BossBarEvent {
-        public final IBossDisplayData displayData;
-        public final boolean hasColorModifier;
-        public SetEvent(IBossDisplayData displayData, boolean hasColorModifier) {
-            this.displayData = displayData;
-            this.hasColorModifier = hasColorModifier;
+public class FontRendererEvent extends Event {
+    public String text;
+    public FontRendererEvent(String text) {
+        this.text = text;
+    }
+    public static class RenderEvent extends FontRendererEvent {
+        public float x;
+        public float y;
+        public int colour;
+        public boolean dropShadow;
+        public RenderEvent(String text, float x, float y, int colour, boolean dropShadow) {
+            super(text);
+            this.x = x;
+            this.y = y;
+            this.colour = colour;
+            this.dropShadow = dropShadow;
         }
     }
-    @Cancelable
-    public static class RenderEvent extends BossBarEvent {}
+    public static class WidthGottenEvent extends FontRendererEvent {
+        public WidthGottenEvent(String text) {
+            super(text);
+        }
+    }
 }

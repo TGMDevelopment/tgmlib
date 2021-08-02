@@ -37,7 +37,7 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.FrameTimer;
 import net.minecraft.util.Session;
 import net.minecraft.util.Timer;
-import xyz.matthewtgm.requisite.tweaker.hooks.RequisiteMinecraftAccessor;
+import xyz.matthewtgm.requisite.mixins.game.MinecraftAccessor;
 
 import java.io.File;
 
@@ -46,11 +46,11 @@ public class GlobalMinecraft {
     private static final Minecraft instance = Minecraft.getMinecraft();
 
     public static float getPartialTicks() {
-        return ((RequisiteMinecraftAccessor) instance).getTimer().renderPartialTicks;
+        return ((MinecraftAccessor) instance).getTimer().renderPartialTicks;
     }
 
     public static Timer getTimer() {
-        return ((RequisiteMinecraftAccessor) instance).getTimer();
+        return ((MinecraftAccessor) instance).getTimer();
     }
 
     public static FrameTimer getFrameTimer() {

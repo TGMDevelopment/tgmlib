@@ -20,7 +20,7 @@ package xyz.matthewtgm.requisite.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import xyz.matthewtgm.requisite.tweaker.hooks.RequisiteMinecraftAccessor;
+import xyz.matthewtgm.requisite.mixins.game.MinecraftAccessor;
 import xyz.matthewtgm.requisite.util.EasingHelper;
 import xyz.matthewtgm.requisite.util.EnhancedFontRenderer;
 import xyz.matthewtgm.requisite.util.MathHelper;
@@ -45,7 +45,7 @@ public class GuiTransFadingButton extends GuiTransButton {
     }
 
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        float partialTicks = ((RequisiteMinecraftAccessor) mc).getTimer().renderPartialTicks;
+        float partialTicks = ((MinecraftAccessor) mc).getTimer().renderPartialTicks;
         GlStateManager.pushMatrix();
         GlStateManager.color(1f, 1f, 1f, 1f);
         boolean hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;

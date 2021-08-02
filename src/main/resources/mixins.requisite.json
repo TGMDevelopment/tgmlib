@@ -1,0 +1,36 @@
+{
+  "compatibilityLevel": "JAVA_8",
+  "minVersion": "0.7.11",
+  "required": true,
+  "package": "xyz.matthewtgm.requisite.mixins",
+  "refmap": "mixins.requisite.refmap.json",
+  "verbose": true,
+  "mixins": [
+    "entity.EntityLivingBaseMixin",
+
+    "game.BossStatusMixin",
+    "game.MinecraftAccessor",
+    "game.MinecraftMixin",
+    "game.NBTTagCompoundAccessor",
+
+    "gui.GuiContainerAccessor",
+    "gui.GuiIngameAccessor",
+    "gui.GuiIngameForgeMixin",
+    "gui.GuiNewChatAccessor",
+    "gui.GuiNewChatMixin",
+    "gui.GuiScreenAccessor",
+    "gui.GuiScreenInvoker",
+
+    "networking.NetHandlerPlayClientMixin",
+    "networking.NetworkManagerMixin",
+
+    "player.AbstractClientPlayerMixin",
+    "player.EntityPlayerInvoker",
+    "player.EntityPlayerSPMixin",
+
+    "rendering.FontRendererMixin",
+    "rendering.RenderMixin",
+
+    "sound.PositionedSoundAccessor"
+  ]
+}

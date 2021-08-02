@@ -41,7 +41,6 @@ import xyz.matthewtgm.requisite.gui.menus.GuiTGMLibLogging;
 import xyz.matthewtgm.requisite.gui.menus.GuiTGMLibMain;
 import xyz.matthewtgm.requisite.keybinds.KeyBind;
 import xyz.matthewtgm.requisite.keybinds.KeyBindManager;
-import xyz.matthewtgm.requisite.tweaker.TGMLibClassTransformer;
 import xyz.matthewtgm.requisite.util.*;
 import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;
 
@@ -56,24 +55,30 @@ import java.util.List;
 )
 public final class Requisite {
 
-    public static final String NAME = "@NAME@", ID = "@ID@", VER = "@VER@", TRANSFORMER = TGMLibClassTransformer.class.getName();
+    public static final String NAME = "@NAME@", ID = "@ID@", VER = "@VER@";
     @Getter private static final RequisiteManager manager = new RequisiteManager();
     @Getter private final Logger logger = LogManager.getLogger(NAME);
     @Getter @Mod.Instance(ID) private static Requisite instance;
 
+    /**
+     * Initialization method for Requisite, shouldn't be called in other mods.
+     */
     @Mod.EventHandler
     public void initialize(FMLInitializationEvent event) {
         manager.initialize();
         start();
     }
 
+    /**
+     * Starts Requisite services, registers utilities and checks for library versions.
+     */
     private void start() {
         if (!JsonVersion.CURRENT.isAtLeast(2, 8, 0))
             throw new IllegalStateException("JsonTGM is outdated! (minimum version is 2.8.0)");
         if (!ConfigVersion.CURRENT.isAtLeast(3, 2, 0))
             throw new IllegalStateException("TGMConfig is outdated! (minimum version is 3.2.0)");
 
-        /* Allow other mods to detect TGMLib, even if they don't use it. */
+        /* Allow other mods to detect Requisite, even if they don't use it. */
         Launch.blackboard.put("requisite", true);
 
         ForgeHelper.registerEventListeners(
