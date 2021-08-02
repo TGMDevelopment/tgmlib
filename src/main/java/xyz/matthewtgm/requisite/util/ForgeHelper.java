@@ -28,9 +28,11 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class ForgeHelper {
+public final class ForgeHelper {
 
     @Getter private static final List<Object> registeredListeners = new CopyOnWriteArrayList<>();
+
+    private ForgeHelper() {}
 
     /**
      * @param event The event to post.

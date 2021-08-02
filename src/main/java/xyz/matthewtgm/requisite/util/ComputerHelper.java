@@ -24,7 +24,9 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 
-public class ComputerHelper {
+public final class ComputerHelper {
+
+    private ComputerHelper() {}
 
     /**
      * @return The string currently copied to the clipboard.

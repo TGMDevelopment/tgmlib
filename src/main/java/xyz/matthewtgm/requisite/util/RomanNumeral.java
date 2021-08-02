@@ -23,9 +23,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 // https://stackoverflow.com/a/19759564
-public class RomanNumeral {
+public final class RomanNumeral {
 
     private final static TreeMap<Integer, String> map = new TreeMap<>();
+
+    private RomanNumeral() {}
 
     static {
         map.put(1000, "M");

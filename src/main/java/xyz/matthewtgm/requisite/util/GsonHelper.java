@@ -21,10 +21,12 @@ package xyz.matthewtgm.requisite.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class GsonHelper {
+public final class GsonHelper {
 
     private static Gson gson = new GsonBuilder().create();
     private static Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
+
+    private GsonHelper() {}
 
     /**
      * @return A gson instance.

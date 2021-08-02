@@ -34,6 +34,10 @@ public class GuiTGMLibMain extends GuiTGMLibBase {
         super("TGMLib", new Color(255, 175, 0).getRGB(), parent);
     }
 
+    public GuiTGMLibMain() {
+        this(null);
+    }
+
     public void initialize() {
         buttonList.add(new GuiTransFadingImageButton(1, width / 2 - 52, height / 2 - 10, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/keybinds_icon.png")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {

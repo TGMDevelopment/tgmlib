@@ -29,7 +29,9 @@ import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class ApiHelper {
+public final class ApiHelper {
+
+    private ApiHelper() {}
 
     /**
      * @param url The url of the page to fetch from.

@@ -18,7 +18,9 @@
 
 package xyz.matthewtgm.requisite.util;
 
-public class BooleanHelper {
+public final class BooleanHelper {
+
+    private BooleanHelper() {}
 
     /**
      * @param booleans All of the booleans to check.

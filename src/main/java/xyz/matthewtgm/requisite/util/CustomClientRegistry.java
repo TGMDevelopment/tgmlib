@@ -25,7 +25,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.util.Arrays;
 import java.util.List;
 
-public class CustomClientRegistry {
+public final class CustomClientRegistry {
+
+    private CustomClientRegistry() {}
 
     /**
      * @param key The keybinding to register.

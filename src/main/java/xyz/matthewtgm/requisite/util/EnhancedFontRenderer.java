@@ -35,7 +35,9 @@ import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings({"unused"})
-public class EnhancedFontRenderer {
+public final class EnhancedFontRenderer {
+
+    private EnhancedFontRenderer() {}
 
     private static final Minecraft mc = Minecraft.getMinecraft();
 

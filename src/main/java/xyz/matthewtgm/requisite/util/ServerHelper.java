@@ -35,12 +35,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ServerHelper {
+public final class ServerHelper {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     private static final List<String> SKYBLOCK_IN_ALL_LANGUAGES = new ArrayList<>(Arrays.asList("SKYBLOCK","\u7A7A\u5C9B\u751F\u5B58", "\u7A7A\u5CF6\u751F\u5B58"));
     private static final Pattern SERVER_BRAND_PATTERN = Pattern.compile("(.+) <- (?:.+)");
+
+    private ServerHelper() {}
 
     /**
      * @return Whether or not the client is connected to Hypixel.

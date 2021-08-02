@@ -18,9 +18,11 @@
 
 package xyz.matthewtgm.requisite.util;
 
-public class MathHelper {
+public final class MathHelper {
 
     // TODO: 2021/07/16 : Javadoc!
+
+    private MathHelper() {}
 
     public static float clamp01(float value) {
         if ((double)value < 0.0)

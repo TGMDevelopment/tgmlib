@@ -23,11 +23,13 @@ import xyz.matthewtgm.requisite.Requisite;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Multithreading {
+public final class Multithreading {
 
     private static final AtomicInteger threadCount = new AtomicInteger(0);
     private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(50, 50, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), (r) -> new Thread(r, String.format(Requisite.NAME + " Thread %s", threadCount.incrementAndGet())));
     private static final ScheduledExecutorService runnableExecutor = new ScheduledThreadPoolExecutor(6);
+
+    private Multithreading() {}
 
     /**
      * @param runnable The code to run asynchronously.

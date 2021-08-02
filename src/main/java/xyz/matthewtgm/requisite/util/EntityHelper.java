@@ -26,7 +26,9 @@ import net.minecraft.entity.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityHelper {
+public final class EntityHelper {
+
+    private EntityHelper() {}
 
     private static final Minecraft mc = Minecraft.getMinecraft();
 

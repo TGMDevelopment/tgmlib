@@ -24,7 +24,9 @@ package xyz.matthewtgm.requisite.util;
  *
  * @author Basilicous
  */
-public class EasingHelper {
+public final class EasingHelper {
+
+    private EasingHelper() {}
 
     private static final double PI = 3.14159;
 

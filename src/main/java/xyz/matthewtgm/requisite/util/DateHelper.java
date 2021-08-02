@@ -20,7 +20,9 @@ package xyz.matthewtgm.requisite.util;
 
 import java.util.Calendar;
 
-public class DateHelper {
+public final class DateHelper {
+
+    private DateHelper() {}
 
     /**
      * Taken from SkyBlockAddons under MIT license

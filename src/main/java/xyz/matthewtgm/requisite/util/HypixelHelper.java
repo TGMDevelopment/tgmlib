@@ -37,7 +37,7 @@ import xyz.matthewtgm.requisite.events.LocrawReceivedEvent;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
-public class HypixelHelper {
+public final class HypixelHelper {
 
     private static int tickTimer = 0;
 

@@ -18,7 +18,7 @@
 
 package xyz.matthewtgm.requisite.util;
 
-public class CommandQueue extends MessageQueue {
+public final class CommandQueue extends MessageQueue {
 
     /**
      * @param msg The command to queue

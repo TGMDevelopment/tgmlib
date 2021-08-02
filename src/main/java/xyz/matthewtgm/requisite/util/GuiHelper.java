@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Used to enhance bits of code relating to the Minecraft {@link GuiScreen}.
  */
-public class GuiHelper {
+public final class GuiHelper {
 
     private static GuiScreen awaitingOpen;
     private static final GuiScreen GUI_NULL = new GuiNull();

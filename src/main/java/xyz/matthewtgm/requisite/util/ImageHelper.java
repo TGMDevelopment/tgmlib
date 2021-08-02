@@ -40,9 +40,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ImageHelper {
+public final class ImageHelper {
 
     // TODO: 2021/07/16 : Javadoc!
+
+    private ImageHelper() {}
 
     public static ByteArrayOutputStream toByteArrayOutputStream(RenderedImage image) throws IOException {
         ByteArrayOutputStream ret = new ByteArrayOutputStream();

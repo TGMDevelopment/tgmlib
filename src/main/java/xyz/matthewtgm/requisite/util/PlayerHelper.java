@@ -38,7 +38,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import xyz.matthewtgm.requisite.mixins.player.EntityPlayerInvoker;
 import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;
 
-public class PlayerHelper {
+public final class PlayerHelper {
 
     @Getter private static String currentName;
 

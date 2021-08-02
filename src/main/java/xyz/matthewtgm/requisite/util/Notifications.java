@@ -28,7 +28,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Notifications {
+public final class Notifications {
 
     private static final List<Notification> notifications = new CopyOnWriteArrayList<>();
 

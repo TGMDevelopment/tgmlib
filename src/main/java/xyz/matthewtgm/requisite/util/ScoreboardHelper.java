@@ -31,7 +31,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ScoreboardHelper {
+public final class ScoreboardHelper {
+
+    private ScoreboardHelper() {}
 
     /**
      * Taken from Danker's Skyblock Mod under GPL 3.0 license

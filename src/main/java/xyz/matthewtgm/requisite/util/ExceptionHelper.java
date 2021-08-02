@@ -18,7 +18,9 @@
 
 package xyz.matthewtgm.requisite.util;
 
-public class ExceptionHelper {
+public final class ExceptionHelper {
+
+    private ExceptionHelper() {}
 
     /**
      * @param runnable The runnable to catch for.

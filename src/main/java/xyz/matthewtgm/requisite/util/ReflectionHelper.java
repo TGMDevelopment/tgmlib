@@ -22,10 +22,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-/**
- * Makes Java reflection easier.
- */
-public class ReflectionHelper {
+public final class ReflectionHelper {
+
+    private ReflectionHelper() {}
 
     /**
      * @param clazz The class to change the field in.

@@ -26,9 +26,11 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import xyz.matthewtgm.requisite.Requisite;
 
-public class ChatHelper {
+public final class ChatHelper {
 
     public static final String requisiteChatPrefix = ChatColour.GRAY + "[" + ChatColour.GREEN + ChatColour.BOLD + Requisite.NAME + ChatColour.RESET + ChatColour.GRAY + "]";
+
+    private ChatHelper() {}
 
     /**
      * @param msg The message to send.

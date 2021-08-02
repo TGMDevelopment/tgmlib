@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class GuiEditor {
+public final class GuiEditor {
 
     // TODO: 2021/07/16 : Javadoc! 
 

@@ -91,13 +91,12 @@ public final class Requisite {
                 new Notifications(),
                 new PlayerHelper(),
                 new ScreenHelper(),
-                new TitleHandler(),
                 new RequisiteImprovedEventsListener()
         );
         manager.start();
         GuiEditor.addEdit(GuiOptions.class, new GuiEditor.GuiEditRunnable() {
             public void init(GuiScreen screen, List<GuiButton> buttonList) {
-                buttonList.add(new GuiButton(234523, screen.width / 2 - 50, screen.height - 24, 100, 20, "TGMLib") {
+                buttonList.add(new GuiButton(IntegerHelper.getRandomNumber(2346, 345671), screen.width / 2 - 50, screen.height - 24, 100, 20, "TGMLib") {
                     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                         if (super.mousePressed(mc, mouseX, mouseY))
                             mc.displayGuiScreen(new GuiTGMLibMain(screen));
@@ -116,7 +115,7 @@ public final class Requisite {
                 return "Requisite";
             }
             public void pressed() {
-                GuiHelper.open(new GuiTGMLibMain(null));
+                GuiHelper.open(new GuiTGMLibMain());
             }
             public void held() {}
             public void released() {}

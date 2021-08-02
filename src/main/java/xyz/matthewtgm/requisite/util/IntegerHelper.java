@@ -22,9 +22,11 @@ import lombok.Getter;
 
 import java.util.Random;
 
-public class IntegerHelper {
+public final class IntegerHelper {
 
     @Getter private static final Random random = new Random();
+
+    private IntegerHelper() {}
 
     /**
      * @param min The minimum number that can be returned.

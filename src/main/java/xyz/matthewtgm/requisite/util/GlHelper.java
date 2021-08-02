@@ -27,7 +27,9 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 
-public class GlHelper {
+public final class GlHelper {
+
+    private GlHelper() {}
 
     /**
      * @param x      The x coordinate to start the box.

@@ -22,10 +22,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 
-/**
- * Makes methods regarding the client player and other players easier to access.
- */
-public class PlayerRendererHelper {
+public final class PlayerRendererHelper {
+
+    private PlayerRendererHelper() {}
 
     /**
      * Adds a new layer to the player class.

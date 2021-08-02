@@ -22,7 +22,9 @@ import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
-public class NpcHelper {
+public final class NpcHelper {
+
+    private NpcHelper() {}
 
     /**
      * @param entity The entity to check.

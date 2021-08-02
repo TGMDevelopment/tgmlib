@@ -28,6 +28,7 @@ import xyz.matthewtgm.requisite.gui.menus.GuiTGMLibMain;
 import xyz.matthewtgm.requisite.gui.menus.GuiTGMLibSettings;
 import xyz.matthewtgm.requisite.socket.packets.impl.announcer.AnnouncementPacket;
 import xyz.matthewtgm.requisite.util.*;
+import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;
 
 import java.awt.*;
 import java.net.URI;
@@ -45,22 +46,22 @@ public final class RequisiteCommand {
 
     @Command.Process
     private void process() {
-        GuiHelper.open(new GuiTGMLibMain(null));
+        GuiHelper.open(new GuiTGMLibMain(GlobalMinecraft.getCurrentScreen()));
     }
 
     @Command.Argument(name = "cosmetics")
     private void cosmetics() {
-        GuiHelper.open(new GuiTGMLibCosmetics(null));
+        GuiHelper.open(new GuiTGMLibCosmetics(GlobalMinecraft.getCurrentScreen()));
     }
 
     @Command.Argument(name = "keybinds", aliases = "keybindings")
     private void keybinds() {
-        GuiHelper.open(new GuiTGMLibKeyBinds(null));
+        GuiHelper.open(new GuiTGMLibKeyBinds(GlobalMinecraft.getCurrentScreen()));
     }
 
     @Command.Argument(name = "settings", aliases = {"config", "options"})
     private void settings() {
-        GuiHelper.open(new GuiTGMLibSettings(null));
+        GuiHelper.open(new GuiTGMLibSettings(GlobalMinecraft.getCurrentScreen()));
     }
 
     @Command.Argument(name = "announce")

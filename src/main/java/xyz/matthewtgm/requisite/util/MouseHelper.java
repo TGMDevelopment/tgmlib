@@ -22,9 +22,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import org.lwjgl.input.Mouse;
 
-public class MouseHelper {
+public final class MouseHelper {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
+
+    private MouseHelper() {}
 
     /**
      * @return The current mouse x postion.

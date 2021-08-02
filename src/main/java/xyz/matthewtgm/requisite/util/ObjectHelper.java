@@ -20,7 +20,9 @@ package xyz.matthewtgm.requisite.util;
 
 import java.util.Objects;
 
-public class ObjectHelper {
+public final class ObjectHelper {
+
+    private ObjectHelper() {}
 
     /**
      * @param o The object to stringify.

@@ -18,7 +18,9 @@
 
 package xyz.matthewtgm.requisite.util;
 
-public class DevelopmentHelper {
+public final class DevelopmentHelper {
+
+    private DevelopmentHelper() {}
 
     public static void markUnderHeavyDevelopment(Object o, String msg) {
         throw new IllegalStateException(String.format(msg, o.getClass().getSimpleName()));

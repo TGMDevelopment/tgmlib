@@ -22,7 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.MathHelper;
 
-public class CustomScaledResolution extends ScaledResolution {
+public final class CustomScaledResolution extends ScaledResolution {
 
     private final double scaledWidthD;
     private final double scaledHeightD;

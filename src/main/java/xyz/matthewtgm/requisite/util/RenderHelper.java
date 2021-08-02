@@ -34,9 +34,11 @@ import java.awt.*;
 /**
  * Used to make Minecraft rendering easier.
  */
-public class RenderHelper {
+public final class RenderHelper {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
+
+    private RenderHelper() {}
 
     /**
      * @param location The location to bind.

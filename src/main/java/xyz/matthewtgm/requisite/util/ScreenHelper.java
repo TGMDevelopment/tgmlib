@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;
 
-public class ScreenHelper {
+public final class ScreenHelper {
 
    private static ScaledResolution resolution;
 

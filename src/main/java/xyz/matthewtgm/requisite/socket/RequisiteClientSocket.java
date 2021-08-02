@@ -31,8 +31,6 @@ import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.parser.JsonParser;
 import xyz.matthewtgm.json.util.JsonHelper;
 import xyz.matthewtgm.requisite.Requisite;
-import xyz.matthewtgm.requisite.listeners.ListenerManager;
-import xyz.matthewtgm.requisite.listeners.ListenerType;
 import xyz.matthewtgm.requisite.socket.packets.BasePacket;
 import xyz.matthewtgm.requisite.socket.packets.impl.announcer.AnnouncementPacket;
 import xyz.matthewtgm.requisite.socket.packets.impl.cosmetics.CosmeticsRetrievePacket;
@@ -44,15 +42,12 @@ import xyz.matthewtgm.requisite.util.ChatHelper;
 import xyz.matthewtgm.requisite.util.Multithreading;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class RequisiteClientSocket extends WebSocketClient {
+public final class RequisiteClientSocket extends WebSocketClient {
 
     private static final BiMap<Class<? extends BasePacket>, Float> packets = HashBiMap.create();
-    private final List<RequisiteClientSocket.OpenRunnable> openListeners = new ArrayList<>();
     private final Logger logger = LogManager.getLogger(Requisite.NAME + " (" + getClass().getSimpleName() + ")");
 
     public RequisiteClientSocket(URI serverUri) {
@@ -61,21 +56,16 @@ public class RequisiteClientSocket extends WebSocketClient {
 
     public void connect() {
         logger.info("Connecting to socket.");
-        for (ListenerManager.ListenerRunnable runnable : ListenerManager.getListeners().get(ListenerType.WEBSOCKET_CONNECT))
-            runnable.run(this);
         super.connect();
     }
 
     public void reconnect() {
         logger.info("Reconnecting to socket.");
-        for (ListenerManager.ListenerRunnable runnable : ListenerManager.getListeners().get(ListenerType.WEBSOCKET_RECONNECT))
-            runnable.run(this);
         new Thread(super::reconnect).start();
     }
 
     public void onOpen(ServerHandshake handshake) {
         logger.info("Connected to socket!");
-        for (RequisiteClientSocket.OpenRunnable runnable : openListeners) runnable.run(this);
     }
 
     public void onMessage(String message) {
@@ -105,8 +95,6 @@ public class RequisiteClientSocket extends WebSocketClient {
         try {
             if (!isOpen())
                 return;
-            for (ListenerManager.ListenerRunnable runnable : ListenerManager.getListeners().get(ListenerType.WEBSOCKET_SEND))
-                runnable.run(this);
             packet.write(this);
             super.send(packet.toJson().getAsString());
         } catch (Exception e) {
@@ -121,22 +109,13 @@ public class RequisiteClientSocket extends WebSocketClient {
         BasePacket thePacket;
         try {
             thePacket = packetClazz == null ? null : packetClazz.newInstance();
-            if (thePacket == null) return;
+            if (thePacket == null)
+                return;
             thePacket.handle(this);
             thePacket.read(this, packet);
         } catch (Exception e) {
             logger.error("There was an unexpected error D:", e);
         }
-    }
-
-    public RequisiteClientSocket addOpenListener(RequisiteClientSocket.OpenRunnable runnable) {
-        openListeners.add(runnable);
-        return this;
-    }
-
-    public RequisiteClientSocket removeOpenListener(RequisiteClientSocket.OpenRunnable runnable) {
-        openListeners.remove(runnable);
-        return this;
     }
 
     static {

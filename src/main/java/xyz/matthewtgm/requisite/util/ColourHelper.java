@@ -23,7 +23,9 @@ import java.awt.*;
 /**
  * Used to create and get colours easily.
  */
-public class ColourHelper {
+public final class ColourHelper {
+
+    private ColourHelper() {}
 
     /**
      * @return A changing colour based on the users computer time. Simulates a "chroma" colour.

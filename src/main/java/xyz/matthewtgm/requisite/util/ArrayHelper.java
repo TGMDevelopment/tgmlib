@@ -24,7 +24,9 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 @SuppressWarnings("unchecked")
-public class ArrayHelper {
+public final class ArrayHelper {
+
+    private ArrayHelper() {}
 
     /**
      * @param array The array to convert.

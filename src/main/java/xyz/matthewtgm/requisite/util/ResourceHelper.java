@@ -29,7 +29,9 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;
 
-public class ResourceHelper {
+public final class ResourceHelper {
+
+    private ResourceHelper() {}
 
     /**
      * @param domain The domain of the resource.
