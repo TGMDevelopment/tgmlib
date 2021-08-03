@@ -91,7 +91,7 @@ public class GuiRequisiteKeyBinds extends GuiRequisiteBase {
         handleScrolling(keyBindY);
 
         for (KeyBind keyBind : Requisite.getManager().getKeyBindManager().getKeyBinds()) {
-            keyBindButtonList.add(new GuiTransFadingButton(buttonId.getAndAdd(1), backgroundHitBox.getIntX() + 4, keyBindY.getAndAdd(22), backgroundHitBox.getIntWidth() - 28, 20, "(" + keyBind.category() + ") " + keyBind.name() + " : " + Keyboard.getKeyName(keyBind.getKey())) {
+            keyBindButtonList.add(new GuiTransFadingButton(buttonId.getAndAdd(1), backgroundHitBox.getIntX() + 4, keyBindY.getAndAdd(22), backgroundHitBox.getIntWidth() - 8, 20, "(" + keyBind.category() + ") " + keyBind.name() + " : " + Keyboard.getKeyName(keyBind.getKey())) {
                 public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                     if (super.mousePressed(mc, mouseX, mouseY)) {
                         listeningButton = new ListeningButtonHolder($this.keyBindButtonList.indexOf(this), displayString);
@@ -112,7 +112,7 @@ public class GuiRequisiteKeyBinds extends GuiRequisiteBase {
         GlStateManager.enableAlpha();
         GlStateManager.enableDepth();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GlHelper.totalScissor(backgroundHitBox.getIntX(), backgroundHitBox.getIntY() + 36, backgroundHitBox.getWidth(), backgroundHitBox.getIntHeight() - backgroundHitBox.getIntY() - 36);
+        GlHelper.totalScissor(backgroundHitBox.getIntX() + 4, backgroundHitBox.getIntY() + 40, width - 4, backgroundHitBox.getIntHeight() - backgroundHitBox.getIntY() - 26);
         for (GuiButton button : this.keyBindButtonList)
             button.drawButton(mc, mouseX, mouseY);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);

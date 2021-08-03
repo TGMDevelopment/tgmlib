@@ -30,17 +30,11 @@ import xyz.matthewtgm.requisite.events.ActionBarEvent;
 import xyz.matthewtgm.requisite.events.BossBarEvent;
 import xyz.matthewtgm.requisite.events.TitleEvent;
 
-@Mixin(value = {GuiIngameForge.class}, remap = false)
+@Mixin({GuiIngameForge.class})
 public abstract class GuiIngameForgeMixin extends GuiIngame {
 
     public GuiIngameForgeMixin(Minecraft mcIn) {
         super(mcIn);
-    }
-
-    @Inject(method = "renderBossHealth", at = @At("HEAD"), cancellable = true, remap = false)
-    private void onBossHealthRendered(CallbackInfo ci) {
-        if (MinecraftForge.EVENT_BUS.post(new BossBarEvent.RenderEvent()))
-            ci.cancel();
     }
 
     @Inject(method = "renderRecordOverlay", at = @At("HEAD"), cancellable = true, remap = false)

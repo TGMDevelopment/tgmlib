@@ -39,14 +39,14 @@ public class GuiRequisiteMain extends GuiRequisiteBase {
     }
 
     public void initialize() {
-        buttonList.add(new GuiTransFadingImageButton(1, width / 2 - 52, height / 2 - 10, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/keybinds_icon.png")) {
+        buttonList.add(new GuiTransFadingImageButton(1, width / 2 - 52, height / 2 - 10, 50, 50, ResourceHelper.get("requisite", "gui/icons/keybinds_icon.png")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY))
                     mc.displayGuiScreen(new GuiRequisiteKeyBinds(GuiRequisiteMain.this));
                 return false;
             }
         });
-        buttonList.add(new GuiTransFadingImageButton(2, width / 2 + 2, height / 2 - 10, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/settings_icon.png")) {
+        buttonList.add(new GuiTransFadingImageButton(2, width / 2 + 2, height / 2 - 10, 50, 50, ResourceHelper.get("requisite", "gui/icons/settings_icon.png")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY))
                     mc.displayGuiScreen(new GuiRequisiteSettings(GuiRequisiteMain.this));
@@ -55,7 +55,7 @@ public class GuiRequisiteMain extends GuiRequisiteBase {
         });
 
         if (CosmeticManager.isLoaded() && Requisite.getManager().getWebSocket().isOpen()) {
-            buttonList.add(new GuiTransFadingImageButton(3, width / 2 - 25, height / 2 - 63, 50, 50, ResourceHelper.get("tgmlib", "gui/icons/cosmetics_icon.png")) {
+            buttonList.add(new GuiTransFadingImageButton(3, width / 2 - 25, height / 2 - 63, 50, 50, ResourceHelper.get("requisite", "gui/icons/cosmetics_icon.png")) {
                 public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                     if (super.mousePressed(mc, mouseX, mouseY))
                         mc.displayGuiScreen(new GuiRequisiteCosmetics(GuiRequisiteMain.this));

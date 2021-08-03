@@ -33,12 +33,12 @@ public class FileHandler {
             mcDir = Minecraft.getMinecraft().mcDataDir,
             configDir = new File(mcDir, "config"),
             tgmDevelopmentDir = new File(configDir, "TGMDevelopment"),
-            tgmLibDir = new File(tgmDevelopmentDir, Requisite.NAME);
+            requisiteDir = new File(tgmDevelopmentDir, Requisite.NAME);
     @Getter private final List<File> directories = new ArrayList<>(Arrays.asList(
             mcDir,
             configDir,
             tgmDevelopmentDir,
-            tgmLibDir
+            requisiteDir
     ));
 
     public void start() {

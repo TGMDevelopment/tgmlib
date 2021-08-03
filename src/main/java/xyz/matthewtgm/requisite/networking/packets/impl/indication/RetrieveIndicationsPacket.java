@@ -26,7 +26,7 @@ import xyz.matthewtgm.requisite.networking.packets.BasePacket;
 public class RetrieveIndicationsPacket extends BasePacket {
 
     public RetrieveIndicationsPacket() {
-        super("RETRIEVE", "INDICATIONS", 7f);
+        super("RETRIEVE", "INDICATIONS", 3f);
     }
 
     public void write(RequisiteClientSocket socket) {}
@@ -36,8 +36,6 @@ public class RetrieveIndicationsPacket extends BasePacket {
         Requisite.getManager().getIndicatorManager().getIndicatorArray().addAll(data.getAsArray("indications"));
     }
 
-    public void handle(RequisiteClientSocket socket) {
-
-    }
+    public void handle(RequisiteClientSocket socket) {}
 
 }

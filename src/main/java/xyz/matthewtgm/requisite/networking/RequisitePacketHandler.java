@@ -62,8 +62,7 @@ public final class RequisitePacketHandler {
     }
 
     public void handle(Logger logger, ByteBuffer buffer) {
-        String parsed = new String(buffer.array());
-        System.out.println(parsed);
+        String parsed = StandardCharsets.UTF_8.decode(buffer).toString();
         if (!JsonHelper.isValidJson(parsed))
             return;
         JsonObject object = JsonParser.parse(parsed).getAsJsonObject();
@@ -108,19 +107,15 @@ public final class RequisitePacketHandler {
     }
 
     static {
-        /* Cosmetics. */
-        packets.put(CosmeticsRetrievePacket.class, 0f);
-        packets.put(CosmeticsTogglePacket.class, 1f);
+        packets.put(GameOpenPacket.class, 0f);
+        packets.put(GameClosePacket.class, 1f);
 
-        /* Announcer. */
         packets.put(AnnouncementPacket.class, 2f);
 
-        /* Game. */
-        packets.put(GameOpenPacket.class, 5f);
-        packets.put(GameClosePacket.class, 6f);
+        packets.put(RetrieveIndicationsPacket.class, 3f);
 
-        /* Indications. */
-        packets.put(RetrieveIndicationsPacket.class, 7f);
+        packets.put(CosmeticsRetrievePacket.class, 6f);
+        packets.put(CosmeticsTogglePacket.class, 7f);
     }
 
 }

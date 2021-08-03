@@ -16,31 +16,23 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.networking.packets.impl.other;
+package xyz.matthewtgm.requisite.mixins.gui;
 
-import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.requisite.networking.RequisiteClientSocket;
-import xyz.matthewtgm.requisite.networking.packets.BasePacket;
+import net.minecraft.client.gui.GuiIngame;
+import net.minecraftforge.common.MinecraftForge;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import xyz.matthewtgm.requisite.events.BossBarEvent;
 
-public class GameClosePacket extends BasePacket {
+@Mixin({GuiIngame.class})
+public class GuiIngameMixin {
 
-    private final String uuid;
-
-    public GameClosePacket(String uuid) {
-        super("CLOSE", "GAME", 1f);
-        this.uuid = uuid;
+    @Inject(method = "renderBossHealth", at = @At("HEAD"), cancellable = true)
+    private void onBossHealthRendered(CallbackInfo ci) {
+        if (MinecraftForge.EVENT_BUS.post(new BossBarEvent.RenderEvent()))
+            ci.cancel();
     }
-
-    public GameClosePacket() {
-        this(null);
-    }
-
-    public void write(RequisiteClientSocket socket) {
-        data.add("uuid", uuid);
-    }
-
-    public void read(RequisiteClientSocket socket, JsonObject object, JsonObject data) {}
-
-    public void handle(RequisiteClientSocket socket) {}
 
 }

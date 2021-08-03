@@ -19,6 +19,10 @@
 package xyz.matthewtgm.requisite.core;
 
 import lombok.Getter;
+import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.java_websocket.framing.CloseFrame;
@@ -26,6 +30,7 @@ import xyz.matthewtgm.json.entities.JsonObject;
 import xyz.matthewtgm.json.util.JsonApiHelper;
 import xyz.matthewtgm.json.util.JsonHelper;
 import xyz.matthewtgm.requisite.Requisite;
+import xyz.matthewtgm.requisite.gui.menus.GuiRequisiteLogging;
 import xyz.matthewtgm.requisite.keybinds.KeyBindManager;
 import xyz.matthewtgm.requisite.players.PlayerDataManager;
 import xyz.matthewtgm.requisite.players.cosmetics.CosmeticManager;
@@ -41,7 +46,6 @@ import xyz.matthewtgm.requisite.networking.packets.impl.other.GameOpenPacket;
 import xyz.matthewtgm.requisite.util.*;
 import xyz.matthewtgm.requisite.util.global.GlobalMinecraft;
 
-import java.io.File;
 import java.net.URI;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
@@ -52,8 +56,6 @@ public class RequisiteManager {
     private static boolean webSocketDebug = false;
 
     private static final Logger logger = LogManager.getLogger(Requisite.NAME + " (Manager)");
-
-    @Getter private static File tgmLibDir;
 
     @Getter private VersionChecker versionChecker;
     @Getter private FileHandler fileHandler;
@@ -68,17 +70,14 @@ public class RequisiteManager {
 
     public void initialize() {
         checkJvmProperties();
-        tgmLibDir = new File(GlobalMinecraft.getGameDirectory(), Requisite.NAME);
-        if (!tgmLibDir.exists() && !tgmLibDir.mkdirs())
-            throw new IllegalStateException("Couldn't create " + Requisite.NAME + " directory.");
     }
 
     private void checkJvmProperties() {
         try {
             if (!webSocketTest)
-                webSocketTest = Boolean.parseBoolean(System.getProperty("tgmLibWebSocketTest", "false"));
+                webSocketTest = Boolean.parseBoolean(System.getProperty("requisiteWebSocketTest", "false"));
             if (!webSocketDebug)
-                webSocketDebug = Boolean.parseBoolean(System.getProperty("tgmLibWebSocketDebug", "false"));
+                webSocketDebug = Boolean.parseBoolean(System.getProperty("requisiteWebSocketDebug", "false"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,14 +85,14 @@ public class RequisiteManager {
 
     public void start() {
         try {
-            versionChecker = new VersionChecker("https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/versions.json", true).setFetchListener((versionChecker, versionObject) -> {
+            versionChecker = new VersionChecker("https://raw.githubusercontent.com/TGMDevelopment/RequisiteData/main/versions.json", true).setFetchListener((versionChecker, versionObject) -> {
                 if (!versionChecker.isLatestVersion("latest", Requisite.VER) && !ForgeHelper.isDevelopmentEnvironment())
-                    ChatHelper.sendMessage(ChatHelper.requisiteChatPrefix, ChatColour.RED + "There's a new version of TGMLib! You should probably restart your game.");
+                    ChatHelper.sendMessage(ChatHelper.requisiteChatPrefix, ChatColour.RED + "There's a new version of Requisite! You should probably restart your game.");
             });
             (fileHandler = new FileHandler()).start();
-            (configHandler = new ConfigHandler("config", fileHandler.getTgmLibDir())).start();
-            (keyBindConfigHandler = new KeyBindConfigHandler("keybinds", fileHandler.getTgmLibDir())).update();
-            (dataHandler = new DataHandler("data", fileHandler.getTgmLibDir())).start();
+            (configHandler = new ConfigHandler("config", fileHandler.getRequisiteDir())).start();
+            (keyBindConfigHandler = new KeyBindConfigHandler("keybinds", fileHandler.getRequisiteDir())).update();
+            (dataHandler = new DataHandler("data", fileHandler.getRequisiteDir())).start();
             fixSocket();
             if (!webSocket.isOpen())
                 scheduleSocketReconnect();
@@ -103,6 +102,7 @@ public class RequisiteManager {
             (cosmeticManager = new CosmeticManager()).start();
             (indicatorManager = new IndicatorManager()).start();
 
+            ForgeHelper.registerEventListener(this);
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 if (dataHandler.isMayLogData())
                     webSocket.send(new GameClosePacket(GlobalMinecraft.getSession().getProfile().getId().toString()));
@@ -115,8 +115,8 @@ public class RequisiteManager {
 
     private URI websocketUri() {
         if (webSocketTest)
-            return URI.create("ws://localhost:2298");
-        JsonObject object = JsonApiHelper.getJsonObject("https://raw.githubusercontent.com/TGMDevelopment/TGMLib-Data/main/websocket.json", true);
+            return URI.create("ws://localhost:8080");
+        JsonObject object = JsonApiHelper.getJsonObject("https://raw.githubusercontent.com/TGMDevelopment/RequisiteData/main/websocket.json", true);
         String uri = object.get("uri").getAsString();
         if (webSocketDebug) {
             logger.info(JsonHelper.makePretty(object));
@@ -176,7 +176,16 @@ public class RequisiteManager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, "TGMLib WebSocket Reconnect Thread"), 15, TimeUnit.MINUTES);
+        }, "Requisite WebSocket Reconnect Thread"), 15, TimeUnit.MINUTES);
+    }
+
+    /**
+     * Permits Requisite to open it's data logging menu on initial run.
+     */
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onGuiOpen(GuiScreenEvent.InitGuiEvent event) {
+        if (event.gui instanceof GuiMainMenu && !dataHandler.isReceivedPrompt())
+            GlobalMinecraft.displayGuiScreen(new GuiRequisiteLogging(event.gui));
     }
 
 }

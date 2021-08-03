@@ -263,7 +263,7 @@ public final class RenderHelper {
         drawVerticalLine(x + width, y + height, y, color);
     }
 
-    protected static void drawHorizontalLine(int startX, int endX, int y, int color) {
+    public static void drawHorizontalLine(int startX, int endX, int y, int color) {
         if (endX < startX) {
             int i = startX;
             startX = endX;
@@ -272,7 +272,7 @@ public final class RenderHelper {
         drawRect(startX, y, endX + 1, y + 1, color);
     }
 
-    protected static void drawVerticalLine(int x, int startY, int endY, int color) {
+    public static void drawVerticalLine(int x, int startY, int endY, int color) {
         if (endY < startY) {
             int i = startY;
             startY = endY;

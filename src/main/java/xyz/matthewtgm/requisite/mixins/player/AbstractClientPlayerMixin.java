@@ -45,7 +45,7 @@ public abstract class AbstractClientPlayerMixin extends EntityPlayer {
             if (!Requisite.getManager().getDataManager().getDataMap().containsKey(getUniqueID().toString()))
                 return;
             PlayerCosmeticData cosmeticsHolder = Requisite.getManager().getDataManager().getDataMap().get(getUniqueID().toString()).getCosmeticData();
-            if ((cosmeticsHolder == null || cosmeticsHolder.getEnabledCloakCosmetics() == null) && !cosmeticsHolder.getEnabledCloakCosmetics().isEmpty()) {
+            if (cosmeticsHolder != null && !cosmeticsHolder.getEnabledCloakCosmetics().isEmpty()) {
                 cir.setReturnValue(null);
             }
         }

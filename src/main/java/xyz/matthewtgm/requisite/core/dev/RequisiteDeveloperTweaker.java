@@ -16,31 +16,29 @@
  * along with Requisite. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package xyz.matthewtgm.requisite.networking.packets.impl.other;
+package xyz.matthewtgm.requisite.core.dev;
 
-import xyz.matthewtgm.json.entities.JsonObject;
-import xyz.matthewtgm.requisite.networking.RequisiteClientSocket;
-import xyz.matthewtgm.requisite.networking.packets.BasePacket;
+import net.minecraft.launchwrapper.ITweaker;
+import net.minecraft.launchwrapper.LaunchClassLoader;
+import xyz.matthewtgm.requisite.core.RequisiteLauncher;
 
-public class GameClosePacket extends BasePacket {
+import java.io.File;
+import java.util.List;
 
-    private final String uuid;
+public class RequisiteDeveloperTweaker implements ITweaker {
 
-    public GameClosePacket(String uuid) {
-        super("CLOSE", "GAME", 1f);
-        this.uuid = uuid;
+    public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile) {}
+
+    public void injectIntoClassLoader(LaunchClassLoader classLoader) {
+        RequisiteLauncher.initialize();
     }
 
-    public GameClosePacket() {
-        this(null);
+    public String getLaunchTarget() {
+        return "net.minecraft.client.main.Main";
     }
 
-    public void write(RequisiteClientSocket socket) {
-        data.add("uuid", uuid);
+    public String[] getLaunchArguments() {
+        return new String[0];
     }
-
-    public void read(RequisiteClientSocket socket, JsonObject object, JsonObject data) {}
-
-    public void handle(RequisiteClientSocket socket) {}
 
 }

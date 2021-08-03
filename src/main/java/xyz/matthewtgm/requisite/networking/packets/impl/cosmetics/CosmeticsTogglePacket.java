@@ -32,7 +32,7 @@ public class CosmeticsTogglePacket extends BasePacket {
     private final String cosmeticId;
 
     public CosmeticsTogglePacket(String uuid, String cosmeticId) {
-        super("TOGGLE", "COSMETICS", 1f);
+        super("TOGGLE", "COSMETICS", 7f);
         this.uuid = uuid;
         this.cosmeticId = cosmeticId;
     }

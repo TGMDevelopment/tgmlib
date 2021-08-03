@@ -36,7 +36,7 @@ public class GuiRequisiteSettings extends GuiRequisiteBase {
         int baseX = backgroundHitBox.getIntX() + 4;
         int baseY = backgroundHitBox.getIntY() + 38;
 
-        buttonList.add(new GuiTransFadingButton(1, baseX, baseY, backgroundHitBox.getIntWidth() - 28, 20, "Light Mode: " + (Requisite.getManager().getConfigHandler().isLightMode() ? ChatColour.GREEN + "ON" : ChatColour.RED + "OFF")) {
+        buttonList.add(new GuiTransFadingButton(1, baseX, baseY, backgroundHitBox.getIntWidth() - 6, 20, "Light Mode: " + (Requisite.getManager().getConfigHandler().isLightMode() ? ChatColour.GREEN + "ON" : ChatColour.RED + "OFF")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY)) {
                     RequisiteManager manager = Requisite.getManager();
@@ -47,7 +47,7 @@ public class GuiRequisiteSettings extends GuiRequisiteBase {
                 return false;
             }
         });
-        buttonList.add(new GuiTransFadingButton(2, baseX, baseY + 22, backgroundHitBox.getIntWidth() - 28, 20, "Log Data: " + (Requisite.getManager().getDataHandler().isMayLogData() ? ChatColour.GREEN + "ON" : ChatColour.RED + "OFF")) {
+        buttonList.add(new GuiTransFadingButton(2, baseX, baseY + 22, backgroundHitBox.getIntWidth() - 6, 20, "Log Data: " + (Requisite.getManager().getDataHandler().isMayLogData() ? ChatColour.GREEN + "ON" : ChatColour.RED + "OFF")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY)) {
                     RequisiteManager manager = Requisite.getManager();
@@ -58,7 +58,7 @@ public class GuiRequisiteSettings extends GuiRequisiteBase {
                 return false;
             }
         });
-        buttonList.add(new GuiTransFadingButton(3, baseX, baseY + 44, backgroundHitBox.getIntWidth() - 28, 20, "Show Indicators: " + (Requisite.getManager().getConfigHandler().isShowIndicators() ? ChatColour.GREEN + "ON" : ChatColour.RED + "OFF")) {
+        buttonList.add(new GuiTransFadingButton(3, baseX, baseY + 44, backgroundHitBox.getIntWidth() - 6, 20, "Show Indicators: " + (Requisite.getManager().getConfigHandler().isShowIndicators() ? ChatColour.GREEN + "ON" : ChatColour.RED + "OFF")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY)) {
                     RequisiteManager manager = Requisite.getManager();

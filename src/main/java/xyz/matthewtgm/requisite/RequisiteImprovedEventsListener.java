@@ -25,7 +25,7 @@ import xyz.matthewtgm.requisite.events.ActionBarEvent;
 import xyz.matthewtgm.requisite.events.ChatMessageReceivedEvent;
 
 /**
- * Permits custom Requisite "improved" events to be run inside of Forge events, a good example of this would be splitting the `ClientChatReceivedEvent`.
+ * Permits custom Requisite "improved" events to be run inside of Forge events, a good example of this would be splitting the {@link ClientChatReceivedEvent}.
  */
 public final class RequisiteImprovedEventsListener {
 

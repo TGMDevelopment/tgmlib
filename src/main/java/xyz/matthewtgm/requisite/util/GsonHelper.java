@@ -20,11 +20,14 @@ package xyz.matthewtgm.requisite.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
+import lombok.Getter;
 
 public final class GsonHelper {
 
     private static Gson gson = new GsonBuilder().create();
     private static Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
+    @Getter private static JsonParser parser = new JsonParser();
 
     private GsonHelper() {}
 

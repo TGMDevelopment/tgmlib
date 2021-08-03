@@ -30,6 +30,8 @@ import xyz.matthewtgm.requisite.util.ChatHelper;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Center of all Requisite networking.
@@ -61,7 +63,9 @@ public final class RequisiteClientSocket extends WebSocketClient {
     /**
      * This is required for some reason..?
      */
-    public void onMessage(String message) {}
+    public void onMessage(String message) {
+        packetHandler.handle(logger, StandardCharsets.UTF_8.encode(message));
+    }
 
     /**
      * Invoked when a message from the server is sent. The parameter value is parsed using the {@link RequisitePacketHandler}

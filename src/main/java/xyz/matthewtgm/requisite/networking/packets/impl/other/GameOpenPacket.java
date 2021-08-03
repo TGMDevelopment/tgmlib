@@ -27,7 +27,7 @@ public class GameOpenPacket extends BasePacket {
     private final String uuid;
 
     public GameOpenPacket(String uuid) {
-        super("OPEN", "GAME", 5f);
+        super("OPEN", "GAME", 0f);
         this.uuid = uuid;
     }
 

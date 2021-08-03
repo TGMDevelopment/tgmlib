@@ -81,7 +81,7 @@ public abstract class GuiRequisiteBase extends GuiScreen {
         buttonList.clear();
 
         backgroundHitBox = createBackgroundHitBox();
-        buttonList.add(new GuiTransFadingImageButton(0, backgroundHitBox.getIntX() + 2, backgroundHitBox.getIntY() + 2, 30, 30, ResourceHelper.get("tgmlib", "gui/icons/exit_icon.png")) {
+        buttonList.add(new GuiTransFadingImageButton(0, backgroundHitBox.getIntX() + 2, backgroundHitBox.getIntY() + 2, 30, 30, ResourceHelper.get("requisite", "gui/icons/exit_icon.png")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY))
                     mc.displayGuiScreen(parent);
@@ -100,7 +100,7 @@ public abstract class GuiRequisiteBase extends GuiScreen {
 
         /* Background. */
         RenderHelper.drawRect(backgroundHitBox.getIntX(), backgroundHitBox.getIntY(), backgroundHitBox.getIntWidth(), backgroundHitBox.getIntHeight(), backgroundColour());
-        RenderHelper.drawHollowRect(backgroundHitBox.getIntX(), backgroundHitBox.getIntY(), backgroundHitBox.getIntWidth() - backgroundHitBox.getIntX(), backgroundHitBox.getIntY() + EnhancedFontRenderer.getFontHeight() * 4, foregroundDividerColour());
+        RenderHelper.drawHorizontalLine(backgroundHitBox.getIntX(), backgroundHitBox.getIntWidth() - backgroundHitBox.getIntX(), backgroundHitBox.getIntY() + EnhancedFontRenderer.getFontHeight() * 4, foregroundDividerColour());
 
         /* Text. */
         EnhancedFontRenderer.drawCenteredStyledScaledText(title, 2, width / 2, backgroundHitBox.getY() + EnhancedFontRenderer.getFontHeight(), titleColour);

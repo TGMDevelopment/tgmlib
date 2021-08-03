@@ -45,10 +45,10 @@ public class RequisiteLauncher {
         if (source != null) {
             URL location = source.getLocation();
             try {
-                File file = new File(location.toURI());
-                if (file.isFile()) {
-                    CoreModManager.getIgnoredMods().remove(file.getName());
-                    CoreModManager.getReparseableCoremods().remove(file.getName());
+                File sourceFile = new File(location.toURI());
+                if (sourceFile.isFile()) {
+                    CoreModManager.getIgnoredMods().remove(sourceFile.getName());
+                    CoreModManager.getReparseableCoremods().remove(sourceFile.getName());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

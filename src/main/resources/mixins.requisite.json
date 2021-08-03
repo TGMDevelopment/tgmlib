@@ -16,6 +16,7 @@
     "gui.GuiContainerAccessor",
     "gui.GuiIngameAccessor",
     "gui.GuiIngameForgeMixin",
+    "gui.GuiIngameMixin",
     "gui.GuiNewChatAccessor",
     "gui.GuiNewChatMixin",
     "gui.GuiScreenAccessor",

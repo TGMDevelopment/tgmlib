@@ -55,7 +55,7 @@ import java.util.List;
 public final class Requisite {
 
     public static final String NAME = "@NAME@", ID = "@ID@", VER = "@VER@";
-    @Getter private static final RequisiteManager manager = new RequisiteManager();
+    @Getter private static RequisiteManager manager;
     @Getter private final Logger logger = LogManager.getLogger(NAME);
     @Getter @Mod.Instance(ID) private static Requisite instance;
 
@@ -64,6 +64,8 @@ public final class Requisite {
      */
     @Mod.EventHandler
     public void initialize(FMLInitializationEvent event) {
+        if (manager == null)
+            manager = new RequisiteManager();
         manager.initialize();
         start();
     }
@@ -130,15 +132,6 @@ public final class Requisite {
             public void held() {}
             public void released() {}
         });
-    }
-
-    /**
-     * Permits Requisite to open it's data logging menu on initial run.
-     */
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onGuiOpen(GuiScreenEvent.InitGuiEvent event) {
-        if (event.gui instanceof GuiMainMenu && !manager.getDataHandler().isReceivedPrompt())
-            GlobalMinecraft.displayGuiScreen(new GuiRequisiteLogging(event.gui));
     }
 
 }

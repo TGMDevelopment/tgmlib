@@ -67,7 +67,7 @@ public class GuiRequisiteCosmetics extends GuiRequisiteBase {
         cachedEnabledCosmetics.clear();
         cosmeticButtonList.clear();
 
-        buttonList.add(new GuiTransFadingImageButton(1, backgroundHitBox.getIntWidth() - 32, backgroundHitBox.getIntY() + 2, 30, 30, ResourceHelper.get("tgmlib", "gui/icons/refresh_icon.png")) {
+        buttonList.add(new GuiTransFadingImageButton(1, backgroundHitBox.getIntWidth() - 32, backgroundHitBox.getIntY() + 2, 30, 30, ResourceHelper.get("requisite", "gui/icons/refresh_icon.png")) {
             public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
                 if (super.mousePressed(mc, mouseX, mouseY)) {
                     Requisite.getManager().getDataManager().getDataMap().clear();

@@ -36,7 +36,7 @@ public class CosmeticsRetrievePacket extends BasePacket {
     private String uuid;
 
     public CosmeticsRetrievePacket(String uuid) {
-        super("RETRIEVE", "COSMETICS", 0f);
+        super("RETRIEVE", "COSMETICS", 6f);
         this.uuid = uuid;
     }
 

@@ -19,6 +19,7 @@
 plugins {
     id "net.minecraftforge.gradle.forge" version "8708bf3e01"
     id "com.github.johnrengelman.shadow" version "6.1.0"
+    id "org.spongepowered.mixin" version "0.6-SNAPSHOT"
     id "org.jetbrains.kotlin.jvm" version "1.5.21"
     id "java"
 }
@@ -65,12 +66,14 @@ dependencies {
     shade('xyz.matthewtgm:TGMConfig:3.2.0')
     shade('org.java-websocket:Java-WebSocket:1.5.2')
 
+    shade('org.spongepowered:mixin:0.7.11-SNAPSHOT')
+    annotationProcessor('org.spongepowered:mixin:0.7.11-SNAPSHOT')
+
     implementation('org.projectlombok:lombok:1.18.20')
     annotationProcessor('org.projectlombok:lombok:1.18.20')
 
     /* Dependencies for cutting other mods' file sizes. */
     shade('com.github.marcoacierno:pastebin-java-api:v0.2.1')
-    shade('org.spongepowered:mixin:0.7.11-SNAPSHOT')
     shade('com.squareup.okhttp3:okhttp:4.9.1') {
         exclude module: 'kotlin-stdlib-jdk8'
     }
@@ -79,6 +82,12 @@ dependencies {
     shade('org.jetbrains.kotlin:kotlin-stdlib-jdk8')
     shade('org.jetbrains.kotlin:kotlin-reflect')
     shade('org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1-native-mt')
+}
+
+/* Disable mixin refMap warnings. */
+mixin {
+    disableRefMapWarning = true
+    add sourceSets.main, 'mixins.requisite.refmap.json'
 }
 
 /* Set the duplicatesStrategy and define configs. */
